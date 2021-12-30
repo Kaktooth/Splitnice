@@ -6,22 +6,13 @@ CREATE TABLE "user"
     phone    VARCHAR
 );
 
-
-CREATE TABLE business_entity
-(
-    id SERIAL PRIMARY KEY
-);
-
 CREATE TABLE account
 (
     id        SERIAL PRIMARY KEY,
     username  VARCHAR,
     amount    DECIMAL,
     email     VARCHAR,
-    phone     VARCHAR,
-    entity_id INTEGER
-        CONSTRAINT fk_entity
-            REFERENCES business_entity (id)
+    phone     VARCHAR
 );
 
 CREATE TABLE "group"
@@ -31,10 +22,7 @@ CREATE TABLE "group"
     amount     DECIMAL,
     creator_id INTEGER
         CONSTRAINT fk_creator
-            REFERENCES account (id),
-    entity_id  INTEGER
-        CONSTRAINT fk_entity
-            REFERENCES business_entity (id)
+            REFERENCES account (id)
 );
 
 CREATE TABLE account_user
@@ -83,12 +71,8 @@ CREATE TABLE expense
     id            SERIAL PRIMARY KEY,
     amount        DECIMAL,
     creation_date TIMESTAMP,
-    landed_by_id  INTEGER
-        CONSTRAINT fk_landed_by_id
-            REFERENCES business_entity (id),
-    landed_to_id  INTEGER
-        CONSTRAINT fk_landed_to_id
-            REFERENCES business_entity (id),
+    landed_by_id  INTEGER,
+    landed_to_id  INTEGER,
     currency_id   INTEGER
         CONSTRAINT fk_currency_id
             REFERENCES currency (id)
