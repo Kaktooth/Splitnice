@@ -1,4 +1,4 @@
-package entity;
+package com.example.splitwise.model;
 
 import java.math.BigDecimal;
 

@@ -9,8 +9,7 @@ CREATE TABLE "user"
 
 CREATE TABLE business_entity
 (
-    id SERIAL PRIMARY KEY,
-    unique (id)
+    id SERIAL PRIMARY KEY
 );
 
 CREATE TABLE account
