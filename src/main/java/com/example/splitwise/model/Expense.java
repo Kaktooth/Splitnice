@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Value
-@Builder(toBuilder = true)
+@Builder
 public class Expense {
 
     @NonNull

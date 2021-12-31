@@ -7,12 +7,10 @@ import lombok.Value;
 
 import java.math.BigDecimal;
 
-
+@EqualsAndHashCode(callSuper = true)
 @Value
-@Builder(toBuilder = true)
-@EqualsAndHashCode(callSuper = false)
-
-public class Account extends BusinessEntity implements Identifiable {
+@Builder
+public class Account extends BusinessEntity {
 
     @NonNull
     Integer id;

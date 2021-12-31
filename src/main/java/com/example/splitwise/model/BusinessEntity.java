@@ -1,9 +1,9 @@
 package com.example.splitwise.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
-public abstract class BusinessEntity {
-
-    private Integer entityId;
+@EqualsAndHashCode
+public abstract class BusinessEntity implements Identifiable {
 }

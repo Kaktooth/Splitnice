@@ -6,7 +6,7 @@ import lombok.NonNull;
 import lombok.Setter;
 
 @Data
-@Builder(toBuilder = true)
+@Builder
 public class AccountGroupInfo implements Identifiable {
 
     @NonNull

@@ -1,29 +1,26 @@
 package com.example.splitwise.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
-import lombok.Setter;
+import lombok.Value;
 
 import java.math.BigDecimal;
 
-@Data
+@EqualsAndHashCode(callSuper = true)
+@Value
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
 
-public class Group extends BusinessEntity implements Identifiable {
+public class Group extends BusinessEntity {
 
     @NonNull
-    private final Integer id;
+    Integer id;
 
-    @Setter
     @NonNull
-    private String title;
+    String title;
 
-    @Setter
     @NonNull
-    private Integer creatorId;
+    Integer creatorId;
 
     @NonNull
     BigDecimal moneyAmount;
