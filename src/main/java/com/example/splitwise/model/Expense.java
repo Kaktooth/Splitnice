@@ -1,28 +1,49 @@
 package com.example.splitwise.model;
 
-import lombok.Builder;
-import lombok.NonNull;
-import lombok.Value;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Value
-@Builder
 public class Expense {
 
-    @NonNull
-    BigDecimal amount;
+    private final BigDecimal amount;
 
-    @NonNull
-    LocalDateTime creationDate;
+    private final LocalDateTime creationDate;
 
-    @NonNull
-    Integer landedById;
+    private final Integer landedById;
 
-    @NonNull
-    Integer landedToId;
+    private final Integer landedToId;
 
-    @NonNull
-    Integer currencyId;
+    private final Integer currencyId;
+
+    public Expense(BigDecimal amount,
+                   LocalDateTime creationDate,
+                   Integer landedById,
+                   Integer landedToId,
+                   Integer currencyId) {
+        this.amount = amount;
+        this.creationDate = creationDate;
+        this.landedById = landedById;
+        this.landedToId = landedToId;
+        this.currencyId = currencyId;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    public Integer getLandedById() {
+        return landedById;
+    }
+
+    public Integer getLandedToId() {
+        return landedToId;
+    }
+
+    public Integer getCurrencyId() {
+        return currencyId;
+    }
 }

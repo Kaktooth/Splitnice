@@ -1,22 +1,30 @@
 package com.example.splitwise.model;
 
-import lombok.NonNull;
-import lombok.Value;
-
 import java.math.BigDecimal;
 
-@Value
-public class Balance implements Identifiable {
+public class Balance {
 
-    @NonNull
-    Integer id;
+    private final BigDecimal amount;
 
-    @NonNull
-    BigDecimal amount;
+    private final Integer balanceCurrencyId;
 
-    @NonNull
-    Integer balanceCurrencyId;
+    private final Integer ownerId;
 
-    @NonNull
-    Integer ownerId;
+    public Balance(BigDecimal amount, Integer balanceCurrencyId, Integer ownerId) {
+        this.amount = amount;
+        this.balanceCurrencyId = balanceCurrencyId;
+        this.ownerId = ownerId;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public Integer getBalanceCurrencyId() {
+        return balanceCurrencyId;
+    }
+
+    public Integer getOwnerId() {
+        return ownerId;
+    }
 }

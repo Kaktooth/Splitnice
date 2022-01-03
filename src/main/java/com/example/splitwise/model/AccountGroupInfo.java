@@ -1,27 +1,43 @@
 package com.example.splitwise.model;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.NonNull;
-import lombok.Setter;
-
-@Data
-@Builder
 public class AccountGroupInfo implements Identifiable {
 
-    @NonNull
     private final Integer id;
 
-    @Setter
-    @NonNull
-    private Integer roleId;
+    private final Integer roleId;
 
-    @NonNull
     private final Integer addedById;
 
-    @NonNull
     private final Integer groupId;
 
-    @NonNull
     private final Integer accountId;
+
+    public AccountGroupInfo(Integer id, Integer roleId, Integer addedById, Integer groupId, Integer accountId) {
+        this.id = id;
+        this.roleId = roleId;
+        this.addedById = addedById;
+        this.groupId = groupId;
+        this.accountId = accountId;
+    }
+
+    public Integer getRoleId() {
+        return roleId;
+    }
+
+    public Integer getAddedById() {
+        return addedById;
+    }
+
+    public Integer getGroupId() {
+        return groupId;
+    }
+
+    public Integer getAccountId() {
+        return accountId;
+    }
+
+    @Override
+    public Integer getId() {
+        return id;
+    }
 }

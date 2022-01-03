@@ -1,29 +1,38 @@
 package com.example.splitwise.model;
 
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.NonNull;
-import lombok.Value;
-
 import java.math.BigDecimal;
 
-@EqualsAndHashCode(callSuper = true)
-@Value
-@Builder
 public class Account extends BusinessEntity {
 
-    @NonNull
-    Integer id;
+    private final String username;
 
-    @NonNull
-    String username;
+    private final String email;
 
-    @NonNull
-    String email;
+    private final String phone;
 
-    @NonNull
-    String phone;
+    private final BigDecimal moneyAmount;
 
-    @NonNull
-    BigDecimal moneyAmount;
+    public Account(Integer id, String username, String email, String phone, BigDecimal moneyAmount) {
+        super(id);
+        this.username = username;
+        this.email = email;
+        this.phone = phone;
+        this.moneyAmount = moneyAmount;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public BigDecimal getMoneyAmount() {
+        return moneyAmount;
+    }
 }
