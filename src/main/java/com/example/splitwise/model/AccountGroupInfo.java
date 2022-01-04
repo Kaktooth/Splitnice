@@ -3,13 +3,9 @@ package com.example.splitwise.model;
 public class AccountGroupInfo implements Identifiable {
 
     private final Integer id;
-
     private final Integer roleId;
-
     private final Integer addedById;
-
     private final Integer groupId;
-
     private final Integer accountId;
 
     public AccountGroupInfo(Integer id, Integer roleId, Integer addedById, Integer groupId, Integer accountId) {

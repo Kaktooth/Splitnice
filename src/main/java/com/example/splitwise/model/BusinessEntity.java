@@ -6,7 +6,7 @@ public abstract class BusinessEntity implements Identifiable {
 
     private final Integer id;
 
-    public BusinessEntity(int id) {
+    public BusinessEntity(Integer id) {
         this.id = id;
     }
 

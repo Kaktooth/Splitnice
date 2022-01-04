@@ -5,9 +5,7 @@ import java.math.BigDecimal;
 public class Group extends BusinessEntity {
 
     private final String title;
-
     private final Integer creatorId;
-
     private final BigDecimal moneyAmount;
 
     public Group(Integer id, String title, Integer creatorId, BigDecimal moneyAmount) {

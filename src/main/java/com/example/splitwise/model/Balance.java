@@ -5,9 +5,7 @@ import java.math.BigDecimal;
 public class Balance {
 
     private final BigDecimal amount;
-
     private final Integer balanceCurrencyId;
-
     private final Integer ownerId;
 
     public Balance(BigDecimal amount, Integer balanceCurrencyId, Integer ownerId) {

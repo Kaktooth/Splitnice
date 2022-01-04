@@ -6,13 +6,9 @@ import java.time.LocalDateTime;
 public class Expense {
 
     private final BigDecimal amount;
-
     private final LocalDateTime creationDate;
-
     private final Integer landedById;
-
     private final Integer landedToId;
-
     private final Integer currencyId;
 
     public Expense(BigDecimal amount,
