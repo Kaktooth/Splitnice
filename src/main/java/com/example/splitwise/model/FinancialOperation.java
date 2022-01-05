@@ -3,24 +3,32 @@ package com.example.splitwise.model;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class Expense {
+public class FinancialOperation implements Identifiable {
 
+    private final Integer id;
     private final BigDecimal amount;
     private final LocalDateTime creationDate;
     private final Integer landedById;
     private final Integer landedToId;
     private final Integer currencyId;
 
-    public Expense(BigDecimal amount,
-                   LocalDateTime creationDate,
-                   Integer landedById,
-                   Integer landedToId,
-                   Integer currencyId) {
+    public FinancialOperation(Integer id,
+                              BigDecimal amount,
+                              LocalDateTime creationDate,
+                              Integer landedById,
+                              Integer landedToId,
+                              Integer currencyId) {
+        this.id = id;
         this.amount = amount;
         this.creationDate = creationDate;
         this.landedById = landedById;
         this.landedToId = landedToId;
         this.currencyId = currencyId;
+    }
+
+    @Override
+    public Integer getId() {
+        return id;
     }
 
     public BigDecimal getAmount() {

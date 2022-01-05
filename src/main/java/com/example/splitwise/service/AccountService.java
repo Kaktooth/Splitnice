@@ -1,0 +1,8 @@
+package com.example.splitwise.service;
+
+import com.example.splitwise.model.Account;
+
+public interface AccountService extends EntityService<Account> {
+
+    Account changeSignUpStatus(boolean signed);
+}
