@@ -1,35 +1,24 @@
-CREATE TABLE business_entity
-(
-    id SERIAL PRIMARY KEY
-);
-
 CREATE TABLE account
 (
-    id          SERIAL PRIMARY KEY,
-    username    VARCHAR,
-    amount      DECIMAL,
-    email       VARCHAR,
-    phone       VARCHAR,
-    has_account BOOLEAN,
-    entity_id   INTEGER
-        CONSTRAINT fk_entity
-            REFERENCES business_entity (id)
+    id        SERIAL PRIMARY KEY,
+    username  VARCHAR,
+    amount    DECIMAL,
+    email     VARCHAR,
+    phone     VARCHAR,
+    signed_up BOOLEAN
 );
 
 CREATE TABLE "group"
 (
-    id        SERIAL PRIMARY KEY,
-    title     VARCHAR,
-    amount    DECIMAL,
-    entity_id INTEGER
-        CONSTRAINT fk_entity
-            REFERENCES business_entity (id)
+    id     SERIAL PRIMARY KEY,
+    title  VARCHAR,
+    amount DECIMAL
 );
 
 CREATE TABLE group_role
 (
-    id   SERIAL PRIMARY KEY,
-    role VARCHAR
+    id    SERIAL PRIMARY KEY,
+    title VARCHAR
 );
 
 CREATE TABLE group_account
@@ -57,27 +46,37 @@ CREATE TABLE currency
     change_time   TIMESTAMP
 );
 
-CREATE TABLE expense_type
+CREATE TABLE operation_type
 (
     id   SERIAL PRIMARY KEY,
     type VARCHAR
 );
 
-CREATE TABLE expense
+CREATE TABLE financial_operation
 (
-    id              SERIAL PRIMARY KEY,
-    amount          DECIMAL,
-    creation_date   TIMESTAMP,
-    landed_by_id    INTEGER
-        CONSTRAINT fk_landed_by_id
-            REFERENCES business_entity (id),
-    landed_to_id    INTEGER
-        CONSTRAINT fk_landed_to_id
-            REFERENCES business_entity (id),
-    currency_id     INTEGER
+    id                SERIAL PRIMARY KEY,
+    amount            DECIMAL,
+    creation_date     TIMESTAMP,
+    currency_id       INTEGER
         CONSTRAINT fk_currency_id
             REFERENCES currency (id),
-    expense_type_id INTEGER
-        CONSTRAINT fk_expense_type_id
-            REFERENCES expense_type (id)
+    operation_type_id INTEGER
+        CONSTRAINT fk_operation_type_id
+            REFERENCES operation_type (id)
+
 );
+
+CREATE TABLE transaction
+(
+    id           SERIAL PRIMARY KEY,
+    amount       DECIMAL,
+    lander_id    INTEGER
+        CONSTRAINT fk_lander_id
+            REFERENCES account (id),
+    receiver_id  INTEGER
+        CONSTRAINT fk_receiver_id
+            REFERENCES account (id),
+    operation_id INTEGER
+        CONSTRAINT fk_operation_id
+            REFERENCES financial_operation (id)
+)
