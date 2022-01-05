@@ -2,8 +2,9 @@ package com.example.splitwise.model;
 
 import java.math.BigDecimal;
 
-public class Account extends BusinessEntity {
+public class Account implements Identifiable {
 
+    private final Integer id;
     private final String username;
     private final String email;
     private final String phone;
@@ -11,7 +12,7 @@ public class Account extends BusinessEntity {
     private final boolean signedUp;
 
     public Account(Integer id, String username, String email, String phone, BigDecimal moneyAmount, boolean signedUp) {
-        super(id);
+        this.id = id;
         this.username = username;
         this.email = email;
         this.phone = phone;
@@ -37,5 +38,10 @@ public class Account extends BusinessEntity {
 
     public boolean isSignedUp() {
         return signedUp;
+    }
+
+    @Override
+    public Integer getId() {
+        return this.id;
     }
 }
