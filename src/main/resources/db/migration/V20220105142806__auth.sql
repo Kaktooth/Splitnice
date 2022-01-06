@@ -1,32 +1,31 @@
-CREATE TABLE account_role
+CREATE TABLE users
 (
-    id   SERIAL PRIMARY KEY,
-    role VARCHAR
+    username VARCHAR NOT NULL PRIMARY KEY,
+    password VARCHAR NOT NULL,
+    enabled  BOOLEAN NOT NULL
 );
 
-ALTER TABLE account
-    ADD password VARCHAR,
-    ADD enabled  boolean not null,
-    ADD role     INTEGER not null
-        constraint fk_account_role
-            references account_role (id);
-
-
-create table authorities
+CREATE TABLE user_authorities
 (
-    id        INTEGER
-        constraint fk_authorities_account
-            references account (id),
-    username  VARCHAR     not null,
-    authority VARCHAR(50) not null
+    id          SERIAL PRIMARY KEY,
+    authorities VARCHAR NOT NULL
 );
 
-create unique index ix_auth_account on authorities (username, authority);
-
-create table persistent_logins
+CREATE TABLE authorities
 (
-    username  varchar(64) not null,
-    series    varchar(64) primary key,
-    token     varchar(64) not null,
-    last_used timestamp   not null
+    username  VARCHAR NOT NULL,
+    authority INTEGER NOT NULL
+        REFERENCES user_authorities (id),
+    CONSTRAINT fk_user_authorities
+        FOREIGN KEY (username)
+            REFERENCES users (username)
+);
+CREATE UNIQUE INDEX ix_auth_account ON authorities (username, authority);
+
+CREATE TABLE persistent_logins
+(
+    username  VARCHAR   NOT NULL,
+    series    VARCHAR PRIMARY KEY,
+    token     VARCHAR   NOT NULL,
+    last_used TIMESTAMP NOT NULL
 );

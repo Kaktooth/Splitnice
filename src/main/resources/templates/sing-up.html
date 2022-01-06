@@ -9,20 +9,16 @@
           crossorigin="anonymous">
 
 </head>
-<body class="d-flex justify-content-center align-items-center text-center">
+<body class ="d-flex justify-content-center align-items-center text-center">
 
-<form class="form-signin" name="form" th:action="@{/sign-in}" method="get">
+<form class="form-signin" name="form" th:action="@{/sign-in}" method="post">
     <h1 class="h3 mb-3 font-weight-normal ">Please sign in</h1>
-<!--    <div th:if="${param.error}">-->
-<!--        Invalid username and password.-->
-<!--    </div>-->
-    <div th:if="${param.accepted}">
-        You have been signed in.
-    </div>
     <label for="user" class="sr-only">Email address</label>
     <input type="email" id="user" name="user" class="form-control" placeholder="Email address" required="" autofocus="">
     <label for="password" class="sr-only">Password</label>
-    <input type="password" id="password" name="password" class="form-control mb-4" placeholder="Password">
+    <input  type="password" id="password" name="password" class="form-control mb-4" placeholder="Password">
+    <label for="phone" class="sr-only">Phone number</label>
+    <input  type="tel" id="phone" name="phone" class="form-control mb-4" placeholder="Phone Number">
 
     <div class="checkbox mb-6">
         <label>
@@ -31,16 +27,6 @@
     </div>
 
     <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-
-    <div>
-        <label> or you can sign up</label>
-        <a href="/sing-up" method="POST">
-            Sign up
-        </a>
-    </div>
 </form>
-
-
-
 </body>
 </html>

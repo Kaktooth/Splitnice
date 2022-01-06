@@ -29,29 +29,80 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     ) throws Exception {
         auth.authenticationProvider(authenticationProvider)
             .jdbcAuthentication()
-            .passwordEncoder(passwordEncoder)
             .dataSource(dataSource)
-            .usersByUsernameQuery("select username, password, enabled from account")
-            .authoritiesByUsernameQuery("select username, role from account");
+            .passwordEncoder(passwordEncoder)
+            .usersByUsernameQuery("select username, password, enabled from users where username=?")
+            .authoritiesByUsernameQuery("select username, authority from authorities where username=?");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
         http
             .authorizeRequests()
+
+            .mvcMatchers("/sign-up")
+            .not()
+            .authenticated()
+
+            .mvcMatchers("/sign-in")
+            .not()
+            .authenticated()
+
+            .mvcMatchers("/sign-out")
+            .authenticated()
+
+            .mvcMatchers("/index")
+            .permitAll()
+
+            .mvcMatchers("/page")
+            .authenticated()
+
             .anyRequest().authenticated()
+            .and()
+            .httpBasic()
             .and()
             .formLogin()
             .loginPage("/sign-in")
-            //.loginProcessingUrl("/perform_login")
-            .usernameParameter("user") // authenticate user (need users from db)
-            .passwordParameter("password")
-            //.successForwardUrl("/page")
-            .permitAll()
+            .successForwardUrl("/page")
             .and()
             .logout()
             .logoutUrl("/sing-out")
-            .logoutSuccessUrl("/sing-in?sing-out")
-            .permitAll();
+            .logoutSuccessUrl("/sign-in")
+            .invalidateHttpSession(true)
+            .deleteCookies("JSESSIONID");
+
+        http.csrf()
+            .ignoringAntMatchers("/h2-console/**");
+        http.headers()
+            .frameOptions()
+            .sameOrigin();
+
+//
+//        http
+//            .csrf()
+//            .and()
+//            .authorizeRequests()
+//
+//            .mvcMatchers("/", "/page")
+//            .permitAll()
+//
+//            .mvcMatchers("/sign-up")
+//            .permitAll()
+//
+//            .anyRequest().authenticated()
+//            .and()
+//            .formLogin()
+//            .loginPage("/sign-in")
+//
+//            //.loginProcessingUrl("/perform_login")
+//            //.successForwardUrl("/page")
+//            .failureForwardUrl("/page")
+//
+//            //.and()
+//            //.logout()
+//            //.logoutSuccessUrl("/sign-out")
+//            .permitAll();
+
     }
 }
