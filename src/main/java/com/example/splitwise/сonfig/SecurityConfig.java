@@ -64,11 +64,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
             .formLogin()
             .loginPage("/sign-in")
-            .successForwardUrl("/page")
+            .successForwardUrl("/page.html")
             .and()
             .logout()
             .logoutUrl("/sing-out")
-            .logoutSuccessUrl("/sign-in")
+            .logoutSuccessUrl("/sign-in.html")
             .invalidateHttpSession(true)
             .deleteCookies("JSESSIONID");
 
