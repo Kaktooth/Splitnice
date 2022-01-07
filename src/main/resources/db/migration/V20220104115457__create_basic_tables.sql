@@ -46,13 +46,13 @@ CREATE TABLE currency
     change_time   TIMESTAMP
 );
 
-CREATE TABLE operation_type
+CREATE TABLE expense_type
 (
     id   SERIAL PRIMARY KEY,
     type VARCHAR
 );
 
-CREATE TABLE financial_operation
+CREATE TABLE expense
 (
     id                SERIAL PRIMARY KEY,
     amount            DECIMAL,
@@ -60,9 +60,9 @@ CREATE TABLE financial_operation
     currency_id       INTEGER
         CONSTRAINT fk_currency_id
             REFERENCES currency (id),
-    operation_type_id INTEGER
-        CONSTRAINT fk_operation_type_id
-            REFERENCES operation_type (id)
+    expense_type_id INTEGER
+        CONSTRAINT fk_expense_type_id
+            REFERENCES expense_type (id)
 
 );
 
@@ -76,7 +76,7 @@ CREATE TABLE transaction
     receiver_id  INTEGER
         CONSTRAINT fk_receiver_id
             REFERENCES account (id),
-    operation_id INTEGER
-        CONSTRAINT fk_operation_id
-            REFERENCES financial_operation (id)
+    expense_id INTEGER
+        CONSTRAINT fk_expense_id
+            REFERENCES expense (id)
 )
