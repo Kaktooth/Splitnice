@@ -11,14 +11,21 @@
 </head>
 <body class="d-flex justify-content-center align-items-center text-center">
 
-<form class="form-signin" name="form" th:action="@{/sign-in}" method="get">
+<form class="form-signin" name="form" th:action="@{/sign-in}" method="post" >
     <h1 class="h3 mb-3 font-weight-normal ">Please sign in</h1>
-<!--    <div th:if="${param.error}">-->
-<!--        Invalid username and password.-->
-<!--    </div>-->
+
     <div th:if="${param.accepted}">
         You have been signed in.
     </div>
+
+    <div th:if="${param.error}">
+        Invalid username and password.
+    </div>
+
+    <div th:if="${param.signout}">
+        You have been signed out.
+    </div>
+
     <label for="user" class="sr-only">Email address</label>
     <input type="email" id="user" name="user" class="form-control" placeholder="Email address" required="" autofocus="">
     <label for="password" class="sr-only">Password</label>
@@ -34,13 +41,11 @@
 
     <div>
         <label> or you can sign up</label>
-        <a href="/sing-up" method="POST">
+        <a href="/sign-up" method="get">
             Sign up
         </a>
     </div>
 </form>
-
-
 
 </body>
 </html>

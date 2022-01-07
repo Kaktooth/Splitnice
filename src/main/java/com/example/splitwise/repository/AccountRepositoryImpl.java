@@ -24,14 +24,13 @@ public class AccountRepositoryImpl implements AccountRepository {
     @Override
     public Account add(Account account) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        String query = "INSERT INTO account (username, amount, email, phone, signed_up) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO account (username, amount, email, phone) VALUES (?, ?, ?, ?)";
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(query);
             ps.setString(1, account.getUsername());
             ps.setBigDecimal(2, account.getMoneyAmount());
             ps.setString(3, account.getEmail());
             ps.setString(4, account.getPhone());
-            ps.setBoolean(5, account.isSignedUp());
             return ps;
         }, keyHolder);
 
@@ -39,7 +38,7 @@ public class AccountRepositoryImpl implements AccountRepository {
 
         if (entityId != null) {
             return new Account(entityId, account.getUsername(), account.getEmail(),
-                account.getPhone(), account.getMoneyAmount(), account.isSignedUp());
+                account.getPhone(), account.getMoneyAmount());
         } else {
             throw new RuntimeException("Account creation operation wasn't successful");
         }
@@ -52,11 +51,6 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     @Override
     public Collection<Account> getAll(Set<Integer> ids) {
-        return null;
-    }
-
-    @Override
-    public Account changeSignUpStatus(boolean signed) {
         return null;
     }
 

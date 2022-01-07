@@ -8,7 +8,6 @@ public final class AccountBuilder {
     private String email;
     private String phone;
     private BigDecimal moneyAmount;
-    private boolean signedUp;
     private Integer id;
 
     public AccountBuilder withUsername(String username) {
@@ -31,17 +30,12 @@ public final class AccountBuilder {
         return this;
     }
 
-    public AccountBuilder withSignedUp(boolean signedUp) {
-        this.signedUp = signedUp;
-        return this;
-    }
-
     public AccountBuilder withId(Integer id) {
         this.id = id;
         return this;
     }
 
     public Account build() {
-        return new Account(id, username, email, phone, moneyAmount, signedUp);
+        return new Account(id, username, email, phone, moneyAmount);
     }
 }

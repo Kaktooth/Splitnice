@@ -1,9 +1,12 @@
 CREATE TABLE users
 (
-    username VARCHAR NOT NULL PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
+    username VARCHAR UNIQUE NOT NULL,
     password VARCHAR NOT NULL,
-    enabled  BOOLEAN NOT NULL
+    enabled  BOOLEAN NOT NULL,
+    phone_number VARCHAR UNIQUE NOT NULL
 );
+
 
 CREATE TABLE user_authorities
 (
@@ -11,16 +14,21 @@ CREATE TABLE user_authorities
     authorities VARCHAR NOT NULL
 );
 
+INSERT INTO user_authorities
+VALUES (0, 'USER'),
+       (1, 'ADMIN');
+
 CREATE TABLE authorities
 (
+    id INTEGER NOT NULL,
     username  VARCHAR NOT NULL,
     authority INTEGER NOT NULL
         REFERENCES user_authorities (id),
     CONSTRAINT fk_user_authorities
-        FOREIGN KEY (username)
-            REFERENCES users (username)
+        FOREIGN KEY (id)
+            REFERENCES users (id)
 );
-CREATE UNIQUE INDEX ix_auth_account ON authorities (username, authority);
+CREATE UNIQUE INDEX ix_auth_account ON authorities (id, authority);
 
 CREATE TABLE persistent_logins
 (
