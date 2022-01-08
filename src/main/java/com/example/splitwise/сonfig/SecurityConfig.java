@@ -63,20 +63,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/error")
             .permitAll()
 
-            .antMatchers("/csrf")
-            .permitAll()
-
             .antMatchers("/sign-in")
             .permitAll()
 
             .antMatchers("/sign-up")
             .permitAll()
 
-            .antMatchers("/**", "/page/**")
+            .antMatchers("/**", "/dashboard/**")
             .authenticated()
 
             .antMatchers("/admin-page")
-            .hasRole("ADMIN")
+            .hasAuthority("ADMIN")
 
             .anyRequest().authenticated()
             .and()
@@ -94,7 +91,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .loginProcessingUrl("/sign-in")
             .usernameParameter("user")
             .passwordParameter("password")
-            .defaultSuccessUrl("/page",true)
+            .defaultSuccessUrl("/dashboard",true)
             .failureUrl("/sign-in?error")
             .permitAll()
             .and()
