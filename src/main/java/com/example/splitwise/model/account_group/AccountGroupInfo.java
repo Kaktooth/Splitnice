@@ -1,14 +1,16 @@
-package com.example.splitwise.model;
+package com.example.splitwise.model.account_group;
+
+import com.example.splitwise.model.Identifiable;
 
 public class AccountGroupInfo implements Identifiable {
 
     private final Integer id;
-    private final Integer roleId;
+    private final GroupRole roleId;
     private final Integer addedById;
     private final Integer groupId;
     private final Integer accountId;
 
-    public AccountGroupInfo(Integer id, Integer roleId, Integer addedById, Integer groupId, Integer accountId) {
+    public AccountGroupInfo(Integer id, GroupRole roleId, Integer addedById, Integer groupId, Integer accountId) {
         this.id = id;
         this.roleId = roleId;
         this.addedById = addedById;
@@ -16,7 +18,7 @@ public class AccountGroupInfo implements Identifiable {
         this.accountId = accountId;
     }
 
-    public Integer getRoleId() {
+    public GroupRole getRoleId() {
         return roleId;
     }
 

@@ -1,9 +1,9 @@
-package com.example.splitwise.model;
+package com.example.splitwise.model.account_group;
 
 public final class AccountGroupInfoBuilder {
 
     private Integer id;
-    private Integer roleId;
+    private GroupRole roleId;
     private Integer addedById;
     private Integer groupId;
     private Integer accountId;
@@ -13,7 +13,7 @@ public final class AccountGroupInfoBuilder {
         return this;
     }
 
-    public AccountGroupInfoBuilder withRoleId(Integer roleId) {
+    public AccountGroupInfoBuilder withRoleId(GroupRole roleId) {
         this.roleId = roleId;
         return this;
     }
