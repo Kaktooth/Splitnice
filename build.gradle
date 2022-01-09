@@ -20,6 +20,8 @@ dependencies {
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
     implementation 'org.postgresql:postgresql'
     implementation 'org.flywaydb:flyway-core'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.0'
+
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'

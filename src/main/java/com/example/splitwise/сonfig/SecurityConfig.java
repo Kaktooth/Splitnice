@@ -3,7 +3,6 @@ package com.example.splitwise.сonfig;
 import com.example.splitwise.auth.LoginAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,12 +11,14 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(
+    prePostEnabled = true,
+    securedEnabled = true,
+    jsr250Enabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final DataSource dataSource;
@@ -30,7 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web.ignoring()
             .mvcMatchers("/resources/**");
     }
@@ -40,12 +41,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         AuthenticationManagerBuilder auth,
         LoginAuthenticationProvider authenticationProvider
     ) throws Exception {
+
         auth.authenticationProvider(authenticationProvider)
             .jdbcAuthentication()
             .dataSource(dataSource)
             .passwordEncoder(passwordEncoder)
             .usersByUsernameQuery("select username, password, enabled from users where username=?")
             .authoritiesByUsernameQuery("select username, authority from authorities where username=?");
+
+        auth.eraseCredentials(true);
     }
 
     @Override
@@ -73,61 +77,33 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .authenticated()
 
             .antMatchers("/admin-page")
-            .hasAuthority("ADMIN")
+            .authenticated()
 
             .anyRequest().authenticated()
             .and()
             .httpBasic()
-//            .and()
-//            .formLogin()
-//            .loginPage("/sign-up")
-//            .loginProcessingUrl("/sign-up")
-//            .defaultSuccessUrl("/sign-in",true)
-//            .failureUrl("/sign-up?error=true")
-//            .permitAll()
             .and()
             .formLogin()
             .loginPage("/sign-in")
             .loginProcessingUrl("/sign-in")
             .usernameParameter("user")
             .passwordParameter("password")
-            .defaultSuccessUrl("/dashboard",true)
+            .defaultSuccessUrl("/dashboard", true)
             .failureUrl("/sign-in?error")
             .permitAll()
             .and()
             .logout().deleteCookies("JSESSIONID")
+            .invalidateHttpSession(true)
             .logoutUrl("/signout")
             .logoutSuccessUrl("/sign-in?signout")
             .permitAll()
             .and()
-            .exceptionHandling().accessDeniedPage("/access-denied-page");
-
-
-//
-//        http
-//            .csrf()
-//            .and()
-//            .authorizeRequests()
-//
-//            .mvcMatchers("/", "/page")
-//            .permitAll()
-//
-//            .mvcMatchers("/sign-up")
-//            .permitAll()
-//
-//            .anyRequest().authenticated()
-//            .and()
-//            .formLogin()
-//            .loginPage("/sign-in")
-//
-//            //.loginProcessingUrl("/perform_login")
-//            //.successForwardUrl("/page")
-//            .failureForwardUrl("/page")
-//
-//            //.and()
-//            //.logout()
-//            //.logoutSuccessUrl("/sign-out")
-//            .permitAll();
-
+            .exceptionHandling().accessDeniedPage("/access-denied-page")
+            .and()
+            .rememberMe()
+            .rememberMeCookieName("remember-me")
+            .rememberMeParameter("remember-me")
+            .key("remember-me")
+            .tokenValiditySeconds(15000);
     }
 }

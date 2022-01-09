@@ -22,6 +22,11 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    public Account update(Integer id, Account entity) {
+        return null;
+    }
+
+    @Override
     public Account getById(Integer accountId) {
         return null;
     }
