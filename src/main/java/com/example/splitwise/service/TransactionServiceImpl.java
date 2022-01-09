@@ -1,6 +1,6 @@
 package com.example.splitwise.service;
 
-import com.example.splitwise.model.Transaction;
+import com.example.splitwise.model.transaction.Transaction;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
