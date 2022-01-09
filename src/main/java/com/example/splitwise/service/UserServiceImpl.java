@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getById(Integer userId) {
-        return new User(userId,null,null,null,false);
+        return new User(userId,"null","null","null",false);
     }
 
     @Override

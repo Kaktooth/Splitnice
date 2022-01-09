@@ -9,13 +9,5 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(value = "/sign-in")
 public class SignInUserController {
 
-    @GetMapping
-    public String signin() {
-        return "/sign-in";
-    }
 
-    @PostMapping
-    public String signinuser() {
-        return "/sign-in";
-    }
 }

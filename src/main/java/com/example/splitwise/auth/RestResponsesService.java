@@ -2,6 +2,7 @@ package com.example.splitwise.auth;
 
 import com.example.splitwise.controller.rest.UserAuthenticationRequest;
 import com.example.splitwise.model.User;
+import org.apache.http.HttpHost;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
@@ -10,14 +11,23 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.support.BasicAuthenticationInterceptor;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +48,7 @@ public class RestResponsesService {
                                 ConversionService conversionService,
                                 AuthenticationProvider authenticationProvider,
                                 PasswordEncoder passwordEncoder) {
+
         this.restTemplate = restTemplate;
         this.conversionService = conversionService;
         this.authenticationProvider = authenticationProvider;
@@ -57,8 +68,9 @@ public class RestResponsesService {
     }
 
     HttpHeaders httpHeaders() {
+
         String plainCreds = getAuthenticationUser().getUsername()
-            + ":" + "qweqwe";
+            + ":" + getAuthenticationUser().getPassword();
 
         byte[] plainCredsBytes = plainCreds.getBytes();
         byte[] base64CredsBytes = Base64.encodeBase64(plainCredsBytes);
@@ -78,7 +90,6 @@ public class RestResponsesService {
         acceptableMediaTypes.add(MediaType.APPLICATION_JSON);
 
         return acceptableMediaTypes;
-
     }
 
     public String getTokenForLoggedUser() {

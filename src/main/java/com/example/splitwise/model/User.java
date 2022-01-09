@@ -2,11 +2,15 @@ package com.example.splitwise.model;
 
 public class User implements Identifiable {
 
-    private final Integer id;
-    private final String email;
-    private final String phone;
-    private final String password;
-    private final boolean enabled;
+    private Integer id;
+    private String email;
+    private String phone;
+    private String password;
+    private boolean enabled;
+
+    public User(){
+
+    }
 
     public User(Integer id, String email, String phone, String password, boolean enabled) {
         this.id = id;

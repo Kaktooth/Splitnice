@@ -35,7 +35,7 @@ class UserRegistrationController {
                                   @RequestParam(value = "phone") String phoneNumber) {
 
         String encodedPassword = passwordEncoder.encode(password);
-        User user = new User(4, username, phoneNumber, encodedPassword, false);
+        User user = new User(4, username, phoneNumber, encodedPassword, true);
 
         User addedUser = userService.add(user);
 

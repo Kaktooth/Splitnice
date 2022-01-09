@@ -2,6 +2,7 @@ package com.example.splitwise.сonfig;
 
 import com.example.splitwise.auth.LoginAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -9,7 +10,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.session.SessionFixationProtectionStrategy;
 
 import javax.sql.DataSource;
 
@@ -49,7 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .usersByUsernameQuery("select username, password, enabled from users where username=?")
             .authoritiesByUsernameQuery("select username, authority from authorities where username=?");
 
-        auth.eraseCredentials(true);
+        auth.eraseCredentials(false);
     }
 
     @Override
@@ -60,6 +63,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.headers()
             .frameOptions()
             .sameOrigin();
+        http.sessionManagement()
+            .sessionAuthenticationStrategy(new SessionFixationProtectionStrategy());
 
         http
             .authorizeRequests()
