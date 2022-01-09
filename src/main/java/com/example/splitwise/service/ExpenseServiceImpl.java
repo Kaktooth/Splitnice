@@ -1,6 +1,8 @@
 package com.example.splitwise.service;
 
+import com.example.splitwise.model.account.Account;
 import com.example.splitwise.model.expense.Expense;
+import com.example.splitwise.model.expense.ExpenseDto;
 import com.example.splitwise.model.transaction.Transaction;
 import com.example.splitwise.repository.ExpenseRepository;
 import org.springframework.stereotype.Service;
@@ -28,10 +30,16 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
+    public Expense registerNewExpense(ExpenseDto expense) {
+        for (Account transaction : expense.getAccounts())
+    }
+
+    @Override
     public Expense add(Expense expense, List<Transaction> transactions) {
         for (Transaction transaction : transactions) {
             transactionService.add(transaction);
         }
+        List<Transaction> transactions
 
         return expenseRepository.add(expense);
     }
