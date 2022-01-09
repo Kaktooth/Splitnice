@@ -1,6 +1,6 @@
 package com.example.splitwise.controller;
 
-import com.example.splitwise.model.Account;
+import com.example.splitwise.model.account.Account;
 import com.example.splitwise.service.AccountService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

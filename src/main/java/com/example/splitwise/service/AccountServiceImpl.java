@@ -1,6 +1,6 @@
 package com.example.splitwise.service;
 
-import com.example.splitwise.model.Account;
+import com.example.splitwise.model.account.Account;
 import com.example.splitwise.repository.AccountRepository;
 import org.springframework.stereotype.Service;
 

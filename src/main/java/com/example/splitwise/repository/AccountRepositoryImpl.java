@@ -1,6 +1,7 @@
 package com.example.splitwise.repository;
 
-import com.example.splitwise.model.Account;
+import com.example.splitwise.model.account.Account;
+import com.example.splitwise.model.account.AccountBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -37,8 +38,14 @@ public class AccountRepositoryImpl implements AccountRepository {
         Integer entityId = (Integer) keyHolder.getKey();
 
         if (entityId != null) {
-            return new Account(entityId, account.getUsername(), account.getEmail(),
-                account.getPhone(), account.getMoneyAmount(), account.isSignedUp());
+            return new AccountBuilder()
+                .withId(entityId)
+                .withUsername(account.getUsername())
+                .withEmail(account.getEmail())
+                .withPhone(account.getPhone())
+                .withMoneyAmount(account.getMoneyAmount())
+                .withCurrency(account.getCurrency())
+                .build();
         } else {
             throw new RuntimeException("Account creation operation wasn't successful");
         }
