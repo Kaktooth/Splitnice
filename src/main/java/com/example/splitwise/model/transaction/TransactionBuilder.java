@@ -1,10 +1,14 @@
 package com.example.splitwise.model.transaction;
 
+import com.example.splitwise.model.Currency;
+
 import java.math.BigDecimal;
 
 public final class TransactionBuilder {
+
     private Integer id;
     private BigDecimal amount;
+    private Currency currency;
     private Integer landerId;
     private Integer receiverId;
     private Integer expenseId;
@@ -16,6 +20,11 @@ public final class TransactionBuilder {
 
     public TransactionBuilder withAmount(BigDecimal amount) {
         this.amount = amount;
+        return this;
+    }
+
+    public TransactionBuilder withCurrency(Currency currency) {
+        this.currency = currency;
         return this;
     }
 
@@ -35,6 +44,6 @@ public final class TransactionBuilder {
     }
 
     public Transaction build() {
-        return new Transaction(id, amount, landerId, receiverId, expenseId);
+        return new Transaction(id, amount, currency, landerId, receiverId, expenseId);
     }
 }
