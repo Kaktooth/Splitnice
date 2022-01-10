@@ -19,40 +19,61 @@
 
 </head>
 <body>
-<main>
-    <nav class="py-1 navbar fixed-top navbar-dark bg-dark border-bottom" aria-label="Main navigation">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/dashboard">Splitnice</a>
-            <div class=" border-0 flex-shrink-0" id="navbarSideCollapse" aria-label="Toggle navigation">
-                    <ul class="nav-item dropdown">
 
-                        <a class="nav-link dropdown-toggle l" data-toggle="dropdown" href="#" role="button"
-                           aria-haspopup="true"
-                           aria-expanded="false">
-                            <label th:inline="text">[[${#httpServletRequest.remoteUser}]]</label>
-                        </a>
-                        <div class="dropdown-menu shadow" aria-labelledby="dropdownUser2" style="">
-                            <a class="dropdown-item" href="/account">Account</a>
-                            <a class="dropdown-item" href="/groups/new-group">Create a group</a>
-                            <a class="dropdown-item" href="/support">Contact support</a>
+<nav class="navbar fixed-top navbar-dark  border-bottom" aria-label="Main navigation">
+    <div class="container-fluid bg-dark">
+        <a class="navbar-brand" href="/dashboard">Splitnice</a>
+        <div class="nav-item dropdown bg-dark shadow">
+            <a class="nav-link dropdown-toggle l" data-toggle="dropdown" href="#" role="button"
+               aria-haspopup="true"
+               aria-expanded="false">
+                <label th:inline="text">[[${#httpServletRequest.remoteUser}]]</label>
+            </a>
+            <div class="dropdown-menu shadow" aria-labelledby="dropdownUser2" style="">
+                <a class="dropdown-item" href="/account">Account</a>
+                <a class="dropdown-item" href="/groups/new-group">Create a group</a>
+                <a class="dropdown-item" href="/support">Contact support</a>
 
-                            <hr class="dropdown-divider">
-                            <form class="dropdown-item" th:action="@{/signout}" method="post">
-                                <button class="btn btn-outline-dark" type="submit">Sign Out</button>
-                            </form>
-<!--                            <a class="dropdown-item" th:href="@{/signout}" method="post">Sign out</a>-->
-                        </div>
-                    </ul>
+                <hr class="dropdown-divider">
+                <form class="dropdown-item" th:action="@{/signout}" method="post">
+                    <button class="btn btn-outline-dark" type="submit">Sign Out</button>
+                </form>
+
             </div>
         </div>
-    </nav>
-</main>
-<!--<h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]</h1>-->
-<!--<p>Logged user: <span sec:authentication="name">Bob</span></p>-->
-<!--<p>Roles: <span sec:authentication="principal.authorities">[ROLE_USER, ROLE_ADMIN]</span></p>-->
 
-<!--<form th:action="@{/signout}" method="post">-->
-<!--    <input type="submit" value="Sign Out"/>-->
-<!--</form>-->
+    </div>
+
+
+    <div class="d-flex flex-row flex-shrink-0 p-3 bg-light container-fluid">
+
+        <div class="list-group list-group-flush">
+            <a class="list-group-item list-group-item-action p-3" href="/dashboard/expenses?expenses">Expenses</a>
+            <a class="list-group-item list-group-item-action p-3" href="/dashboard/activity?activity">Activity</a>
+            <a class="list-group-item list-group-item-action p-3" href="/dashboard/groups?groups">Groups</a>
+            <a class="list-group-item list-group-item-action p-3" href="/dashboard/friends?friends">Friends</a>
+        </div>
+
+        <div class="justify-content-start col-10">
+
+
+            <div th:if="${param.expenses}">
+                <th:block th:replace="expenses"></th:block>
+            </div>
+
+            <div th:if="${param.activity}">
+                <th:block th:replace="activity"></th:block>
+            </div>
+
+
+            <div th:if="${param.groups}">
+                <th:block th:replace="groups"></th:block>
+            </div>
+            <div th:if="${param.friends}">
+                <th:block th:replace="friends"></th:block>
+            </div>
+        </div>
+    </div>
+</nav>
 </body>
 </html>

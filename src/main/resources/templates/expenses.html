@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form id="expForm" name="form" th:action="@{/dashboard/new-expense}" method="post">
+
+    <nav class="col-12 navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <form id="groupsForm" name="form" th:action="@{/dashboard/expenses}" method="post">
+
+                    <button class="btn btn-primary btn-block" type="submit">Add an expense</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div id="accordion">
+        <div class="card">
+            <div class="card-header" id="headingOne">
+                <h5 class="mb-0">
+                    <div class="list-group">
+                        <div class="d-flex w-100 align-items-center justify-content-between">
+                            <strong class="mb-1">Expense</strong>
+                            <small>300$</small>
+                        </div>
+                        <div class="p-1 col-10 mb-1 small">
+                            Vova Beridniy 20.02.2019
+                            <button class="btn btn-link"
+                                    data-toggle="collapse"
+                                    data-target="#collapseOne"
+                                    aria-expanded="false"
+                                    aria-controls="collapseOne">
+                                Details
+                            </button>
+                        </div>
+                    </div>
+                </h5>
+            </div>
+
+            <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                <div class="card-body">
+                    <div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+</body>
+</html>

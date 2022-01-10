@@ -1,6 +1,6 @@
 package com.example.splitwise.controller.view;
 
-import com.example.splitwise.auth.RestResponsesService;
+import com.example.splitwise.auth.RestRequestService;
 import com.example.splitwise.model.User;
 import com.example.splitwise.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +18,11 @@ public class UserController {
 
     private final UserService userService;
 
-    private final RestResponsesService restResponsesService;
+    private final RestRequestService restResponsesService;
 
     @Autowired
     public UserController(UserService userService,
-                          RestResponsesService restResponsesService) {
+                          RestRequestService restResponsesService) {
         this.userService = userService;
         this.restResponsesService = restResponsesService;
     }

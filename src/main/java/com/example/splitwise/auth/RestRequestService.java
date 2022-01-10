@@ -20,12 +20,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class RestResponsesService {
+public class RestRequestService {
 
     private final ConversionService conversionService;
 
     @Autowired
-    public RestResponsesService(ConversionService conversionService) {
+    public RestRequestService(ConversionService conversionService) {
         this.conversionService = conversionService;
     }
 
@@ -69,7 +69,7 @@ public class RestResponsesService {
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<User> request = new HttpEntity<>(null, httpHeaders());
         ResponseEntity<User> responseEntity = restTemplate.exchange(
-            "http://localhost:8080/api/account",
+            "http://localhost:8082/api/account",
             HttpMethod.GET, request, User.class
         );
     }
@@ -78,7 +78,7 @@ public class RestResponsesService {
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<User> request = new HttpEntity<>(null, httpHeaders());
         ResponseEntity<User> responseEntity = restTemplate.exchange(
-            "http://localhost:8080/api/account/" + id,
+            "http://localhost:8082/api/account/" + id,
             HttpMethod.GET, request, User.class
         );
         return conversionService.convert(responseEntity.getBody(), User.class);

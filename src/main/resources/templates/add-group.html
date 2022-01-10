@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Add new Group</title>
@@ -10,6 +10,16 @@
           crossorigin="anonymous">
 </head>
 <body>
+<form id="expForm" name="form" th:action="@{/dashboard}" method="post">
+    <!--  expenses list -->
+    <div class="flex">
+        <p class="text-left">Create new group</p>
+        <label for="group-name"></label>
+        <input tabindex="1" placeholder="Group name..." autocomplete="off" type="text" name="group-name"
+               id="group-name">
 
+        <button class="btn btn-primary" type="submit">Create</button>
+    </div>
+</form>
 </body>
 </html>
