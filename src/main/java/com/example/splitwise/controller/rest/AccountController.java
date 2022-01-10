@@ -1,4 +1,4 @@
-package com.example.splitwise.controller;
+package com.example.splitwise.controller.rest;
 
 import com.example.splitwise.model.account.Account;
 import com.example.splitwise.service.AccountService;

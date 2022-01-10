@@ -9,6 +9,8 @@ public interface EntityService<T extends Identifiable> {
 
     T add(T entity);
 
+    T update(Integer id, T entity);
+
     T getById(Integer entityId);
 
     Collection<T> getAll(Set<Integer> ids);

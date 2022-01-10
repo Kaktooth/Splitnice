@@ -15,6 +15,11 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    public Transaction update(Integer id, Transaction entity) {
+        return null;
+    }
+
+    @Override
     public Transaction getById(Integer entityId) {
         return null;
     }

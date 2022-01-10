@@ -30,6 +30,11 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
+    public Expense update(Integer id, Expense entity) {
+        return null;
+    }
+
+    @Override
     public Expense registerNewExpense(ExpenseDto expense) {
         return null;
     }

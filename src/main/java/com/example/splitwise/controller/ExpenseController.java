@@ -2,7 +2,6 @@ package com.example.splitwise.controller;
 
 import com.example.splitwise.model.expense.Expense;
 import com.example.splitwise.model.expense.ExpenseDto;
-import com.example.splitwise.model.expense.SplittingType;
 import com.example.splitwise.service.ExpenseService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

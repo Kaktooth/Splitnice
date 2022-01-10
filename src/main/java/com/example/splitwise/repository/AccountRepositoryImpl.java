@@ -62,11 +62,6 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public Account changeSignUpStatus(boolean signed) {
-        return null;
-    }
-
-    @Override
     public void delete(Integer accountId) {
 
     }

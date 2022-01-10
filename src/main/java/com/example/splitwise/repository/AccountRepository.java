@@ -4,5 +4,5 @@ import com.example.splitwise.model.account.Account;
 
 public interface AccountRepository extends EntityRepository<Account> {
 
-    Account changeSignUpStatus(boolean signed);
+//    Account changeSignUpStatus(boolean signed);
 }

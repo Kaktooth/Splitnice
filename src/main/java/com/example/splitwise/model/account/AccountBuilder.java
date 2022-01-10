@@ -5,6 +5,7 @@ import com.example.splitwise.model.Currency;
 import java.math.BigDecimal;
 
 public final class AccountBuilder {
+
     private Integer id;
     private String username;
     private String email;
