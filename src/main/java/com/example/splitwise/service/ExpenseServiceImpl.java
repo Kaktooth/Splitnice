@@ -31,18 +31,18 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     public Expense registerNewExpense(ExpenseDto expense) {
-        for (Account transaction : expense.getAccounts())
+        return null;
     }
 
-    @Override
-    public Expense add(Expense expense, List<Transaction> transactions) {
-        for (Transaction transaction : transactions) {
-            transactionService.add(transaction);
-        }
-        List<Transaction> transactions
-
-        return expenseRepository.add(expense);
-    }
+//    @Override
+//    public Expense add(Expense expense, List<Transaction> transactions) {
+//        for (Transaction transaction : transactions) {
+//            transactionService.add(transaction);
+//        }
+//
+//
+//        return expenseRepository.add(expense);
+//    }
 
     @Override
     public Expense getById(Integer expenseId) {
