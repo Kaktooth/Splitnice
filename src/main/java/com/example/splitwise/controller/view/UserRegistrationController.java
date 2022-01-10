@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping(value = "/sign-up")
+@RequestMapping("/sign-up")
 class UserRegistrationController {
 
     private final UserService userService;
@@ -37,7 +37,7 @@ class UserRegistrationController {
         String encodedPassword = passwordEncoder.encode(password);
         User user = new User(4, username, phoneNumber, encodedPassword, true);
 
-        User addedUser = userService.add(user);
+        userService.add(user);
 
         return "/sign-in";
     }

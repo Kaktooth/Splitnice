@@ -13,6 +13,7 @@ import javax.sql.DataSource;
 
 @Configuration
 public class CommonSecurityConfig {
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

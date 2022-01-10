@@ -3,8 +3,6 @@ package com.example.splitwise.repository;
 import com.example.splitwise.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -27,6 +25,7 @@ public class UserRepositoryImpl implements UserRepository {
     public User add(User user) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String queryForUsers = "INSERT INTO users(username, password, enabled, phone_number) VALUES (?, ?, ?, ?)";
+
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(queryForUsers, new String[]{"id"});
             ps.setString(1, user.getEmail());
@@ -38,7 +37,7 @@ public class UserRepositoryImpl implements UserRepository {
 
         Integer entityId = (Integer) keyHolder.getKey();
 
-        String queryForAuthorities = "INSERT INTO authorities(id,username, authority) VALUES (?, ?, ?)";
+        String queryForAuthorities = "INSERT INTO authorities(id, username, authority) VALUES (?, ?, ?)";
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(queryForAuthorities);
             ps.setInt(1, entityId);
@@ -57,10 +56,8 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User getById(Integer entityId) {
-        String query = "SELECT username, password, enabled, phone_number FROM users WHERE users.id=:id";
-        SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("id", entityId);
-
-        return jdbcTemplate.queryForObject(query, new UserMapper(), namedParameters);
+        String query = "SELECT username, password, enabled, phone_number FROM users WHERE users.id = ?";
+        return jdbcTemplate.queryForObject(query, new UserMapper(), entityId);
     }
 
     @Override

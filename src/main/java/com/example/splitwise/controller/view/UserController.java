@@ -35,7 +35,6 @@ public class UserController {
 
     @GetMapping("/{id}")
     public String getUserAccountWithId(@PathVariable("id") int id, Model model) {
-
         User user = restResponsesService.findUser(id);
 
         model.addAttribute("userObject", user);

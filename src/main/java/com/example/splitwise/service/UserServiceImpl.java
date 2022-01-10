@@ -13,7 +13,6 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-
     @Autowired
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -23,7 +22,6 @@ public class UserServiceImpl implements UserService {
     public User add(User user) {
       return userRepository.add(user);
     }
-
 
     @Override
     public User update(Integer id, User user) {
