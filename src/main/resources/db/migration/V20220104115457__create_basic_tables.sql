@@ -6,12 +6,6 @@ CREATE TABLE currency
     change_time   TIMESTAMP
 );
 
-CREATE TABLE expense_type
-(
-    id   SERIAL PRIMARY KEY,
-    title VARCHAR
-);
-
 CREATE TABLE group_role
 (
     id    SERIAL PRIMARY KEY,
@@ -20,11 +14,11 @@ CREATE TABLE group_role
 
 CREATE TABLE account
 (
-    id        SERIAL PRIMARY KEY,
-    username  VARCHAR,
-    email     VARCHAR,
-    phone     VARCHAR,
-    amount    DECIMAL,
+    id          SERIAL PRIMARY KEY,
+    username    VARCHAR,
+    email       VARCHAR,
+    phone       VARCHAR,
+    amount      DECIMAL,
     currency_id INTEGER
         CONSTRAINT fk_currency_id
             REFERENCES currency (id)
@@ -32,8 +26,8 @@ CREATE TABLE account
 
 CREATE TABLE "group"
 (
-    id     SERIAL PRIMARY KEY,
-    title  VARCHAR,
+    id         SERIAL PRIMARY KEY,
+    title      VARCHAR,
     creator_id INTEGER
         CONSTRAINT fk_creator
             REFERENCES account (id)
@@ -59,14 +53,39 @@ CREATE TABLE account_group
 CREATE TABLE expense
 (
     id              SERIAL PRIMARY KEY,
+    title           VARCHAR,
     amount          DECIMAL,
     creation_date   TIMESTAMP,
+    author_id INTEGER
+        CONSTRAINT fk_author_id
+            REFERENCES account (id),
     currency_id     INTEGER
         CONSTRAINT fk_currency_id
-            REFERENCES currency (id),
-    expense_type_id INTEGER
-        CONSTRAINT fk_expense_type_id
-            REFERENCES expense_type (id)
+            REFERENCES currency (id)
+);
+
+CREATE TABLE group_expense
+(
+    id              SERIAL PRIMARY KEY,
+    expense_id INTEGER
+        CONSTRAINT fk_expense_id
+            REFERENCES expense (id),
+    group_id INTEGER
+        CONSTRAINT fk_group_id
+            REFERENCES "group" (id)
+);
+
+
+-- not account but contact
+CREATE TABLE individual_expense
+(
+    id              SERIAL PRIMARY KEY,
+    expense_id INTEGER
+        CONSTRAINT fk_expense_id
+            REFERENCES expense (id),
+    user_id INTEGER
+        CONSTRAINT fk_account_id
+            REFERENCES account (id)
 );
 
 CREATE TABLE transaction

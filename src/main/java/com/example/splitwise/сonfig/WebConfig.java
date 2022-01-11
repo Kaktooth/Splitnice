@@ -33,12 +33,8 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
         registry.addViewController("/sign-up").setViewName("sign-up");
 
         registry.addViewController("/admin-page").setViewName("admin-page");
-        registry.addViewController("/dashboard").setViewName("dashboard");
+        registry.addViewController("/dashboard/**").setViewName("dashboard");
         registry.addRedirectViewController("/", "/dashboard");
-        registry.addViewController("/dashboard/expenses").setViewName("dashboard");
-        registry.addViewController("/dashboard/activity").setViewName("dashboard");
-        registry.addViewController("/dashboard/groups").setViewName("dashboard");
-        registry.addViewController("/dashboard/friends").setViewName("dashboard");
         registry.addViewController("/groups").setViewName("groups");
 
         registry.addViewController("/account").setViewName("account");
