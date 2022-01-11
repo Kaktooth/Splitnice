@@ -6,7 +6,6 @@ public class User implements Identifiable {
     private String email;
     private String phone;
     private String password;
-    private String passwordLengthChar;
     private boolean enabled;
 
     public User(){
@@ -18,7 +17,6 @@ public class User implements Identifiable {
         this.email = email;
         this.phone = phone;
         this.password = password;
-        this.passwordLengthChar = getPasswordLengthChar();
         this.enabled = enabled;
     }
 
@@ -34,8 +32,16 @@ public class User implements Identifiable {
         return password;
     }
 
-    public String getPasswordLengthChar() {
-        return "*".repeat(password.length());
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public boolean isEnabled() {

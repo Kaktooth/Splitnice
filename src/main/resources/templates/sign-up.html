@@ -11,7 +11,7 @@
 
 </head>
 <body class="d-flex justify-content-center align-items-center text-center">
-
+<input type="hidden" th:if="${_csrf}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 <form name="form2" th:action="@{/sign-up}" method="post">
     <h1 class="h3 mb-3 font-weight-normal ">Please sign up</h1>
     <label for="user" class="sr-only">Email address</label>

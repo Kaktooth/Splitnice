@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.session.SessionFixationProtectionStrategy;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 import javax.sql.DataSource;
 
@@ -20,9 +21,12 @@ import javax.sql.DataSource;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final DataSource dataSource;
+
     private final PasswordEncoder passwordEncoder;
 
-    public SecurityConfig(DataSource dataSource, PasswordEncoder passwordEncoder) {
+    @Autowired
+    public SecurityConfig(DataSource dataSource,
+                          PasswordEncoder passwordEncoder) {
         this.dataSource = dataSource;
         this.passwordEncoder = passwordEncoder;
     }
@@ -51,14 +55,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf()
+        http
+            .csrf().csrfTokenRepository(
+                CookieCsrfTokenRepository.withHttpOnlyFalse()
+            )
             .ignoringAntMatchers("/h2-console/**");
-        http.headers()
+
+        http
+            .headers()
             .frameOptions()
             .sameOrigin();
-        http.sessionManagement()
+        http
+            .sessionManagement()
             .sessionAuthenticationStrategy(new SessionFixationProtectionStrategy());
-        http.authorizeRequests()
+        http
+            .authorizeRequests()
             .antMatchers("/error")
             .permitAll()
             .antMatchers("/sign-in")
@@ -88,12 +99,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .logoutSuccessUrl("/sign-in?signout")
             .permitAll()
             .and()
-            .exceptionHandling().accessDeniedPage("/access-denied-page")
-            .and()
-            .rememberMe()
-            .rememberMeCookieName("remember-me")
-            .rememberMeParameter("remember-me")
-            .key("remember-me")
-            .tokenValiditySeconds(15000);
+            .exceptionHandling().accessDeniedPage("/access-denied-page");
+
+//        http
+//            .rememberMe()
+//            .rememberMeCookieName("remember-me")
+//            .rememberMeParameter("remember-me")
+//            .alwaysRemember(true)
+//            .useSecureCookie(true)
+//            .key("remember-me")
+//            .tokenValiditySeconds(15000);
+
     }
 }

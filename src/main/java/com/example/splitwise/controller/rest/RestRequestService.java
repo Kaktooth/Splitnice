@@ -1,6 +1,7 @@
-package com.example.splitwise.auth;
+package com.example.splitwise.controller.rest;
 
 import com.example.splitwise.model.User;
+import com.example.splitwise.model.expense.Expense;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
@@ -53,6 +54,7 @@ public class RestRequestService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(acceptableMediaTypes());
         headers.set(HttpHeaders.CONTENT_TYPE, "application/json");
+
         headers.add("Authorization", "Basic " + encodedCredentials);
         return headers;
     }
@@ -68,6 +70,7 @@ public class RestRequestService {
     public void userRestResponse() {
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<User> request = new HttpEntity<>(null, httpHeaders());
+
         ResponseEntity<User> responseEntity = restTemplate.exchange(
             "http://localhost:8082/api/account",
             HttpMethod.GET, request, User.class
@@ -76,13 +79,73 @@ public class RestRequestService {
 
     public User findUser(Integer id) {
         RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<User> request = new HttpEntity<>(null, httpHeaders());
+        HttpEntity<User> request = new HttpEntity<>(
+            new User()
+            , httpHeaders());
+
         ResponseEntity<User> responseEntity = restTemplate.exchange(
             "http://localhost:8082/api/account/" + id,
             HttpMethod.GET, request, User.class
         );
         return conversionService.convert(responseEntity.getBody(), User.class);
     }
+
+    public User editUser(Integer id, User user, String edit) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpEntity<User> request = new HttpEntity<>(
+            conversionService.convert(user, User.class), httpHeaders());
+
+        ResponseEntity<User> responseEntity = restTemplate.exchange(
+            "http://localhost:8082/api/account/" + id + "?edit=" + edit,
+            HttpMethod.POST, request, User.class
+        );
+
+        return conversionService.convert(responseEntity.getBody(), User.class);
+    }
+
+    public ArrayList<Expense> findExpenses(Integer id) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity<ArrayList<Expense>> request = new HttpEntity<>(
+            new ArrayList<>()
+            , httpHeaders());
+
+        ArrayList<Expense> expenses = new ArrayList<>();
+        Class<ArrayList<Expense>> expensesClass = (Class<ArrayList<Expense>>) expenses.getClass();
+        ResponseEntity<ArrayList<Expense>> responseEntity = restTemplate.exchange(
+            "http://localhost:8082/api/dashboard/expenses/" + id,
+            HttpMethod.PUT, request, expensesClass
+        );
+
+        return conversionService.convert(responseEntity.getBody(), expensesClass);
+    }
+
+    public Expense createExpense(Expense expense) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity<ArrayList<Expense>> request = new HttpEntity<>(httpHeaders());
+
+        ResponseEntity<Expense> responseEntity = restTemplate.exchange(
+            "http://localhost:8082/api/dashboard/new-expense",
+            HttpMethod.POST, request, Expense.class
+        );
+
+        return conversionService.convert(responseEntity.getBody(), Expense.class);
+    }
+
+//    public User updateUserByParam(Integer id, String parameter) {
+//        RestTemplate restTemplate = new RestTemplate();
+//        HttpEntity<User> request = new HttpEntity<>(
+//            new User()
+//            , httpHeaders());
+//
+//        ResponseEntity<User> responseEntity = restTemplate.exchange(
+//            "http://localhost:8082/api/account/" + id + "?" + parameter,
+//            HttpMethod.POST, request, User.class
+//        );
+//
+//        return conversionService.convert(responseEntity.getBody(), User.class);
+//    }
+
 
     public HttpEntity<User> getUser(User user, HttpHeaders httpHeaders) {
         return new HttpEntity<>(user, httpHeaders);

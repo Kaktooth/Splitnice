@@ -20,17 +20,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User add(User user) {
-      return userRepository.add(user);
+        return userRepository.add(user);
     }
 
     @Override
     public User update(Integer id, User user) {
+
         return user;
     }
 
     @Override
     public User getById(Integer userId) {
-        return new User(userId,"null","null","null",false);
+        return new User(userId, "mock@gmail.com", "0992397893", "qweqwe", true);
     }
 
     @Override
@@ -43,22 +44,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changePassword(String oldPassword, String newPassword) {
+    public User changePassword(Integer id,String oldPassword, String newPassword) {
 
+        return new User(1, "mock@gmail.com", "0992397893", newPassword, true);
     }
 
     @Override
-    public void changeEmail(String phoneNumber) {
-
+    public User changeEmail(Integer id) {
+        return new User(1, "changed@gmail.com", "0992397893", "qweqwe", true);
     }
 
     @Override
-    public void forgotPassword(String phoneNumber) {
-
+    public User changePhoneNumber(Integer id) {
+        return new User(1, "changed@gmail.com", "0334343422", "qweqwe", true);
     }
 
     @Override
-    public void changeSignInStatus(boolean signed) {
+    public User forgotPassword(Integer id) {
+return null;
+    }
 
+    @Override
+    public User changeSignInStatus(boolean signed) {
+return null;
     }
 }

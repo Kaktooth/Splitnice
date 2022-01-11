@@ -10,7 +10,6 @@
 
 </head>
 <body class="d-flex justify-content-center align-items-center text-center">
-
 <form class="form-signin" name="form" th:action="@{/sign-in}" method="post">
     <h1 class="h3 mb-3 font-weight-normal ">Please sign in</h1>
 
@@ -36,6 +35,8 @@
             <input type="checkbox" name="remember-me" id="remember-me" value="remember-me"> Remember me
         </label>
     </div>
+
+    <input type="hidden" th:if="${_csrf}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 
     <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
 
