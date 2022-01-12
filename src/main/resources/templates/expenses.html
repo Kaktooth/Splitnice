@@ -2,29 +2,70 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Expenses</title>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+          integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+            crossorigin="anonymous"></script>
 </head>
 <body>
-<form id="expForm" name="form" th:action="@{/dashboard/new-expense}" method="post">
 
-    <nav class="col-12 navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <form id="groupsForm" name="form" th:action="@{/dashboard/expenses}" method="post">
 
-                    <button class="btn btn-primary btn-block" type="submit">Add an expense</button>
-                </form>
+<nav class="col-12 navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header container-fluid ">
+            <div class="row-3">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">Search</span>
+                    </div>
+                    <input type="text" class="form-control" aria-label="Default"
+                           aria-describedby="inputGroup-sizing-default">
+                </div>
             </div>
-        </div>
-    </nav>
 
+            <form class="row-3" id="exportForm" name="form" th:action="@{/export}" method="get">
+
+                <button class="btn btn-info">
+                    Export to excel
+                </button>
+
+            </form>
+
+            <form class="row-3" id="expenseForm" name="form" th:action="@{/add-expense(expenseType='INDIVIDUAL')}"
+                  method="get">
+                <input type="hidden" id="expenseType" name="expenseType" value="INDIVIDUAL"/>
+
+                <button class="btn btn-primary ">
+                    Add an expense
+                </button>
+            </form>
+
+        </div>
+    </div>
+</nav>
+
+
+<!--&lt;!&ndash;/*@thymesVar id="expenses" type="com.example.splitwise.model.expense.ExpenseWrapperList"*/&ndash;&gt;-->
+<!--<ul th:each="expense : ${expenses.expenses}">-->
+
+<li class="list-group-item">
     <div id="accordion">
         <div class="card">
             <div class="card-header" id="headingOne">
                 <h5 class="mb-0">
                     <div class="list-group">
+                        <label>Expense Name</label>
                         <div class="d-flex w-100 align-items-center justify-content-between">
-                            <strong class="mb-1">Expense</strong>
+                            <strong class="mb-1"> <!-- <td th:text="${expense}">1</td>--></strong>
                             <small>300$</small>
                         </div>
                         <div class="p-1 col-10 mb-1 small">
@@ -32,7 +73,7 @@
                             <button class="btn btn-link"
                                     data-toggle="collapse"
                                     data-target="#collapseOne"
-                                    aria-expanded="false"
+                                    aria-expanded="true"
                                     aria-controls="collapseOne">
                                 Details
                             </button>
@@ -50,7 +91,9 @@
             </div>
         </div>
     </div>
+</li>
+<!--</ul>-->
 
-</form>
+
 </body>
 </html>

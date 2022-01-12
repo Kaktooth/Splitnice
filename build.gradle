@@ -6,7 +6,7 @@ plugins {
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = "16"
 
 repositories {
     mavenCentral()
@@ -22,6 +22,9 @@ dependencies {
     implementation 'org.flywaydb:flyway-core'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.0'
 
+    //fix to problem that java.time.OffsetDateTime not supported by default
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 }
@@ -29,3 +32,4 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+targetCompatibility = JavaVersion.VERSION_16

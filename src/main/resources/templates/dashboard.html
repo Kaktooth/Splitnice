@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<html lang="en" xmlns:th="https://thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Splitnise</title>
@@ -36,6 +36,7 @@
 
                 <hr class="dropdown-divider">
                 <form class="dropdown-item" th:action="@{/signout}" method="post">
+                    <input type="hidden" th:if="${_csrf}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                     <button class="btn btn-outline-dark" type="submit">Sign Out</button>
                 </form>
 

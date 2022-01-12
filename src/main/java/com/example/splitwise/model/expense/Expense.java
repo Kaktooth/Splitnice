@@ -8,11 +8,14 @@ import java.time.OffsetDateTime;
 
 public class Expense implements Identifiable {
 
-    private final Integer id;
-    private final BigDecimal amount;
-    private final OffsetDateTime creationDate;
-    private final Currency currency;
-    private final ExpenseType type;
+    private Integer id;
+    private BigDecimal amount;
+    private OffsetDateTime creationDate;
+    private Currency currency;
+    private ExpenseType type;
+
+    public Expense() {
+    }
 
     public Expense(Integer id, BigDecimal amount, OffsetDateTime creationDate, Currency currency, ExpenseType type) {
         this.id = id;

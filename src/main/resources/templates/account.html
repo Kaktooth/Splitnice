@@ -10,10 +10,11 @@
           crossorigin="anonymous">
     <title>Account</title>
 </head>
+
 <body class="d-flex justify-content-center align-items-center text-center">
-
-<form name="form" th:action="@{/account}" method="put">
-
+<form name="form" th:action="@{/account/{id}(id=${userObject.id},edit=${savedEdit})}" th:method="put">
+    <input type="hidden" name="${_csrf.parameterName}"
+           value="${_csrf.token}"/>
     <h1 class="h3 mb-3 font-weight-normal ">Your account</h1>
 
     <input
@@ -23,65 +24,74 @@
             class="form-control"
             autofocus="autofocus" readonly
             placeholder="Unique identifier"/>
+
     <div>
-        <label for="email">Your email address</label>
-        <div th:unless="${param.editemail}">
+
+        <div th:unless="${#strings.equals(#request.getParameter('edit'), 'email')}">
+            <label for="user-email">Your email address</label>
             <input
-                    id="email"
-                    name="email"
+                    id="user-email"
+                    name="user-email"
                     th:field="${userObject.email}"
                     class="form-control"
                     autofocus="autofocus" readonly
                     placeholder="Email..."/>
         </div>
-        <div th:if="${param.editemail}">
+        <div th:if="${#strings.equals(#request.getParameter('edit'), 'email')}">
+            <label for="email">Your email address</label>
             <input th:field="${userObject.email}"
-                   type="email" id="username"
-                   name="user" class="form-control"
+                   type="email" id="email"
+                   name="email" class="form-control"
                    placeholder="Email address" required=""
                    autofocus=""/>
         </div>
-        <a href="?editemail" th:unless="${param.editemail}">
+        <a th:href="@{/account/{id}(id=${userObject.id},edit='email')}"
+           th:unless="${#strings.equals(#request.getParameter('edit'), 'email')}">
             <i class="icon-pencil"></i> Edit email
         </a>
 
-        <a href="/account" th:if="${param.editemail}">
+        <a th:href="@{/account/{id}(id=${userObject.id})}"
+           th:if="${#strings.equals(#request.getParameter('edit'), 'email')}">
             <i class="icon-pencil"></i> Cancel edit email
         </a>
     </div>
     <div>
-        <label for="new-password">Your password</label>
-        <div th:unless="${param.editpassword}">
+
+        <div th:unless="${#strings.equals(#request.getParameter('edit'), 'password')}">
+            <label for="password">Your password</label>
             <input
                     id="password"
                     name="password"
                     type="password"
-                    th:field="${userObject.passwordLengthChar}"
+                    field="Your password"
                     class="form-control"
                     autofocus="autofocus" readonly
                     placeholder="Unique identifier"/>
         </div>
-        <div th:if="${param.editpassword}">
+        <div th:if="${#strings.equals(#request.getParameter('edit'), 'password')}">
             <label for="old-password" class="sr-only">Old Password</label>
-            <input type="password" id="old-password" name="password" class="form-control mb-4"
+            <input type="password" id="old-password" name="old-password" class="form-control mb-4"
                    placeholder="Old Password">
             <label for="new-password" class="sr-only">New Password</label>
-            <input type="password" id="new-password" name="password" class="form-control mb-4"
+            <input type="password" id="new-password" name="new-password" class="form-control mb-4"
                    placeholder="New password">
         </div>
 
-        <a href="?editpassword" th:unless="${param.editpassword}">
+        <a th:href="@{/account/{id}(id=${userObject.id},edit='password')}"
+           th:unless="${#strings.equals(#request.getParameter('edit'), 'password')}">
             <i class="icon-pencil"></i> Edit password
         </a>
 
-        <a href="/account" th:if="${param.editpassword}">
+        <a th:href="@{/account/{id}(id=${userObject.id})}"
+           th:if="${#strings.equals(#request.getParameter('edit'), 'password')}">
             <i class="icon-pencil"></i> Cancel edit password
         </a>
     </div>
 
     <div>
-        <label for="phone">Your phone number</label>
-        <div th:unless="${param.editphone}">
+
+        <div th:unless="${#strings.equals(#request.getParameter('edit'), 'phone')}">
+            <label for="phone-number">Your phone number</label>
             <input
                     id="phone-number"
                     name="phone-number"
@@ -91,21 +101,23 @@
                     autofocus="autofocus" readonly
                     placeholder="Unique identifier"/>
         </div>
-        <div th:if="${param.editphone}">
+        <div th:if="${#strings.equals(#request.getParameter('edit'), 'phone')}">
             <label for="phone" class="sr-only">Phone number</label>
             <input th:field="${userObject.phone}" type="tel" id="phone" name="phone" class="form-control mb-4"
                    placeholder="Phone Number">
         </div>
 
-        <a href="?editphone" th:unless="${param.editphone}">
+        <a th:href="@{/account/{id}(id=${userObject.id},edit='phone')}"
+           th:unless="${#strings.equals(#request.getParameter('edit'), 'phone')}">
             <i class="icon-pencil"></i> Edit phone number
         </a>
 
-        <a href="/account" th:if="${param.editphone}">
+        <a th:href="@{/account/{id}(id=${userObject.id})}"
+           th:if="${#strings.equals(#request.getParameter('edit'), 'phone')}">
             <i class="icon-pencil"></i> Cancel edit phone number
         </a>
     </div>
-    <button class="btn btn-primary btn-block" type="submit">Save</button>
+    <button class="btn btn-primary btn-block p-3" type="submit">Save</button>
 
 </form>
 </body>
