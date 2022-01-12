@@ -2,6 +2,12 @@ package com.example.splitwise.controller.rest;
 
 import com.example.splitwise.model.User;
 import com.example.splitwise.model.expense.Expense;
+import com.example.splitwise.model.expense.ExpenseDto;
+import com.example.splitwise.model.expense.ExpenseWrapperList;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
@@ -14,10 +20,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -39,6 +49,27 @@ public class RestRequestService {
     private Optional<UserDetails> getUserFrom(Authentication authentication) {
         return Optional.ofNullable(((UserDetails) authentication.getPrincipal()));
 
+    }
+
+    RequestCallback requestCallback(final User updatedInstance) {
+        return clientHttpRequest -> {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.writeValue(clientHttpRequest.getBody(), updatedInstance);
+
+            String plainCredentials = getAuthenticationUser().getUsername()
+                + ":" + SecurityContextHolder.getContext().getAuthentication().getCredentials();
+
+            byte[] plainCredentialsBytes = plainCredentials.getBytes();
+            byte[] encodedCredentialsBytes = Base64.encodeBase64(plainCredentialsBytes);
+            String encodedCredentials = new String(encodedCredentialsBytes);
+
+            clientHttpRequest.getHeaders().setContentType(MediaType.APPLICATION_JSON);
+            clientHttpRequest.getHeaders().setAccept(acceptableMediaTypes());
+            clientHttpRequest.getHeaders().set(HttpHeaders.CONTENT_TYPE, "application/json");
+
+            clientHttpRequest.getHeaders().add("Authorization", "Basic " + encodedCredentials);
+
+        };
     }
 
     private HttpHeaders httpHeaders() {
@@ -80,7 +111,42 @@ public class RestRequestService {
     public User findUser(Integer id) {
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<User> request = new HttpEntity<>(
-            new User()
+            null
+            , httpHeaders());
+
+        ResponseEntity<User> responseEntity = restTemplate.exchange(
+            "http://localhost:8082/api/account/" + id,
+            HttpMethod.GET, request, User.class
+        );
+
+        return conversionService.convert(responseEntity.getBody(), User.class);
+    }
+
+    public User editUser(Integer id, User user,
+                         String edit, String parameter) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        Map<String, Integer> params = new HashMap<String, Integer>();
+        params.put("id", 1);
+
+        User updatedUser = new User(1, "updated@gmail.com", "045345345", "fwef235", true);
+
+        if (Objects.equals(edit, "email")) {
+            updatedUser.setEmail(parameter);
+        } else if (Objects.equals(edit, "password")) {
+            updatedUser.setPassword(parameter);
+        } else {
+            updatedUser.setPhone(parameter);
+        }
+
+        ResponseEntity<User> responseUpdate = restTemplate.execute(
+            "http://localhost:8082/api/account/" + id,
+//                + "?edit=" + edit,//+"&"+parameter,
+            HttpMethod.PUT, requestCallback(updatedUser),
+            clientHttpResponse -> null
+        );
+        HttpEntity<User> request = new HttpEntity<>(
+            null
             , httpHeaders());
 
         ResponseEntity<User> responseEntity = restTemplate.exchange(
@@ -90,46 +156,49 @@ public class RestRequestService {
         return conversionService.convert(responseEntity.getBody(), User.class);
     }
 
-    public User editUser(Integer id, User user, String edit) {
+    public ExpenseWrapperList findExpenses(Integer id) {
         RestTemplate restTemplate = new RestTemplate();
-
-        HttpEntity<User> request = new HttpEntity<>(
-            conversionService.convert(user, User.class), httpHeaders());
-
-        ResponseEntity<User> responseEntity = restTemplate.exchange(
-            "http://localhost:8082/api/account/" + id + "?edit=" + edit,
-            HttpMethod.POST, request, User.class
-        );
-
-        return conversionService.convert(responseEntity.getBody(), User.class);
-    }
-
-    public ArrayList<Expense> findExpenses(Integer id) {
-        RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<ArrayList<Expense>> request = new HttpEntity<>(
-            new ArrayList<>()
+        HttpEntity<ExpenseWrapperList> request = new HttpEntity<>(
+            null
             , httpHeaders());
 
-        ArrayList<Expense> expenses = new ArrayList<>();
-        Class<ArrayList<Expense>> expensesClass = (Class<ArrayList<Expense>>) expenses.getClass();
-        ResponseEntity<ArrayList<Expense>> responseEntity = restTemplate.exchange(
+
+        ResponseEntity<ExpenseWrapperList> responseEntity = restTemplate.exchange(
             "http://localhost:8082/api/dashboard/expenses/" + id,
-            HttpMethod.PUT, request, expensesClass
+            HttpMethod.GET,
+            request,
+            ExpenseWrapperList.class
         );
 
-        return conversionService.convert(responseEntity.getBody(), expensesClass);
+        return conversionService.convert(responseEntity.getBody(), ExpenseWrapperList.class);
     }
 
-    public Expense createExpense(Expense expense) {
+    public ExpenseDto createExpense(ExpenseDto expense) {
         RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<ArrayList<Expense>> request = new HttpEntity<>(httpHeaders());
+        ExpenseDto newExpense = conversionService.convert(expense, ExpenseDto.class);
 
-        ResponseEntity<Expense> responseEntity = restTemplate.exchange(
-            "http://localhost:8082/api/dashboard/new-expense",
-            HttpMethod.POST, request, Expense.class
+        ObjectMapper objectMapper =  JsonMapper.builder()
+            .addModule(new JavaTimeModule())
+            .build();
+
+        try {
+            String test = objectMapper.writeValueAsString(expense);
+
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        HttpEntity<ExpenseDto> request = new HttpEntity<>(
+            newExpense,
+            httpHeaders());
+
+        ResponseEntity<ExpenseDto> responseEntity = restTemplate.exchange(
+            "http://localhost:8082/api/add-expense",
+            HttpMethod.POST,
+            request, ExpenseDto.class
         );
 
-        return conversionService.convert(responseEntity.getBody(), Expense.class);
+        return conversionService.convert(responseEntity.getBody(), ExpenseDto.class);
     }
 
 //    public User updateUserByParam(Integer id, String parameter) {

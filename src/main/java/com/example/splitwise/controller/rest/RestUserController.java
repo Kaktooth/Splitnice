@@ -7,7 +7,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,24 +36,23 @@ public class RestUserController {
         return userService.getById(id);
     }
 
-    @PutMapping("/{id}")
-    public String edit(@PathVariable("id") Integer id,
-                         @RequestParam(value = "edit" ,required = false) String edit,
-                         @RequestParam(value = "username", required = false) String username,
-                         @RequestParam(value = "new-password", required = false) String password,
-                         @RequestParam(value = "phone", required = false) String phone,
-                         @RequestBody User user,
-                         Model model) {
-        if (Objects.equals(edit, "email")) {
-            user.setEmail(phone);
-        } else if (Objects.equals(edit, "password")) {
-            user.setPassword(password);
-        } else {
-            user.setPhone(phone);
-        }
-
-        System.out.println(user.toString());
-        model.addAttribute("userObject", user);
-        return "/account";
-    }
+//    @PutMapping("/{id}")
+//    public User edit(@PathVariable("id") Integer id,
+//                       @RequestParam(value = "edit", required = false) String edit,
+//                       @RequestParam(value = "email", required = false) String email,
+//                       @RequestParam(value = "new-password", required = false) String password,
+//                       @RequestParam(value = "phone", required = false) String phone,
+//                       @RequestBody User user,
+//                       Model model) {
+//        if (Objects.equals(edit, "email")) {
+//            user.setEmail(email);
+//        } else if (Objects.equals(edit, "password")) {
+//            user.setPassword(password);
+//        } else {
+//            user.setPhone(phone);
+//        }
+//
+//        model.addAttribute("userObject", user);
+//        return user;
+//    }
 }

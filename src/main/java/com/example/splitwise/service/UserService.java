@@ -6,13 +6,13 @@ public interface UserService extends EntityService<User> {
 
     User changePassword(Integer id,String oldPassword, String newPassword);
 
-    User update(Integer id, User user);
-
     User changeEmail(Integer id);
 
     User changePhoneNumber(Integer id);
 
     User forgotPassword(Integer id);
+
+    Integer getIdFromAuthenticationName(String name);
 
     User changeSignInStatus(boolean signed);
 }

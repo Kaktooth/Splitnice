@@ -2,10 +2,15 @@ package com.example.splitwise.controller.view;
 
 import com.example.splitwise.controller.rest.RestRequestService;
 import com.example.splitwise.model.Currency;
-import com.example.splitwise.model.expense.Expense;
+import com.example.splitwise.model.account.Account;
+import com.example.splitwise.model.expense.ExpenseDto;
 import com.example.splitwise.model.expense.ExpenseType;
+import com.example.splitwise.model.expense.NamesParser;
 import com.example.splitwise.model.expense.SplittingType;
+import com.example.splitwise.service.AccountService;
+import com.example.splitwise.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,11 +20,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 
 @Controller
-@RequestMapping("/dashboard/new-expense")
+@RequestMapping("/add-expense")
 public class ExpenseCreationController {
-
+    AccountService accountService;
+    UserService userService;
     private final RestRequestService restResponsesService;
 
     @Autowired
@@ -28,17 +37,53 @@ public class ExpenseCreationController {
     }
 
     @GetMapping
-    public void addAttributes(Model model){
+    public String addAttributes(@RequestParam(value = "expenseType") String expenseType,
+                                Model model) {
+        model.addAttribute(expenseType);
 
+        return "add-expense";
     }
 
     @PostMapping
-    public String registerNewUser(@RequestParam(value = "user") String username,
-                                  @RequestParam(value = "password") String password,
-                                  @RequestParam(value = "phone") String phoneNumber) {
+    public String registerNewUser(@RequestParam(value = "names") String names,
+                                  @RequestParam(value = "expenseName") String expenseName,
+                                  @RequestParam(value = "amount") BigDecimal amount,
+                                  @RequestParam(value = "currency") String currency,
+                                  @RequestParam(value = "splitType") String splitType,
+                                  @RequestParam(value = "expenseType") String expenseType) {
 
-        Expense expense = restResponsesService.createExpense(new Expense(1, new BigDecimal("3.3"), OffsetDateTime.now(), Currency.USD, ExpenseType.INDIVIDUAL));
+        Integer id = userService.getIdFromAuthenticationName(
+            SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName());
+        Account account = accountService.getById(id);
 
-        return "new-expense";
+        NamesParser namesParser = new NamesParser();
+
+        List<Account> accounts;
+        if (Objects.equals(expenseType, "INDIVIDUAL")) {
+
+            accounts = namesParser.parseToAccounts(names);
+        } else {
+
+            accounts = namesParser.parseToGroupAccounts(1);
+        }
+
+        ExpenseDto expense = restResponsesService.createExpense(
+            new ExpenseDto(
+                1,
+                new BigDecimal("3.3"),
+                OffsetDateTime.now(),
+                Currency.valueOf(currency),
+                ExpenseType.valueOf(expenseType),
+                SplittingType.valueOf(splitType),
+                account,
+                accounts,
+                new HashMap<>() //change
+            )
+        );
+
+        return "add-expense";
     }
 }

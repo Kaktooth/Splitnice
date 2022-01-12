@@ -18,6 +18,8 @@ public class WebConfig implements WebMvcConfigurer{
         registry.addRedirectViewController("/", "/dashboard");
         registry.addViewController("/dashboard/**").setViewName("dashboard");
 
+        registry.addViewController("/add-expense").setViewName("add-expense");
+
         registry.addViewController("/groups").setViewName("groups");
 
         registry.addViewController("/account/**").setViewName("account");
@@ -25,6 +27,7 @@ public class WebConfig implements WebMvcConfigurer{
         registry.addViewController("/groups/new-group").setViewName("add-group");
         registry.addViewController("/support").setViewName("contacts");
         registry.addViewController("/api/**");
+
 
         registry.addViewController("/error").setViewName("error");
         registry.addViewController("/access-denied-page").setViewName("access-denied-page");

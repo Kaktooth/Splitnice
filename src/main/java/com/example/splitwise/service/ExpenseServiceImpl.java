@@ -8,6 +8,7 @@ import com.example.splitwise.model.transaction.TransactionBuilder;
 import com.example.splitwise.repository.ExpenseRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -29,11 +30,6 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     public Expense add(Expense expense) {
         return expenseRepository.add(expense);
-    }
-
-    @Override
-    public Expense update(Integer id, Expense entity) {
-        return null;
     }
 
     @Override

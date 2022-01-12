@@ -4,5 +4,5 @@ import com.example.splitwise.model.account.Account;
 
 public interface AccountService extends EntityService<Account> {
 
-    Account changeSignUpStatus(boolean signed);
+    Account getAccountFromName(String name);
 }

@@ -24,12 +24,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(Integer id, User user) {
-
-        return user;
-    }
-
-    @Override
     public User getById(Integer userId) {
         return new User(userId, "mock@gmail.com", "0992397893", "qweqwe", true);
     }
@@ -44,7 +38,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User changePassword(Integer id,String oldPassword, String newPassword) {
+    public User changePassword(Integer id, String oldPassword, String newPassword) {
 
         return new User(1, "mock@gmail.com", "0992397893", newPassword, true);
     }
@@ -61,11 +55,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User forgotPassword(Integer id) {
-return null;
+        return null;
+    }
+
+    @Override
+    public Integer getIdFromAuthenticationName(String name) {
+        return null;
     }
 
     @Override
     public User changeSignInStatus(boolean signed) {
-return null;
+        return null;
     }
 }

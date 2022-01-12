@@ -26,20 +26,22 @@
             placeholder="Unique identifier"/>
 
     <div>
-        <label for="email">Your email address</label>
+
         <div th:unless="${#strings.equals(#request.getParameter('edit'), 'email')}">
+            <label for="user-email">Your email address</label>
             <input
-                    id="email"
-                    name="email"
+                    id="user-email"
+                    name="user-email"
                     th:field="${userObject.email}"
                     class="form-control"
                     autofocus="autofocus" readonly
                     placeholder="Email..."/>
         </div>
         <div th:if="${#strings.equals(#request.getParameter('edit'), 'email')}">
+            <label for="email">Your email address</label>
             <input th:field="${userObject.email}"
-                   type="email" id="username"
-                   name="username" class="form-control"
+                   type="email" id="email"
+                   name="email" class="form-control"
                    placeholder="Email address" required=""
                    autofocus=""/>
         </div>
@@ -54,8 +56,9 @@
         </a>
     </div>
     <div>
-        <label for="new-password">Your password</label>
+
         <div th:unless="${#strings.equals(#request.getParameter('edit'), 'password')}">
+            <label for="password">Your password</label>
             <input
                     id="password"
                     name="password"
@@ -67,10 +70,10 @@
         </div>
         <div th:if="${#strings.equals(#request.getParameter('edit'), 'password')}">
             <label for="old-password" class="sr-only">Old Password</label>
-            <input type="password" id="old-password" name="password" class="form-control mb-4"
+            <input type="password" id="old-password" name="old-password" class="form-control mb-4"
                    placeholder="Old Password">
             <label for="new-password" class="sr-only">New Password</label>
-            <input type="password" id="new-password" name="password" class="form-control mb-4"
+            <input type="password" id="new-password" name="new-password" class="form-control mb-4"
                    placeholder="New password">
         </div>
 
@@ -86,8 +89,9 @@
     </div>
 
     <div>
-        <label for="phone">Your phone number</label>
+
         <div th:unless="${#strings.equals(#request.getParameter('edit'), 'phone')}">
+            <label for="phone-number">Your phone number</label>
             <input
                     id="phone-number"
                     name="phone-number"

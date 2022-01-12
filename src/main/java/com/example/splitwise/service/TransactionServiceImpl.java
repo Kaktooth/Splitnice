@@ -22,11 +22,6 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Transaction update(Integer id, Transaction transaction) {
-        return null;
-    }
-
-    @Override
     public Transaction getById(Integer transactionId) {
         return transactionRepository.getById(transactionId);
     }

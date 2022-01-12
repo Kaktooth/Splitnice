@@ -12,6 +12,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.session.SessionFixationProtectionStrategy;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.util.matcher.RequestHeaderRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import javax.sql.DataSource;
 
@@ -55,11 +57,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
         http
-            .csrf().csrfTokenRepository(
+            .csrf()
+            .requireCsrfProtectionMatcher(new RequestHeaderRequestMatcher("/api/**"))
+            .csrfTokenRepository(
                 CookieCsrfTokenRepository.withHttpOnlyFalse()
-            )
-            .ignoringAntMatchers("/h2-console/**");
+            );
+
 
         http
             .headers()
@@ -94,7 +99,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .permitAll()
             .and()
             .logout().deleteCookies("JSESSIONID")
-            .invalidateHttpSession(true)
             .logoutUrl("/signout")
             .logoutSuccessUrl("/sign-in?signout")
             .permitAll()
