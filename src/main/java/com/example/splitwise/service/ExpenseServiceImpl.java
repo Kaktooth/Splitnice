@@ -8,7 +8,6 @@ import com.example.splitwise.model.transaction.TransactionBuilder;
 import com.example.splitwise.repository.ExpenseRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -53,10 +52,9 @@ public class ExpenseServiceImpl implements ExpenseService {
                 }
                 return newExpense;
             case SPECIFIC:
-                // to implement
+                // TODO implement
                 return newExpense;
         }
-
         return null;
     }
 
@@ -72,6 +70,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     public void delete(Integer expenseId) {
+        transactionService.deleteTransactionsOfExpense(expenseId);
         expenseRepository.delete(expenseId);
     }
 

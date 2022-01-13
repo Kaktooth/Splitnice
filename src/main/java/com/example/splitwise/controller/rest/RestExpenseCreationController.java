@@ -3,6 +3,7 @@ package com.example.splitwise.controller.rest;
 import com.example.splitwise.model.Currency;
 import com.example.splitwise.model.expense.Expense;
 import com.example.splitwise.model.expense.ExpenseType;
+import com.example.splitwise.model.expense.IndividualExpense;
 import com.example.splitwise.service.ExpenseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,7 +28,7 @@ public class RestExpenseCreationController {
     public Expense getExpenses() {
 
         return expenseService.add(
-            new Expense(1, new BigDecimal("2.2"), OffsetDateTime.now(), Currency.USD, ExpenseType.INDIVIDUAL)
+            new IndividualExpense(null, new BigDecimal("2.2"), OffsetDateTime.now(), Currency.USD, 1, 2)
         );
     }
 }

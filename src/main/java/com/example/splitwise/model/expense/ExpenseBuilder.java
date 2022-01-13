@@ -11,7 +11,9 @@ public final class ExpenseBuilder {
     private BigDecimal amount;
     private OffsetDateTime creationDate;
     private Currency currency;
-    private ExpenseType type;
+    private Integer creatorId;
+    private Integer groupId;
+    private Integer accountId;
 
     public ExpenseBuilder withId(Integer id) {
         this.id = id;
@@ -33,12 +35,26 @@ public final class ExpenseBuilder {
         return this;
     }
 
-    public ExpenseBuilder withType(ExpenseType type) {
-        this.type = type;
+    public ExpenseBuilder withCreatorId(Integer id) {
+        this.creatorId = id;
         return this;
     }
 
-    public Expense build() {
-        return new Expense(id, amount, creationDate, currency, type);
+    public ExpenseBuilder withGroupId(Integer id) {
+        this.groupId = id;
+        return this;
+    }
+
+    public ExpenseBuilder withAccountId(Integer id) {
+        this.accountId = id;
+        return this;
+    }
+
+    public GroupExpense buildGroupExpense() {
+        return new GroupExpense(id, amount, creationDate, currency, creatorId, groupId);
+    }
+
+    public IndividualExpense buildIndividualExpense() {
+        return new IndividualExpense(id, amount, creationDate, currency, creatorId, accountId);
     }
 }

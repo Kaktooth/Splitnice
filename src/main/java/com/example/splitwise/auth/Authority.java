@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum Authority {
+
     USER(1,"USER"), ADMIN(2,"ADMIN");
 
     private final int numVal;

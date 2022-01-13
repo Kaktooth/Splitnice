@@ -67,7 +67,8 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void delete(Integer entityId) {
-
+        String query = "DELETE FROM users WHERE id = ?";
+        jdbcTemplate.update(query, entityId);
     }
 
     @Override
@@ -77,11 +78,6 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void changeEmail(String phoneNumber) {
-
-    }
-
-    @Override
-    public void forgotPassword(String phoneNumber) {
 
     }
 

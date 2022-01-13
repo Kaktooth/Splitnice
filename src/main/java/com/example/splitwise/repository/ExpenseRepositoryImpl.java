@@ -2,6 +2,9 @@ package com.example.splitwise.repository;
 
 import com.example.splitwise.model.expense.Expense;
 import com.example.splitwise.model.expense.ExpenseBuilder;
+import com.example.splitwise.model.expense.GroupExpense;
+import com.example.splitwise.model.expense.IndividualExpense;
+import com.example.splitwise.utils.DbCurrencyManager;
 import com.example.splitwise.utils.TimeConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -29,27 +32,37 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
     public Expense add(Expense expense) {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        String query = "INSERT INTO expense (amount, creation_date, currency_id, expense_type_id) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO expense (amount, creation_date, currency_id, author_id) VALUES (?, ?, ?, ?)";
 
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(query);
             ps.setBigDecimal(1, expense.getAmount());
             ps.setTimestamp(2, timestamp);
-            ps.setInt(3, getCurrencyTypeId(expense.getCurrency().toString()));
-            ps.setInt(4, getExpenseTypeId(expense.getType().toString()));
+            ps.setInt(3, DbCurrencyManager.getIdOfCurrencyType(expense.getCurrency()));
+            ps.setInt(4, expense.getCreatorId());
 
             return ps;
         }, keyHolder);
 
         Integer entityId = (Integer) keyHolder.getKey();
 
-        return new ExpenseBuilder()
-            .withId(entityId)
-            .withAmount(expense.getAmount())
-            .withCreationDate(TimeConverter.convertTime(timestamp))
-            .withCurrency(expense.getCurrency())
-            .withType(expense.getType())
-            .build();
+        if (expense instanceof GroupExpense) {
+            return new ExpenseBuilder()
+                .withId(entityId)
+                .withAmount(expense.getAmount())
+                .withCreationDate(TimeConverter.convertTime(timestamp))
+                .withCurrency(expense.getCurrency())
+                .withCreatorId(expense.getCreatorId())
+                .buildGroupExpense();
+        } else if (expense instanceof IndividualExpense) {
+            return new ExpenseBuilder()
+                .withId(entityId)
+                .withAmount(expense.getAmount())
+                .withCreationDate(TimeConverter.convertTime(timestamp))
+                .withCurrency(expense.getCurrency())
+                .buildIndividualExpense();
+        }
+        return null;
     }
 
     @Override
@@ -76,13 +89,55 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
         });
     }
 
-    private Integer getExpenseTypeId(String title) {
-        String query = "SELECT expense_type.id FROM expense_type WHERE title = ?";
-        return jdbcTemplate.queryForObject(query, Integer.class, title);
+    @Override
+    public Expense addGroupExpense(GroupExpense expense) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        Expense savedExpense = add(expense);
+        String query = "INSERT INTO group_expense VALUES (?, ?)";
+
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, savedExpense.getId());
+            ps.setInt(2, expense.getGroupId());
+
+            return ps;
+        }, keyHolder);
+
+        Integer groupExpenseId = (Integer) keyHolder.getKey();
+
+        return new ExpenseBuilder()
+            .withId(savedExpense.getId())
+            .withAmount(expense.getAmount())
+            .withCreationDate(savedExpense.getCreationDate())
+            .withCurrency(expense.getCurrency())
+            .withCreatorId(expense.getCreatorId())
+            .withGroupId(expense.getGroupId())
+            .buildIndividualExpense();
     }
 
-    private Integer getCurrencyTypeId(String title) {
-        String query = "SELECT currency.id FROM currency WHERE title = ?";
-        return jdbcTemplate.queryForObject(query, Integer.class, title);
+    @Override
+    public Expense addIndividualExpense(IndividualExpense expense) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        Expense savedExpense = add(expense);
+        String query = "INSERT INTO individual_expense VALUES (?, ?)";
+
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, savedExpense.getId());
+            ps.setInt(2, expense.getTargetId());
+
+            return ps;
+        }, keyHolder);
+
+        Integer groupExpenseId = (Integer) keyHolder.getKey();
+
+        return new ExpenseBuilder()
+            .withId(savedExpense.getId())
+            .withAmount(expense.getAmount())
+            .withCreationDate(savedExpense.getCreationDate())
+            .withCurrency(expense.getCurrency())
+            .withCreatorId(expense.getCreatorId())
+            .withGroupId(expense.getTargetId())
+            .buildIndividualExpense();
     }
 }

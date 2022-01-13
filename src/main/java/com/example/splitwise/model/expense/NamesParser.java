@@ -5,11 +5,10 @@ import com.example.splitwise.service.AccountService;
 import com.example.splitwise.service.GroupService;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class NamesParser {
+
     AccountService accountService;
     GroupService groupService;
 
@@ -20,7 +19,7 @@ public class NamesParser {
         splitedNames
             .forEach(
                 name -> accounts.add(
-                    accountService.getAccountFromName(name)
+                    accountService.getByUsername(name)
                 )
             );
 
@@ -28,9 +27,6 @@ public class NamesParser {
     }
 
     public List<Account> parseToGroupAccounts(Integer groupId) {
-
-        List<Account> accounts = new ArrayList<>(groupService.getAccounts(groupId));
-
-        return accounts;
+        return new ArrayList<>(groupService.getAccounts(groupId));
     }
 }

@@ -50,6 +50,7 @@ public class ExpenseCreationController {
                                   @RequestParam(value = "amount") BigDecimal amount,
                                   @RequestParam(value = "currency") String currency,
                                   @RequestParam(value = "splitType") String splitType,
+                                  @RequestParam(value = "creatorId") Integer creatorId,
                                   @RequestParam(value = "expenseType") String expenseType) {
 
         Integer id = userService.getIdFromAuthenticationName(
@@ -80,7 +81,8 @@ public class ExpenseCreationController {
                 SplittingType.valueOf(splitType),
                 account,
                 accounts,
-                new HashMap<>() //change
+                null,
+                creatorId
             )
         );
 

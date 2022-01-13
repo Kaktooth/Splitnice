@@ -2,6 +2,7 @@ package com.example.splitwise.repository;
 
 import com.example.splitwise.model.account.Account;
 import com.example.splitwise.model.account.AccountBuilder;
+import com.example.splitwise.utils.DbCurrencyManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -25,21 +26,20 @@ public class AccountRepositoryImpl implements AccountRepository {
     @Override
     public Account add(Account account) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        String query = "INSERT INTO account (username, amount, email, phone) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO account (username, amount, currency_id) VALUES (?, ?, ?)";
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(query);
             ps.setString(1, account.getUsername());
             ps.setBigDecimal(2, account.getMoneyAmount());
-            ps.setString(3, account.getEmail());
-            ps.setString(4, account.getPhone());
+            ps.setInt(3, DbCurrencyManager.getIdOfCurrencyType(account.getCurrency()));
             return ps;
         }, keyHolder);
 
-        Integer entityId = (Integer) keyHolder.getKey();
+        Integer accountId = (Integer) keyHolder.getKey();
 
-        if (entityId != null) {
+        if (accountId != null) {
             return new AccountBuilder()
-                .withId(entityId)
+                .withId(accountId)
                 .withUsername(account.getUsername())
                 .withEmail(account.getEmail())
                 .withPhone(account.getPhone())
@@ -53,7 +53,14 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     @Override
     public Account getById(Integer accountId) {
-        return null;
+        String query = "SELECT * FROM account WHERE id = ?";
+        return jdbcTemplate.queryForObject(query, new AccountMapper(), accountId);
+    }
+
+    @Override
+    public Account getByUsername(String username) {
+        String query = "SELECT * FROM account WHERE username = ?";
+        return jdbcTemplate.queryForObject(query, new AccountMapper(), username);
     }
 
     @Override
@@ -64,5 +71,34 @@ public class AccountRepositoryImpl implements AccountRepository {
     @Override
     public void delete(Integer accountId) {
 
+    }
+
+    @Override
+    public Account add(Account account, Integer userId) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        String query = "INSERT INTO account (username, amount, currency_id, user_id) VALUES (?, ?, ?, ?)";
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, account.getUsername());
+            ps.setBigDecimal(2, account.getMoneyAmount());
+            ps.setInt(3, DbCurrencyManager.getIdOfCurrencyType(account.getCurrency()));
+            ps.setInt(4, userId);
+            return ps;
+        }, keyHolder);
+
+        Integer accountId = (Integer) keyHolder.getKey();
+
+        if (accountId != null) {
+            return new AccountBuilder()
+                .withId(accountId)
+                .withUsername(account.getUsername())
+                .withEmail(account.getEmail())
+                .withPhone(account.getPhone())
+                .withMoneyAmount(account.getMoneyAmount())
+                .withCurrency(account.getCurrency())
+                .build();
+        } else {
+            throw new RuntimeException("Account creation operation wasn't successful");
+        }
     }
 }

@@ -8,8 +8,6 @@ public interface UserRepository extends EntityRepository<User> {
 
     void changeEmail(String phoneNumber);
 
-    void forgotPassword(String phoneNumber);
-
     void changeSignInStatus(boolean signed);
 }
 

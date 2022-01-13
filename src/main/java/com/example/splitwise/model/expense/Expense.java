@@ -6,23 +6,20 @@ import com.example.splitwise.model.Identifiable;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
-public class Expense implements Identifiable {
+public abstract class Expense implements Identifiable {
 
-    private Integer id;
-    private BigDecimal amount;
-    private OffsetDateTime creationDate;
-    private Currency currency;
-    private ExpenseType type;
+    private final Integer id;
+    private final BigDecimal amount;
+    private final OffsetDateTime creationDate;
+    private final Currency currency;
+    private final Integer creatorId;
 
-    public Expense() {
-    }
-
-    public Expense(Integer id, BigDecimal amount, OffsetDateTime creationDate, Currency currency, ExpenseType type) {
+    public Expense(Integer id, BigDecimal amount, OffsetDateTime creationDate, Currency currency, Integer creatorId) {
         this.id = id;
         this.amount = amount;
         this.creationDate = creationDate;
         this.currency = currency;
-        this.type = type;
+        this.creatorId = creatorId;
     }
 
     @Override
@@ -42,7 +39,7 @@ public class Expense implements Identifiable {
         return currency;
     }
 
-    public ExpenseType getType() {
-        return type;
+    public Integer getCreatorId() {
+        return creatorId;
     }
 }

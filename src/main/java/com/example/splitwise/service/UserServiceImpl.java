@@ -4,11 +4,13 @@ import com.example.splitwise.model.User;
 import com.example.splitwise.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.Set;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -25,7 +27,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getById(Integer userId) {
-        return new User(userId, "mock@gmail.com", "0992397893", "qweqwe", true);
+        return userRepository.getById(userId);
     }
 
     @Override

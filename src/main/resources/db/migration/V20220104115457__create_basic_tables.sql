@@ -12,19 +12,39 @@ CREATE TABLE group_role
     title VARCHAR
 );
 
+CREATE TABLE contact
+(
+    id SERIAL PRIMARY KEY,
+    email       VARCHAR,
+    phone       VARCHAR
+);
+
 CREATE TABLE account
 (
     id          SERIAL PRIMARY KEY,
     username    VARCHAR,
-    email       VARCHAR,
-    phone       VARCHAR,
     amount      DECIMAL,
+    user_id     INTEGER
+        CONSTRAINT fk_user_id
+            REFERENCES users (id),
     currency_id INTEGER
         CONSTRAINT fk_currency_id
             REFERENCES currency (id)
 );
 
-CREATE TABLE "group"
+CREATE TABLE account_contact
+(
+    id SERIAL PRIMARY KEY,
+    contact_username VARCHAR,
+    contact_id     INTEGER
+        CONSTRAINT fk_contact_id
+            REFERENCES contact (id),
+    account_id INTEGER
+        CONSTRAINT fk_account_id
+            REFERENCES account (id)
+);
+
+    CREATE TABLE "group"
 (
     id         SERIAL PRIMARY KEY,
     title      VARCHAR,
@@ -52,38 +72,36 @@ CREATE TABLE account_group
 
 CREATE TABLE expense
 (
-    id              SERIAL PRIMARY KEY,
-    title           VARCHAR,
-    amount          DECIMAL,
-    creation_date   TIMESTAMP,
-    author_id INTEGER
+    id            SERIAL PRIMARY KEY,
+    title         VARCHAR,
+    amount        DECIMAL,
+    creation_date TIMESTAMP,
+    author_id     INTEGER
         CONSTRAINT fk_author_id
             REFERENCES account (id),
-    currency_id     INTEGER
+    currency_id   INTEGER
         CONSTRAINT fk_currency_id
             REFERENCES currency (id)
 );
 
 CREATE TABLE group_expense
 (
-    id              SERIAL PRIMARY KEY,
+    id         SERIAL PRIMARY KEY,
     expense_id INTEGER
         CONSTRAINT fk_expense_id
             REFERENCES expense (id),
-    group_id INTEGER
+    group_id   INTEGER
         CONSTRAINT fk_group_id
             REFERENCES "group" (id)
 );
 
-
--- not account but contact
 CREATE TABLE individual_expense
 (
-    id              SERIAL PRIMARY KEY,
+    id         SERIAL PRIMARY KEY,
     expense_id INTEGER
         CONSTRAINT fk_expense_id
             REFERENCES expense (id),
-    user_id INTEGER
+    user_id    INTEGER
         CONSTRAINT fk_account_id
             REFERENCES account (id)
 );
