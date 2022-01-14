@@ -16,6 +16,6 @@ public class UserMapper implements RowMapper<User> {
         boolean enabled = rs.getBoolean("enabled");
         String phoneNumber = rs.getString("phone_number");
 
-        return new User(id, username, password, phoneNumber, enabled);
+        return new User(id, username, phoneNumber, password, enabled);
     }
 }

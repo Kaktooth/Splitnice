@@ -1,7 +1,9 @@
 package com.example.splitwise.model.expense;
 
 import com.example.splitwise.model.Currency;
+import com.example.splitwise.model.WrappedList;
 import com.example.splitwise.model.account.Account;
+import com.example.splitwise.model.account.AccountWrapperList;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -13,8 +15,8 @@ public class ExpenseDto extends Expense {
     private final ExpenseType type;
     private final SplittingType splittingType;
     private final Account lander;
-    private final List<Account> accounts;
-    private final Map<Account, BigDecimal> shares;
+    private final AccountWrapperList accounts;
+    private final ExpenseWrapperMap shares;
 
     public ExpenseDto(Integer id,
                       BigDecimal amount,
@@ -23,8 +25,8 @@ public class ExpenseDto extends Expense {
                       ExpenseType type,
                       SplittingType splittingType,
                       Account lander,
-                      List<Account> accounts,
-                      Map<Account, BigDecimal> shares,
+                      AccountWrapperList accounts,
+                      ExpenseWrapperMap shares,
                       Integer creatorId) {
         super(id, amount, creationDate, currency, creatorId);
         this.type = type;
@@ -42,11 +44,11 @@ public class ExpenseDto extends Expense {
         return lander;
     }
 
-    public List<Account> getAccounts() {
+    public AccountWrapperList getWrappedAccounts() {
         return accounts;
     }
 
-    public Map<Account, BigDecimal> getShares() {
+    public ExpenseWrapperMap getShares() {
         return shares;
     }
 

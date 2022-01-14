@@ -63,10 +63,9 @@
                     id="password"
                     name="password"
                     type="password"
-                    field="Your password"
                     class="form-control"
                     autofocus="autofocus" readonly
-                    placeholder="Unique identifier"/>
+                    placeholder="Your password"/>
         </div>
         <div th:if="${#strings.equals(#request.getParameter('edit'), 'password')}">
             <label for="old-password" class="sr-only">Old Password</label>

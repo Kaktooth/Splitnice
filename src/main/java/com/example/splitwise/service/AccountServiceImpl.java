@@ -27,15 +27,15 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account add(User user) {
-        User newUser = new UserBuilder()
-            .withEmail(user.getEmail())
-            .withPhone(user.getPhone())
-            .withEnabled(true)
-            .withPassword(user.getPassword())
-            .build();
-
-        userService.add(newUser);
-        Integer newUserId = userService.add(user).getId();
+//        User newUser = new UserBuilder()
+//            .withEmail(user.getEmail())
+//            .withPhone(user.getPhone())
+//            .withEnabled(true)
+//            .withPassword(user.getPassword())
+//            .build();
+//
+//        userService.add(newUser);
+//        Integer newUserId = userService.add(user).getId();
 
         Account account = new AccountBuilder()
             .withUsername(user.getEmail())
@@ -45,7 +45,7 @@ public class AccountServiceImpl implements AccountService {
             .withCurrency(Currency.USD)
             .build();
 
-        return accountRepository.add(account, newUserId);
+        return accountRepository.add(account, user.getId());
     }
 
     @Override

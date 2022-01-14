@@ -30,13 +30,14 @@ public class UserController {
         Integer id = 1;
         model.addAttribute("id", id);
         model.addAttribute("edit", null);
-        return "redirect:/account/" + id + "?edit=";
+        return "redirect:/account/" + id;
     }
 
     @GetMapping("/{id}")
     public String getUser(@PathVariable("id") int id,
-                          @RequestParam(value = "edit") String edit,
+                          @RequestParam(value = "edit", required = false) String edit,
                           Model model) {
+
         User user = restResponsesService.findUser(id);
 
         model.addAttribute("edit", edit);
@@ -44,27 +45,6 @@ public class UserController {
         model.addAttribute("userObject", user);
         return "/account";
     }
-
-//    @GetMapping("/{id}/{edit}")
-//    public String getUserAccountWithId(@PathVariable("id") int id, Model model) {
-//        User user = restResponsesService.findUser(id);
-//
-//        model.addAttribute("userObject", user);
-//        return "/account";
-//    }
-//
-//    @PutMapping("/{id}/{edit}")
-//    public String edit(@PathVariable("id") Integer id,
-//                       @PathVariable("edit") String edit,
-//                       Model model) {
-//
-//        User user = restResponsesService.findUser(id);
-//
-//        user = restResponsesService.editUserByParam(id, user);
-//
-//        model.addAttribute("userObject", user);
-//        return "/account";
-//    }
 
     @PutMapping("/{id}")
     public String update(@PathVariable("id") Integer id,

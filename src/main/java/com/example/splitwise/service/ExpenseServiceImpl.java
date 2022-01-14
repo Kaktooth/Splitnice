@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -37,7 +38,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 
         switch (expense.getSplittingType()) {
             case EQUAL:
-                for (Account account : expense.getAccounts()) {
+                for (Account account : expense.getWrappedAccounts().getWrappedItems()) {
                     if (!account.getId().equals(expense.getLander().getId())) {
                         Transaction transaction = new TransactionBuilder()
                             .withExpenseId(newExpense.getId())
@@ -59,6 +60,17 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
+    public Collection<Expense> getAllGroupExpenses(Set<Integer> ids) {
+        return expenseRepository.getAllGroupExpenses(ids);
+    }
+
+    @Override
+    public Collection<Expense> getAllAccountExpenses(Set<Integer> ids) {
+        List<Expense> accountExpenses = List.copyOf(expenseRepository.getAllAccountExpenses(ids));
+        return accountExpenses;
+    }
+
+    @Override
     public Expense getById(Integer expenseId) {
         return expenseRepository.getById(expenseId);
     }
@@ -75,6 +87,6 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     private BigDecimal getEqualShare(ExpenseDto expense) {
-        return expense.getAmount().divide(new BigDecimal(expense.getAccounts().size()), new MathContext(2));
+        return expense.getAmount().divide(new BigDecimal(expense.getWrappedAccounts().getWrappedItems().size()), new MathContext(2));
     }
 }

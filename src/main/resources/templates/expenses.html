@@ -54,8 +54,8 @@
 </nav>
 
 
-<!--&lt;!&ndash;/*@thymesVar id="expenses" type="com.example.splitwise.model.expense.ExpenseWrapperList"*/&ndash;&gt;-->
-<!--<ul th:each="expense : ${expenses.expenses}">-->
+
+<!--<ul th:each="expense : ${expenses}" >-->
 
 <li class="list-group-item">
     <div id="accordion">
@@ -63,7 +63,7 @@
             <div class="card-header" id="headingOne">
                 <h5 class="mb-0">
                     <div class="list-group">
-                        <label>Expense Name</label>
+                        <label >Expense Name</label>
                         <div class="d-flex w-100 align-items-center justify-content-between">
                             <strong class="mb-1"> <!-- <td th:text="${expense}">1</td>--></strong>
                             <small>300$</small>

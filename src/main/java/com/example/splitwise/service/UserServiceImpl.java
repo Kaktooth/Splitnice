@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Integer getIdFromAuthenticationName(String name) {
-        return null;
+        return userRepository.getIdFromAuthenticationName(name);
     }
 
     @Override

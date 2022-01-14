@@ -4,6 +4,7 @@ import com.example.splitwise.model.expense.Expense;
 import com.example.splitwise.model.expense.ExpenseBuilder;
 import com.example.splitwise.model.expense.GroupExpense;
 import com.example.splitwise.model.expense.IndividualExpense;
+import com.example.splitwise.model.expense.IndividualExpenseMapper;
 import com.example.splitwise.utils.DbCurrencyManager;
 import com.example.splitwise.utils.TimeConverter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -139,5 +140,25 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
             .withCreatorId(expense.getCreatorId())
             .withGroupId(expense.getTargetId())
             .buildIndividualExpense();
+    }
+
+    @Override
+    public Collection<Expense> getAllGroupExpenses(Set<Integer> ids) {
+        String inSql = String.join(",", Collections.nCopies(ids.size(), "?"));
+        String query = String.format("SELECT id, expense_id, group_id FROM group_expense WHERE id IN (%s)", inSql);
+
+        return null; //jdbcTemplate.query(query, Expense.class, ids);
+    }
+
+    @Override
+    public Collection<Expense> getAllAccountExpenses(Set<Integer> ids) {
+        String inSql = String.join(",", Collections.nCopies(ids.size(), "?"));
+        String query = String.format("SELECT individual_expense.id, amount, creation_date, currency_id, author_id, user_id\n" +
+            "FROM individual_expense\n" +
+            "INNER JOIN expense ON expense.id = expense_id\n" +
+            "INNER JOIN users ON users.id = user_id\n" +
+            "WHERE individual_expense.id IN (%s)", inSql);
+
+        return jdbcTemplate.query(query, new IndividualExpenseMapper(), ids.toArray());
     }
 }

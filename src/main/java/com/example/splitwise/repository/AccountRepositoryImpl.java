@@ -2,6 +2,7 @@ package com.example.splitwise.repository;
 
 import com.example.splitwise.model.account.Account;
 import com.example.splitwise.model.account.AccountBuilder;
+import com.example.splitwise.service.UserService;
 import com.example.splitwise.utils.DbCurrencyManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,8 +19,11 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
+    private final UserService userService;
+
     @Autowired
-    public AccountRepositoryImpl(JdbcTemplate jdbcTemplate) {
+    public AccountRepositoryImpl(JdbcTemplate jdbcTemplate, UserService userService) {
+        this.userService = userService;
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -53,13 +57,19 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     @Override
     public Account getById(Integer accountId) {
-        String query = "SELECT * FROM account WHERE id = ?";
+        String query = "SELECT account.id, account.username,users.username, amount, users.phone_number, user_id, currency_id\n" +
+            "FROM account\n" +
+            "INNER JOIN users ON users.id = user_id\n" +
+            "WHERE account.id = ?";
         return jdbcTemplate.queryForObject(query, new AccountMapper(), accountId);
     }
 
     @Override
     public Account getByUsername(String username) {
-        String query = "SELECT * FROM account WHERE username = ?";
+        String query = "SELECT account.id, account.username, users.username, amount, users.phone_number, user_id, currency_id\n" +
+            "FROM account\n" +
+            "INNER JOIN users ON users.id = user_id\n" +
+            "WHERE account.username = ?";
         return jdbcTemplate.queryForObject(query, new AccountMapper(), username);
     }
 
@@ -86,19 +96,19 @@ public class AccountRepositoryImpl implements AccountRepository {
             return ps;
         }, keyHolder);
 
-        Integer accountId = (Integer) keyHolder.getKey();
+//        Integer accountId = (Integer) keyHolder.getKey();
 
-        if (accountId != null) {
-            return new AccountBuilder()
-                .withId(accountId)
-                .withUsername(account.getUsername())
-                .withEmail(account.getEmail())
-                .withPhone(account.getPhone())
-                .withMoneyAmount(account.getMoneyAmount())
-                .withCurrency(account.getCurrency())
-                .build();
-        } else {
-            throw new RuntimeException("Account creation operation wasn't successful");
-        }
+//        if (accountId != null) {
+        return new AccountBuilder()
+            .withId(userId)
+            .withUsername(account.getUsername())
+            .withEmail(account.getEmail())
+            .withPhone(account.getPhone())
+            .withMoneyAmount(account.getMoneyAmount())
+            .withCurrency(account.getCurrency())
+            .build();
+//        } else {
+//            throw new RuntimeException("Account creation operation wasn't successful");
+//        }
     }
 }

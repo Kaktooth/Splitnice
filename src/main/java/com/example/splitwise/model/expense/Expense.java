@@ -2,6 +2,7 @@ package com.example.splitwise.model.expense;
 
 import com.example.splitwise.model.Currency;
 import com.example.splitwise.model.Identifiable;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;

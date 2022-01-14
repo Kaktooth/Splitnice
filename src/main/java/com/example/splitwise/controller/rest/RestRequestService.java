@@ -3,7 +3,7 @@ package com.example.splitwise.controller.rest;
 import com.example.splitwise.model.User;
 import com.example.splitwise.model.expense.Expense;
 import com.example.splitwise.model.expense.ExpenseDto;
-import com.example.splitwise.model.expense.ExpenseWrapperList;
+import com.example.splitwise.model.expense.IndividualExpense;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
@@ -25,6 +25,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -126,7 +127,7 @@ public class RestRequestService {
                          String edit, String parameter) {
         RestTemplate restTemplate = new RestTemplate();
 
-        Map<String, Integer> params = new HashMap<String, Integer>();
+        Map<String, Integer> params = new HashMap<>();
         params.put("id", 1);
 
         User updatedUser = new User(1, "updated@gmail.com", "045345345", "fwef235", true);
@@ -156,33 +157,31 @@ public class RestRequestService {
         return conversionService.convert(responseEntity.getBody(), User.class);
     }
 
-    public ExpenseWrapperList findExpenses(Integer id) {
+    public ArrayList<LinkedHashMap<String, Object>> findAccountExpenses(Integer id) {
         RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<ExpenseWrapperList> request = new HttpEntity<>(
+
+        HttpEntity<ArrayList<IndividualExpense>> request = new HttpEntity<>(
             null
             , httpHeaders());
 
+        ResponseEntity<ArrayList> response =
+            restTemplate.exchange("http://localhost:8082/api/dashboard/expenses/" + id,
+                HttpMethod.GET, request, ArrayList.class);
 
-        ResponseEntity<ExpenseWrapperList> responseEntity = restTemplate.exchange(
-            "http://localhost:8082/api/dashboard/expenses/" + id,
-            HttpMethod.GET,
-            request,
-            ExpenseWrapperList.class
-        );
-
-        return conversionService.convert(responseEntity.getBody(), ExpenseWrapperList.class);
+        return response.getBody();
     }
 
     public ExpenseDto createExpense(ExpenseDto expense) {
         RestTemplate restTemplate = new RestTemplate();
         ExpenseDto newExpense = conversionService.convert(expense, ExpenseDto.class);
 
-        ObjectMapper objectMapper =  JsonMapper.builder()
+        ObjectMapper objectMapper = JsonMapper.builder()
             .addModule(new JavaTimeModule())
             .build();
 
+        String test;
         try {
-            String test = objectMapper.writeValueAsString(expense);
+            test = objectMapper.writeValueAsString(expense);
 
         } catch (JsonProcessingException e) {
             e.printStackTrace();
@@ -192,29 +191,13 @@ public class RestRequestService {
             newExpense,
             httpHeaders());
 
-        ResponseEntity<ExpenseDto> responseEntity = restTemplate.exchange(
-            "http://localhost:8082/api/add-expense",
-            HttpMethod.POST,
+        ResponseEntity<ExpenseDto> Entity = restTemplate.exchange(
+            "http://localhost:8082/api/add-expense", HttpMethod.POST,
             request, ExpenseDto.class
         );
 
-        return conversionService.convert(responseEntity.getBody(), ExpenseDto.class);
+        return conversionService.convert(Entity.getBody(), ExpenseDto.class);
     }
-
-//    public User updateUserByParam(Integer id, String parameter) {
-//        RestTemplate restTemplate = new RestTemplate();
-//        HttpEntity<User> request = new HttpEntity<>(
-//            new User()
-//            , httpHeaders());
-//
-//        ResponseEntity<User> responseEntity = restTemplate.exchange(
-//            "http://localhost:8082/api/account/" + id + "?" + parameter,
-//            HttpMethod.POST, request, User.class
-//        );
-//
-//        return conversionService.convert(responseEntity.getBody(), User.class);
-//    }
-
 
     public HttpEntity<User> getUser(User user, HttpHeaders httpHeaders) {
         return new HttpEntity<>(user, httpHeaders);
