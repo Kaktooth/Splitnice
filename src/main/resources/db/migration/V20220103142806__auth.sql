@@ -1,7 +1,7 @@
 CREATE TABLE users
 (
     id SERIAL PRIMARY KEY,
-    username VARCHAR NOT NULL,
+    username VARCHAR UNIQUE NOT NULL,
     password VARCHAR NOT NULL,
     enabled  BOOLEAN NOT NULL,
     phone_number VARCHAR NOT NULL
@@ -28,11 +28,3 @@ CREATE TABLE authorities
             REFERENCES users (id)
 );
 CREATE UNIQUE INDEX ix_auth_account ON authorities (id, authority);
-
-CREATE TABLE persistent_logins
-(
-    username  VARCHAR   NOT NULL,
-    series    VARCHAR PRIMARY KEY,
-    token     VARCHAR   NOT NULL,
-    last_used TIMESTAMP NOT NULL
-);

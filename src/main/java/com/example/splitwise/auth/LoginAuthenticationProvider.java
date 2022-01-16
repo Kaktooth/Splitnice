@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 public class LoginAuthenticationProvider implements AuthenticationProvider {
@@ -38,9 +39,18 @@ public class LoginAuthenticationProvider implements AuthenticationProvider {
         if (user != null && passwordEncoder.matches(password, user.getPassword())) {
             List<GrantedAuthority> authorities
                 = new ArrayList<>();
+            if (user.getAuthorities() == null) {
+                SimpleGrantedAuthority userAuthority = new SimpleGrantedAuthority(Authority.USER.toString());
+                SimpleGrantedAuthority adminAuthority = new SimpleGrantedAuthority(Authority.ADMIN.toString());
 
-            authorities.add(new SimpleGrantedAuthority(Authority.USER.getName()));
-
+                if (!Objects.equals(username, "admin@gmail.com")) {
+                    authorities.add(userAuthority);
+                } else {
+                    authorities.add(adminAuthority);
+                }
+            } else {
+                authorities.addAll(user.getAuthorities());
+            }
             return new UsernamePasswordAuthenticationToken(user, password, authorities);
         } else {
             throw new BadCredentialsException("Bad credentials, cant authenticate...");

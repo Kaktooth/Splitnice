@@ -173,7 +173,7 @@ public class RestRequestService {
 
     public ExpenseDto createExpense(ExpenseDto expense) {
         RestTemplate restTemplate = new RestTemplate();
-        ExpenseDto newExpense = conversionService.convert(expense, ExpenseDto.class);
+//        ExpenseDto newExpense = conversionService.convert(expense, ExpenseDto.class);
 
         ObjectMapper objectMapper = JsonMapper.builder()
             .addModule(new JavaTimeModule())
@@ -188,7 +188,7 @@ public class RestRequestService {
         }
 
         HttpEntity<ExpenseDto> request = new HttpEntity<>(
-            newExpense,
+            expense,
             httpHeaders());
 
         ResponseEntity<ExpenseDto> Entity = restTemplate.exchange(

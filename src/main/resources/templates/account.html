@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<html lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Account</title>
@@ -16,7 +17,11 @@
     <input type="hidden" name="${_csrf.parameterName}"
            value="${_csrf.token}"/>
     <h1 class="h3 mb-3 font-weight-normal ">Your account</h1>
-
+    <div sec:authorize="isAuthenticated()">
+        Welcome <b><span sec:authentication="name">Username</span></b>
+        &nbsp;
+        <i><span sec:authentication="principal.authorities">Roles</span></i>
+    </div>
     <input
             id="id"
             name="id"

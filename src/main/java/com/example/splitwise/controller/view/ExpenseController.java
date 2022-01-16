@@ -35,7 +35,42 @@ public class ExpenseController {
     @GetMapping
     public String getExpensesAccount(Model model) {
         model.addAttribute("id", 1);
-        model.addAttribute("expenses", null);
+        List<Expense> expenseList = new ArrayList<>();
+        Expense expense = new ExpenseBuilder()
+            .withId(1)
+            .withAmount(new BigDecimal("2.2"))
+            .withCreationDate(OffsetDateTime.now())
+            .withCurrency(Currency.USD)
+            .withCreatorId(1)
+            .buildIndividualExpense();
+        expenseList.add(expense);
+        Expense expense2 = new ExpenseBuilder()
+            .withId(2)
+            .withAmount(new BigDecimal("5.5"))
+            .withCreationDate(OffsetDateTime.now())
+            .withCurrency(Currency.EUR)
+            .withCreatorId(1)
+            .buildIndividualExpense();
+        expenseList.add(expense);
+
+        Expense expense3 = new ExpenseBuilder()
+            .withId(1)
+            .withAmount(new BigDecimal("2.2"))
+            .withCreationDate(OffsetDateTime.now())
+            .withCurrency(Currency.USD)
+            .withCreatorId(2)
+            .buildIndividualExpense();
+        expenseList.add(expense);
+        Expense expense4 = new ExpenseBuilder()
+            .withId(2)
+            .withAmount(new BigDecimal("5.5"))
+            .withCreationDate(OffsetDateTime.now())
+            .withCurrency(Currency.EUR)
+            .withCreatorId(2)
+            .buildIndividualExpense();
+        expenseList.add(expense);
+        model.addAttribute("expenseList", expenseList);
+
         model.addAttribute("split", SplittingType.values());
         model.addAttribute("currency", Currency.values());
 
@@ -44,20 +79,43 @@ public class ExpenseController {
 
     @GetMapping("/{id}")
     public String getExpensesWithUserId(@PathVariable("id") int id, Model model) {
-        ArrayList<LinkedHashMap<String, Object>> expenses = restResponsesService.findAccountExpenses(id);
         List<Expense> expenseList = new ArrayList<>();
-        for (LinkedHashMap<String, Object> expense : expenses) {
-            Expense expenseFromLinked = new ExpenseBuilder()
-                .withId((Integer)expense.get("id"))
-                .withAmount(new BigDecimal((Double) expense.get("amount")))
+        Expense expense = new ExpenseBuilder()
+                .withId(1)
+                .withAmount(new BigDecimal("2.2"))
                 .withCreationDate(OffsetDateTime.now())
-                .withCurrency(Currency.valueOf((String)expense.get("currency")))
-                .withCreatorId((Integer)expense.get("creatorId"))
+                .withCurrency(Currency.USD)
+                .withCreatorId(1)
                 .buildIndividualExpense();
-            expenseList.add(expenseFromLinked);
-        }
+            expenseList.add(expense);
+        Expense expense2 = new ExpenseBuilder()
+            .withId(2)
+            .withAmount(new BigDecimal("5.5"))
+            .withCreationDate(OffsetDateTime.now())
+            .withCurrency(Currency.EUR)
+            .withCreatorId(1)
+            .buildIndividualExpense();
+        expenseList.add(expense);
 
-        model.addAttribute("expenses", expenseList);
+        Expense expense3 = new ExpenseBuilder()
+            .withId(1)
+            .withAmount(new BigDecimal("2.2"))
+            .withCreationDate(OffsetDateTime.now())
+            .withCurrency(Currency.USD)
+            .withCreatorId(2)
+            .buildIndividualExpense();
+        expenseList.add(expense);
+
+        Expense expense4 = new ExpenseBuilder()
+            .withId(2)
+            .withAmount(new BigDecimal("5.5"))
+            .withCreationDate(OffsetDateTime.now())
+            .withCurrency(Currency.EUR)
+            .withCreatorId(2)
+            .buildIndividualExpense();
+        expenseList.add(expense);
+
+        model.addAttribute("expenseList", expenseList);
         return "dashboard";
     }
 }

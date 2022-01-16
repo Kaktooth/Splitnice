@@ -1,5 +1,6 @@
 package com.example.splitwise.сonfig;
 
+import com.example.splitwise.auth.Authority;
 import com.example.splitwise.auth.LoginAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -13,13 +14,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.session.SessionFixationProtectionStrategy;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.RequestHeaderRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final DataSource dataSource;
@@ -63,28 +63,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .requireCsrfProtectionMatcher(new RequestHeaderRequestMatcher("/api/**"))
             .csrfTokenRepository(
                 CookieCsrfTokenRepository.withHttpOnlyFalse()
-            );
+            )
 
-
-        http
+            .and()
             .headers()
             .frameOptions()
-            .sameOrigin();
-        http
+            .sameOrigin()
+            .and()
             .sessionManagement()
-            .sessionAuthenticationStrategy(new SessionFixationProtectionStrategy());
-        http
+            .sessionAuthenticationStrategy(new SessionFixationProtectionStrategy())
+
+            .and()
             .authorizeRequests()
-            .antMatchers("/error")
+            .mvcMatchers("/error")
             .permitAll()
-            .antMatchers("/sign-in")
+            .mvcMatchers("/sign-in")
             .permitAll()
-            .antMatchers("/sign-up")
+            .mvcMatchers("/sign-up")
             .permitAll()
-            .antMatchers("/**", "/dashboard/**")
+            .mvcMatchers("/**", "/dashboard/**")
             .authenticated()
-            .antMatchers("/admin-page")
-            .authenticated()
+            .mvcMatchers("/admin-page")
+            .hasAuthority(Authority.ADMIN.getNumVal().toString())
             .anyRequest().authenticated()
             .and()
             .httpBasic()
@@ -98,21 +98,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .failureUrl("/sign-in?error")
             .permitAll()
             .and()
-            .logout().deleteCookies("JSESSIONID")
+            .logout()
+            .invalidateHttpSession(true)
+            .deleteCookies("JSESSIONID")
             .logoutUrl("/signout")
             .logoutSuccessUrl("/sign-in?signout")
             .permitAll()
             .and()
             .exceptionHandling().accessDeniedPage("/access-denied-page");
-
-//        http
-//            .rememberMe()
-//            .rememberMeCookieName("remember-me")
-//            .rememberMeParameter("remember-me")
-//            .alwaysRemember(true)
-//            .useSecureCookie(true)
-//            .key("remember-me")
-//            .tokenValiditySeconds(15000);
 
     }
 }

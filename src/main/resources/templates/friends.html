@@ -29,14 +29,7 @@
                         <input type="hidden" id="expenseType" name="expenseType" value="INDIVIDUAL"/>
 
                         <button class="btn btn-primary ">
-                            Add an expense
-                        </button>
-                    </form>
-
-                    <form id="exportForm" name="form" th:action="@{/export}" method="get">
-
-                        <button class="btn btn-info">
-                            Export to excel
+                            Add friend
                         </button>
                     </form>
                 </div>
@@ -45,42 +38,34 @@
     </div>
 </nav>
 
-<!--/*@thymesVar id="expenseList" type="List<Expense>"*/-->
-<ul th:each="expense : ${expenseList}" >
+<ul th:each="friend : ${friends}" >
 
-<li class="list-group-item">
+    <li class="list-group-item">
 
-    <div class="card">
-        <div class="card-header">
-            <h5 class="mb-0">
-                <div class="list-group">
-                    <label>Expense Name</label>
-                    <div class="d-flex w-100 align-items-center justify-content-between">
-                        <strong class="mb-1"> <!-- <td th:text="${expense}">1</td>--></strong>
-                        <small>${expense.}</small>
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <div class="list-group">
+                        <label>Friend Name</label>
+
+                        <button class="btn btn-light"
+                                type="button"
+                                data-toggle="collapse"
+                                data-target="#collapseExpense"
+                                aria-expanded="false"
+                                aria-controls="collapseExpense">
+                            Show details
+                        </button>
                     </div>
-                    <div class="p-1 col-10 mb-1 small">
-                        Vova Beridniy 20.02.2019
-
-                    </div>
-                    <button class="btn btn-light"
-                            type="button"
-                            data-toggle="collapse"
-                            data-target="#collapseExpense"
-                            aria-expanded="false"
-                            aria-controls="collapseExpense">
-                        Show details
-                    </button>
+                </h5>
+            </div>
+            <div class="collapse" id="collapseExpense">
+                <div class="card-body">
+                    <label>Details</label>
                 </div>
-            </h5>
-        </div>
-        <div class="collapse" id="collapseExpense">
-            <div class="card-body">
-                <label>Details</label>
             </div>
         </div>
-    </div>
-</li>
+    </li>
 </ul>
 
 </body>

@@ -6,9 +6,9 @@ import java.util.Map;
 
 public enum Authority {
 
-    USER(1,"USER"), ADMIN(2,"ADMIN");
+    USER(0,"USER"), ADMIN(1,"ADMIN");
 
-    private final int numVal;
+    private final Integer numVal;
 
     private final String string;
 
@@ -19,12 +19,12 @@ public enum Authority {
             lookup.put(w.getNumVal(), w);
     }
 
-    Authority(int numVal, String string) {
+    Authority(Integer numVal, String string) {
         this.numVal = numVal;
         this.string = string;
     }
 
-    public int getNumVal() {
+    public Integer getNumVal() {
         return numVal;
     }
 
