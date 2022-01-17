@@ -25,9 +25,7 @@ public class RestExpenseController {
 
     @GetMapping("/{id}")
     public List<Expense> getExpenses(@PathVariable("id") Integer id) {
-        List<Expense> expenses = new ArrayList<>(expenseService.getAllAccountExpenses(Set.of(id)));
-        return expenses;
-
+        return new ArrayList<>(expenseService.getAllAccountExpenses(Set.of(id)));
     }
 
 }

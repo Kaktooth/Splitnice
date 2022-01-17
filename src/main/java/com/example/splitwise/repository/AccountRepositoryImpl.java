@@ -96,19 +96,19 @@ public class AccountRepositoryImpl implements AccountRepository {
             return ps;
         }, keyHolder);
 
-//        Integer accountId = (Integer) keyHolder.getKey();
+        Integer accountId = (Integer) keyHolder.getKey();
 
-//        if (accountId != null) {
+        if (accountId != null) {
         return new AccountBuilder()
-            .withId(userId)
+            .withId(accountId)
             .withUsername(account.getUsername())
             .withEmail(account.getEmail())
             .withPhone(account.getPhone())
             .withMoneyAmount(account.getMoneyAmount())
             .withCurrency(account.getCurrency())
             .build();
-//        } else {
-//            throw new RuntimeException("Account creation operation wasn't successful");
-//        }
+        } else {
+            throw new RuntimeException("Account creation operation wasn't successful");
+        }
     }
 }
