@@ -45,43 +45,84 @@
     </div>
 </nav>
 
-<!--/*@thymesVar id="expenseList" type="List<Expense>"*/-->
-<ul th:each="expense : ${expenseList}" >
+<ul th:each="expense : ${expenseList}">
 
-<li class="list-group-item">
+    <li class="list-group-item">
 
-    <div class="card">
-        <div class="card-header">
-            <h5 class="mb-0">
-                <div class="list-group">
-                    <label>Expense Name</label>
-                    <div class="d-flex w-100 align-items-center justify-content-between">
-                        <strong class="mb-1"> <!-- <td th:text="${expense}">1</td>--></strong>
-                        <small>${expense.}</small>
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <div class="list-group">
+                        <label th:text="${expense.id}"></label>
+
+                        <div class="d-flex w-100 align-items-center justify-content-between">
+                            <strong class="mb-1"> <!-- <td th:text="${expense}">1</td>--></strong>
+                            <small th:text="${expense.getAmountInfo()}"></small>
+                        </div>
+
+                        <div class="p-1 col-10 mb-1 small" th:text="${expense.getCreationInfo()}">
+
+                        </div>
+                        <button class="btn btn-light"
+                                type="button"
+                                data-toggle="collapse"
+                                th:attr="data-target='#collapseExpense'+${expense.id}
+                                ,aria-controls='collapseExpense'+${expense.id}"
+                                aria-expanded="false">
+                            Show details
+                        </button>
                     </div>
-                    <div class="p-1 col-10 mb-1 small">
-                        Vova Beridniy 20.02.2019
-
-                    </div>
-                    <button class="btn btn-light"
-                            type="button"
-                            data-toggle="collapse"
-                            data-target="#collapseExpense"
-                            aria-expanded="false"
-                            aria-controls="collapseExpense">
-                        Show details
-                    </button>
+                </h5>
+            </div>
+            <div class="collapse" th:attr="id='collapseExpense'+${expense.id}">
+                <div class="card-body">
+                    <label>Details</label>
                 </div>
-            </h5>
-        </div>
-        <div class="collapse" id="collapseExpense">
-            <div class="card-body">
-                <label>Details</label>
             </div>
         </div>
-    </div>
-</li>
+    </li>
 </ul>
+<div class="nav-item">
+    <!--    <form method="get" th:action="@{/expenses/${param.currentPage}}">-->
+    <form method="get" th:action="@{/dashboard/expense/{currentPage}(currentPage=${currentPage})}">
+        <nav aria-label="Page navigation" class="navbar navbar-expand-lg navbar-light bg-light justify-content-center">
+            <ul class="pagination">
+                <li class="page-item" th:if="${currentPage > 1}">
+                    <a class="page-link"
+                       th:href="@{/dashboard/expenses/{currentPage}(currentPage=${currentPage}-1,
+                            pageSize=${param.pageSize.iterator().next()}, expenses = true)}">Previous</a>
+                </li>
 
+                <ul class="list-group" th:if="${pageCount > 0}"
+                    th:each="pageNumber : ${pageNumbers}">
+                    <a class="page-link"
+                       th:href="@{/dashboard/expenses/{currentPage}(currentPage=${pageNumber},
+                           pageSize=${param.pageSize.iterator().next()}, expenses = true)}"
+                       th:text="${pageNumber}"></a>
+                </ul>
+
+                <li class="page-item" th:if="${pageCount} > (${currentPage}-1)">
+                    <a class="page-link"
+                       th:href="@{/dashboard/expenses/{currentPage}(currentPage=(${currentPage}+1),
+                            pageSize=${param.pageSize.iterator().next()}, expenses = true)}">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </form>
+    <nav aria-label="Page navigation">
+        <label>Page size: <label th:text=" ${param.pageSize}"></label></label>
+        <ul class="pagination">
+            <!--                <li th:if="${param.pageSize.iterator().next()} gt 1">-->
+            <!--                    <a class="page-link"-->
+            <!--                       th:href="@{/expenses/{currentPage}(pageSize=(${param.pageSize.iterator().next()}-1),expenses=true)}"><</a>-->
+            <!--                </li>-->
+            <!--                <li th:if="${param.pageSize.iterator().next()} gt (${param.pageSize.iterator().next()}-1)">-->
+            <!--                    <a class="page-link"-->
+            <!--                       th:href="@{/expenses/{currentPage}(pageSize=(${param.pageSize.iterator().next()}+1),expenses=true)}">></a>-->
+            <!--                </li>-->
+        </ul>
+    </nav>
+    <!--    </form>-->
+</div>
 </body>
 </html>
