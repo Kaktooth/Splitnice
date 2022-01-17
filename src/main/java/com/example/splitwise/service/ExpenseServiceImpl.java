@@ -38,7 +38,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 
         switch (expense.getSplittingType()) {
             case EQUAL:
-                for (Account account : expense.getWrappedAccounts().getWrappedItems()) {
+                for (Account account : expense.getAccounts()) {
                     if (!account.getId().equals(expense.getLander().getId())) {
                         Transaction transaction = new TransactionBuilder()
                             .withExpenseId(newExpense.getId())
@@ -87,6 +87,6 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     private BigDecimal getEqualShare(ExpenseDto expense) {
-        return expense.getAmount().divide(new BigDecimal(expense.getWrappedAccounts().getWrappedItems().size()), new MathContext(2));
+        return expense.getAmount().divide(new BigDecimal(expense.getAccounts().size()), new MathContext(2));
     }
 }

@@ -13,7 +13,6 @@ public class NamesParser {
     private final AccountService accountService;
     private final GroupService groupService;
 
-    @Autowired
     public NamesParser(AccountService accountService, GroupService groupService) {
         this.groupService = groupService;
         this.accountService = accountService;

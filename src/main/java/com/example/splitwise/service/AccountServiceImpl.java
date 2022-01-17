@@ -2,7 +2,6 @@ package com.example.splitwise.service;
 
 import com.example.splitwise.model.Currency;
 import com.example.splitwise.model.User;
-import com.example.splitwise.model.UserBuilder;
 import com.example.splitwise.model.account.Account;
 import com.example.splitwise.model.account.AccountBuilder;
 import com.example.splitwise.repository.AccountRepository;
@@ -18,24 +17,13 @@ import java.util.Set;
 public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
-    private final UserService userService;
 
-    public AccountServiceImpl(AccountRepository accountRepository, UserService userService) {
+    public AccountServiceImpl(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
-        this.userService = userService;
     }
 
     @Override
     public Account add(User user) {
-//        User newUser = new UserBuilder()
-//            .withEmail(user.getEmail())
-//            .withPhone(user.getPhone())
-//            .withEnabled(true)
-//            .withPassword(user.getPassword())
-//            .build();
-//
-//        userService.add(newUser);
-//        Integer newUserId = userService.add(user).getId();
 
         Account account = new AccountBuilder()
             .withUsername(user.getEmail())

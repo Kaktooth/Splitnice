@@ -3,7 +3,6 @@ package com.example.splitwise.model.expense;
 import com.example.splitwise.model.Currency;
 import com.example.splitwise.utils.DbCurrencyManager;
 import com.example.splitwise.utils.TimeConverter;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.math.BigDecimal;
@@ -11,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.OffsetDateTime;
 
-public class IndividualExpenseMapper implements RowMapper<Expense> {
+public class IndividualExpenseRowMapper implements RowMapper<Expense> {
 
     @Override
     public Expense mapRow(ResultSet rs, int rowNum) throws SQLException {

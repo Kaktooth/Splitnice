@@ -4,7 +4,7 @@ import com.example.splitwise.model.expense.Expense;
 import com.example.splitwise.model.expense.ExpenseBuilder;
 import com.example.splitwise.model.expense.GroupExpense;
 import com.example.splitwise.model.expense.IndividualExpense;
-import com.example.splitwise.model.expense.IndividualExpenseMapper;
+import com.example.splitwise.model.expense.IndividualExpenseRowMapper;
 import com.example.splitwise.utils.DbCurrencyManager;
 import com.example.splitwise.utils.TimeConverter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -159,6 +159,6 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
             "INNER JOIN users ON users.id = user_id\n" +
             "WHERE individual_expense.id IN (%s)", inSql);
 
-        return jdbcTemplate.query(query, new IndividualExpenseMapper(), ids.toArray());
+        return jdbcTemplate.query(query, new IndividualExpenseRowMapper(), ids.toArray());
     }
 }
