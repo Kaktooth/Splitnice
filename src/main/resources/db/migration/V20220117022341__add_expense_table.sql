@@ -5,9 +5,7 @@ CREATE TABLE expense
     amount        DECIMAL,
     creation_date TIMESTAMP,
     author_id     INTEGER
-        CONSTRAINT fk_author_id
-            REFERENCES account (id),
+        CONSTRAINT fk_author_id REFERENCES account (id),
     currency_id   INTEGER
-        CONSTRAINT fk_currency_id
-            REFERENCES currency (id)
+        CONSTRAINT fk_currency_id REFERENCES currency (id)
 );

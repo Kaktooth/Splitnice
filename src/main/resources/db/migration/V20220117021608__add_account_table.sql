@@ -4,9 +4,7 @@ CREATE TABLE account
     username    VARCHAR,
     amount      DECIMAL,
     user_id     INTEGER
-        CONSTRAINT fk_user_id
-            REFERENCES users (id),
+        CONSTRAINT fk_user_id REFERENCES users (id),
     currency_id INTEGER
-        CONSTRAINT fk_currency_id
-            REFERENCES currency (id)
+        CONSTRAINT fk_currency_id REFERENCES currency (id)
 );
