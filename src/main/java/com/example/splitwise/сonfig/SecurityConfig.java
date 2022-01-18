@@ -23,7 +23,6 @@ import javax.sql.DataSource;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final DataSource dataSource;
-
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -36,7 +35,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) {
         web.ignoring()
-            .mvcMatchers("/resources/**");
+            .mvcMatchers("/resources/**",
+                "/configuration/ui",
+                "/v2/api-docs",
+                "/swagger-resources/**",
+                "/configuration/security",
+                "/swagger-ui.html",
+                "/webjars/**");
     }
 
     @Autowired
@@ -82,6 +87,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .mvcMatchers("/sign-up")
             .permitAll()
             .mvcMatchers("/**", "/dashboard/**")
+            .permitAll()
+            .mvcMatchers("/api")
             .authenticated()
             .mvcMatchers("/admin-page")
             .hasAuthority(Authority.ADMIN.getNumVal().toString())
@@ -105,7 +112,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .logoutSuccessUrl("/sign-in?signout")
             .permitAll()
             .and()
-            .exceptionHandling().accessDeniedPage("/access-denied-page");
+            .exceptionHandling().accessDeniedPage("/access-denied-page")
+            .and();
+
+        http.headers().frameOptions().disable();
 
     }
 }
