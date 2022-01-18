@@ -17,6 +17,7 @@ import java.sql.PreparedStatement;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 @Repository
@@ -143,7 +144,7 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
     }
 
     @Override
-    public Collection<Expense> getAllGroupExpenses(Set<Integer> ids) {
+    public List<Expense> getAllGroupExpenses(Set<Integer> ids) {
         String inSql = String.join(",", Collections.nCopies(ids.size(), "?"));
         String query = String.format("SELECT id, expense_id, group_id FROM group_expense WHERE id IN (%s)", inSql);
 
@@ -151,7 +152,7 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
     }
 
     @Override
-    public Collection<Expense> getAllAccountExpenses(Set<Integer> ids) {
+    public List<Expense> getAllAccountExpenses(Set<Integer> ids) {
         String inSql = String.join(",", Collections.nCopies(ids.size(), "?"));
         String query = String.format("SELECT individual_expense.id, amount, creation_date, currency_id, author_id, user_id\n" +
             "FROM individual_expense\n" +

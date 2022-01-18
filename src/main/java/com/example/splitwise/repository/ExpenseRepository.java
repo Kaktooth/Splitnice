@@ -5,6 +5,7 @@ import com.example.splitwise.model.expense.GroupExpense;
 import com.example.splitwise.model.expense.IndividualExpense;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 public interface ExpenseRepository extends EntityRepository<Expense> {
@@ -13,7 +14,7 @@ public interface ExpenseRepository extends EntityRepository<Expense> {
 
     Expense addIndividualExpense(IndividualExpense expense);
 
-    Collection<Expense> getAllGroupExpenses(Set<Integer> ids);
+    List<Expense> getAllGroupExpenses(Set<Integer> ids);
 
-    Collection<Expense> getAllAccountExpenses(Set<Integer> ids);
+    List<Expense> getAllAccountExpenses(Set<Integer> ids);
 }

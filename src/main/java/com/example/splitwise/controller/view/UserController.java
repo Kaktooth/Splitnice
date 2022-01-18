@@ -1,6 +1,6 @@
 package com.example.splitwise.controller.view;
 
-import com.example.splitwise.controller.rest.RestRequestService;
+import com.example.splitwise.controller.RestRequestService;
 import com.example.splitwise.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

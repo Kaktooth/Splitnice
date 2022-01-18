@@ -20,7 +20,7 @@ public class RestExpenseCreationController {
         this.expenseService = expenseService;
     }
 
-    @PostMapping()
+    @PostMapping
     public Expense getExpenses(@RequestBody ExpenseDto expenseDto) {
         return expenseService.add(expenseDto);
     }

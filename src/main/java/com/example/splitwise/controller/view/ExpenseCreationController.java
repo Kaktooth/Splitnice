@@ -1,6 +1,6 @@
 package com.example.splitwise.controller.view;
 
-import com.example.splitwise.controller.rest.RestRequestService;
+import com.example.splitwise.controller.RestRequestService;
 import com.example.splitwise.model.Currency;
 import com.example.splitwise.model.account.Account;
 import com.example.splitwise.model.expense.Expense;

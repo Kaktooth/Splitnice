@@ -60,12 +60,12 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
-    public Collection<Expense> getAllGroupExpenses(Set<Integer> ids) {
+    public List<Expense> getAllGroupExpenses(Set<Integer> ids) {
         return expenseRepository.getAllGroupExpenses(ids);
     }
 
     @Override
-    public Collection<Expense> getAllAccountExpenses(Set<Integer> ids) {
+    public List<Expense> getAllAccountExpenses(Set<Integer> ids) {
         List<Expense> accountExpenses = List.copyOf(expenseRepository.getAllAccountExpenses(ids));
         return accountExpenses;
     }

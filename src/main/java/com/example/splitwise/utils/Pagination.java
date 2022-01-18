@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Pagination<T> implements Pageble<T> {
+public class Pagination<T> {
 
     private final List<T> expenses;
 

@@ -1,11 +1,10 @@
 package com.example.splitwise.controller.view;
 
-import com.example.splitwise.controller.rest.RestRequestService;
+import com.example.splitwise.controller.RestRequestService;
 import com.example.splitwise.model.Currency;
 import com.example.splitwise.model.expense.Expense;
 import com.example.splitwise.model.expense.ExpenseBuilder;
 import com.example.splitwise.model.expense.SplittingType;
-import com.example.splitwise.utils.Pageble;
 import com.example.splitwise.utils.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -102,7 +101,7 @@ public class ExpenseController {
             .buildIndividualExpense();
         expenseList.add(expense6);
 
-        Pageble<Expense> pagination = new Pagination<>(expenseList);
+        Pagination<Expense> pagination = new Pagination<>(expenseList);
         int pageCount = pagination.getPageCount(pageSize) + 1;
         List<Integer> pageNumbers = pagination.getPageNumbers(pageCount);
         List<Expense> currentPageContent = pagination.getCurrentPageContent(currentPage - 1, pageSize);

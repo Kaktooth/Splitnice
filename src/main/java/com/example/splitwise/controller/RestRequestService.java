@@ -1,4 +1,4 @@
-package com.example.splitwise.controller.rest;
+package com.example.splitwise.controller;
 
 import com.example.splitwise.model.User;
 import com.example.splitwise.model.expense.Expense;
@@ -52,7 +52,7 @@ public class RestRequestService {
 
     }
 
-    RequestCallback requestCallback(final User updatedInstance) {
+    private RequestCallback requestCallback(final User updatedInstance) {
         return clientHttpRequest -> {
             ObjectMapper mapper = new ObjectMapper();
             mapper.writeValue(clientHttpRequest.getBody(), updatedInstance);
@@ -155,20 +155,6 @@ public class RestRequestService {
             HttpMethod.GET, request, User.class
         );
         return conversionService.convert(responseEntity.getBody(), User.class);
-    }
-
-    public ArrayList<LinkedHashMap<String, Object>> findAccountExpenses(Integer id) {
-        RestTemplate restTemplate = new RestTemplate();
-
-        HttpEntity<ArrayList<IndividualExpense>> request = new HttpEntity<>(
-            null
-            , httpHeaders());
-
-        ResponseEntity<ArrayList> response =
-            restTemplate.exchange("http://localhost:8082/api/dashboard/expenses/" + id,
-                HttpMethod.GET, request, ArrayList.class);
-
-        return response.getBody();
     }
 
     public ExpenseDto createExpense(ExpenseDto expense) {
