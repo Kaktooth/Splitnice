@@ -57,7 +57,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User getById(Integer entityId) {
         String query = "SELECT id, username, password, enabled, phone_number FROM users WHERE users.id = ?";
-        User user = jdbcTemplate.queryForObject(query, new UserMapper(), entityId);
+        User user = jdbcTemplate.queryForObject(query, new UserRowMapper(), entityId);
         return user;
     }
 
@@ -85,7 +85,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Integer getIdFromAuthenticationName(String name) {
         String query = "SELECT id, username, password, enabled, phone_number FROM users WHERE users.username = ?";
-        User user = jdbcTemplate.queryForObject(query, new UserMapper(), name);
+        User user = jdbcTemplate.queryForObject(query, new UserRowMapper(), name);
 
         return user.getId();
     }

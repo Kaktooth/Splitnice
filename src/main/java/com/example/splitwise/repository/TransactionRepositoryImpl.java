@@ -1,7 +1,6 @@
 package com.example.splitwise.repository;
 
 import com.example.splitwise.model.transaction.Transaction;
-import com.example.splitwise.model.transaction.TransactionBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -42,7 +41,7 @@ public class TransactionRepositoryImpl implements TransactionRepository {
 
         Integer transactionId = (Integer) keyHolder.getKey();
 
-        return new TransactionBuilder()
+        return new Transaction.TransactionBuilder()
             .withId(transactionId)
             .withAmount(transaction.getAmount())
             .withLanderId(transaction.getLanderId())

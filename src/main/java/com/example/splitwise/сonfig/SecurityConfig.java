@@ -12,8 +12,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.session.SessionFixationProtectionStrategy;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.util.matcher.RequestHeaderRequestMatcher;
 
 import javax.sql.DataSource;
 
@@ -64,29 +62,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http
-            .csrf()
-            .requireCsrfProtectionMatcher(new RequestHeaderRequestMatcher("/api/**"))
-            .csrfTokenRepository(
-                CookieCsrfTokenRepository.withHttpOnlyFalse()
-            )
-
-            .and()
             .headers()
             .frameOptions()
             .sameOrigin()
             .and()
             .sessionManagement()
             .sessionAuthenticationStrategy(new SessionFixationProtectionStrategy())
-
             .and()
             .authorizeRequests()
-            .mvcMatchers("/error")
-            .permitAll()
-            .mvcMatchers("/sign-in")
-            .permitAll()
-            .mvcMatchers("/sign-up")
-            .permitAll()
-            .mvcMatchers("/**", "/dashboard/**")
+            .mvcMatchers("/error", "/sign-in", "/sign-up", "/**", "/dashboard/**")
             .permitAll()
             .mvcMatchers("/api")
             .authenticated()
@@ -113,9 +97,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .permitAll()
             .and()
             .exceptionHandling().accessDeniedPage("/access-denied-page")
-            .and();
-
-        http.headers().frameOptions().disable();
+            .and()
+            .headers().frameOptions().disable();
 
     }
 }

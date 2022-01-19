@@ -4,7 +4,6 @@ import com.example.splitwise.model.account.Account;
 import com.example.splitwise.model.expense.Expense;
 import com.example.splitwise.model.expense.ExpenseDto;
 import com.example.splitwise.model.transaction.Transaction;
-import com.example.splitwise.model.transaction.TransactionBuilder;
 import com.example.splitwise.repository.ExpenseRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,7 +39,7 @@ public class ExpenseServiceImpl implements ExpenseService {
             case EQUAL:
                 for (Account account : expense.getAccounts()) {
                     if (!account.getId().equals(expense.getLander().getId())) {
-                        Transaction transaction = new TransactionBuilder()
+                        Transaction transaction = new Transaction.TransactionBuilder()
                             .withExpenseId(newExpense.getId())
                             .withAmount(getEqualShare(expense))
                             .withCurrency(expense.getCurrency())

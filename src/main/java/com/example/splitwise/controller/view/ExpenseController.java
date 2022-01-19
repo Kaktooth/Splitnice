@@ -3,7 +3,6 @@ package com.example.splitwise.controller.view;
 import com.example.splitwise.controller.RestRequestService;
 import com.example.splitwise.model.Currency;
 import com.example.splitwise.model.expense.Expense;
-import com.example.splitwise.model.expense.ExpenseBuilder;
 import com.example.splitwise.model.expense.SplittingType;
 import com.example.splitwise.utils.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +46,7 @@ public class ExpenseController {
 
         List<Expense> expenseList = new ArrayList<>();
 
-        Expense expense = new ExpenseBuilder()
+        Expense expense = new Expense.ExpenseBuilder()
             .withId(1)
             .withAmount(new BigDecimal("13.5"))
             .withCreationDate(OffsetDateTime.now())
@@ -56,7 +55,7 @@ public class ExpenseController {
             .buildIndividualExpense();
         expenseList.add(expense);
 
-        Expense expense2 = new ExpenseBuilder()
+        Expense expense2 = new Expense.ExpenseBuilder()
             .withId(2)
             .withAmount(new BigDecimal("100"))
             .withCreationDate(OffsetDateTime.now())
@@ -65,7 +64,7 @@ public class ExpenseController {
             .buildIndividualExpense();
         expenseList.add(expense2);
 
-        Expense expense3 = new ExpenseBuilder()
+        Expense expense3 = new Expense.ExpenseBuilder()
             .withId(3)
             .withAmount(new BigDecimal("76.2"))
             .withCreationDate(OffsetDateTime.now())
@@ -74,7 +73,7 @@ public class ExpenseController {
             .buildIndividualExpense();
         expenseList.add(expense3);
 
-        Expense expense4 = new ExpenseBuilder()
+        Expense expense4 = new Expense.ExpenseBuilder()
             .withId(4)
             .withAmount(new BigDecimal("14.5"))
             .withCreationDate(OffsetDateTime.now())
@@ -83,7 +82,7 @@ public class ExpenseController {
             .buildIndividualExpense();
         expenseList.add(expense4);
 
-        Expense expense5 = new ExpenseBuilder()
+        Expense expense5 = new Expense.ExpenseBuilder()
             .withId(5)
             .withAmount(new BigDecimal("176.2"))
             .withCreationDate(OffsetDateTime.now())
@@ -92,7 +91,7 @@ public class ExpenseController {
             .buildIndividualExpense();
         expenseList.add(expense5);
 
-        Expense expense6 = new ExpenseBuilder()
+        Expense expense6 = new Expense.ExpenseBuilder()
             .withId(6)
             .withAmount(new BigDecimal("144.5"))
             .withCreationDate(OffsetDateTime.now())

@@ -2,7 +2,6 @@ package com.example.splitwise.controller.view;
 
 import com.example.splitwise.model.Currency;
 import com.example.splitwise.model.expense.Expense;
-import com.example.splitwise.model.expense.ExpenseBuilder;
 import com.example.splitwise.utils.ExcelExpenseExporter;
 import com.example.splitwise.utils.Exporter;
 import org.springframework.core.io.ByteArrayResource;
@@ -82,7 +81,7 @@ public class ExportController {
 //        expenseList.add(expense6);
 
 
-        Expense expense = new ExpenseBuilder()
+        Expense expense = new Expense.ExpenseBuilder()
             .withId(1)
             .withAmount(new BigDecimal("13.5"))
             .withCreationDate(OffsetDateTime.now())
@@ -92,7 +91,7 @@ public class ExportController {
             .buildGroupExpense();
         expenseList.add(expense);
 
-        Expense expense2 = new ExpenseBuilder()
+        Expense expense2 = new Expense.ExpenseBuilder()
             .withId(2)
             .withAmount(new BigDecimal("100"))
             .withCreationDate(OffsetDateTime.now())

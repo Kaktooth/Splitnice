@@ -1,10 +1,8 @@
 package com.example.splitwise.repository;
 
 import com.example.splitwise.model.expense.Expense;
-import com.example.splitwise.model.expense.ExpenseBuilder;
 import com.example.splitwise.model.expense.GroupExpense;
 import com.example.splitwise.model.expense.IndividualExpense;
-import com.example.splitwise.model.expense.IndividualExpenseRowMapper;
 import com.example.splitwise.utils.DbCurrencyManager;
 import com.example.splitwise.utils.TimeConverter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +47,7 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
         Integer entityId = (Integer) keyHolder.getKey();
 
         if (expense instanceof GroupExpense) {
-            return new ExpenseBuilder()
+            return new Expense.ExpenseBuilder()
                 .withId(entityId)
                 .withAmount(expense.getAmount())
                 .withCreationDate(TimeConverter.convertTime(timestamp))
@@ -57,7 +55,7 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
                 .withCreatorId(expense.getCreatorId())
                 .buildGroupExpense();
         } else if (expense instanceof IndividualExpense) {
-            return new ExpenseBuilder()
+            return new Expense.ExpenseBuilder()
                 .withId(entityId)
                 .withAmount(expense.getAmount())
                 .withCreationDate(TimeConverter.convertTime(timestamp))
@@ -107,7 +105,7 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
 
         Integer groupExpenseId = (Integer) keyHolder.getKey();
 
-        return new ExpenseBuilder()
+        return new Expense.ExpenseBuilder()
             .withId(savedExpense.getId())
             .withAmount(expense.getAmount())
             .withCreationDate(savedExpense.getCreationDate())
@@ -133,7 +131,7 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
 
         Integer groupExpenseId = (Integer) keyHolder.getKey();
 
-        return new ExpenseBuilder()
+        return new Expense.ExpenseBuilder()
             .withId(savedExpense.getId())
             .withAmount(expense.getAmount())
             .withCreationDate(savedExpense.getCreationDate())

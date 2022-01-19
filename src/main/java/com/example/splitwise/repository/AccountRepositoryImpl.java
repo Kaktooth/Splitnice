@@ -1,7 +1,6 @@
 package com.example.splitwise.repository;
 
 import com.example.splitwise.model.account.Account;
-import com.example.splitwise.model.account.AccountBuilder;
 import com.example.splitwise.service.UserService;
 import com.example.splitwise.utils.DbCurrencyManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +41,7 @@ public class AccountRepositoryImpl implements AccountRepository {
         Integer accountId = (Integer) keyHolder.getKey();
 
         if (accountId != null) {
-            return new AccountBuilder()
+            return new Account.AccountBuilder()
                 .withId(accountId)
                 .withUsername(account.getUsername())
                 .withEmail(account.getEmail())
@@ -61,7 +60,7 @@ public class AccountRepositoryImpl implements AccountRepository {
             "FROM account\n" +
             "INNER JOIN users ON users.id = user_id\n" +
             "WHERE account.id = ?";
-        return jdbcTemplate.queryForObject(query, new AccountMapper(), accountId);
+        return jdbcTemplate.queryForObject(query, new AccountRowMapper(), accountId);
     }
 
     @Override
@@ -70,7 +69,7 @@ public class AccountRepositoryImpl implements AccountRepository {
             "FROM account\n" +
             "INNER JOIN users ON users.id = user_id\n" +
             "WHERE account.username = ?";
-        return jdbcTemplate.queryForObject(query, new AccountMapper(), username);
+        return jdbcTemplate.queryForObject(query, new AccountRowMapper(), username);
     }
 
     @Override
@@ -99,7 +98,7 @@ public class AccountRepositoryImpl implements AccountRepository {
         Integer accountId = (Integer) keyHolder.getKey();
 
         if (accountId != null) {
-        return new AccountBuilder()
+        return new Account.AccountBuilder()
             .withId(accountId)
             .withUsername(account.getUsername())
             .withEmail(account.getEmail())

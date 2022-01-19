@@ -1,6 +1,8 @@
-package com.example.splitwise.model.expense;
+package com.example.splitwise.repository;
 
 import com.example.splitwise.model.Currency;
+import com.example.splitwise.model.expense.Expense;
+import com.example.splitwise.model.expense.IndividualExpense;
 import com.example.splitwise.utils.DbCurrencyManager;
 import com.example.splitwise.utils.TimeConverter;
 import org.springframework.jdbc.core.RowMapper;

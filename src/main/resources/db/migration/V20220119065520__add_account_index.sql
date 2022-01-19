@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX ix_auth_account ON authorities (id, authority);

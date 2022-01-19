@@ -66,4 +66,58 @@ public abstract class Expense implements Identifiable {
             ", creatorId=" + creatorId +
             '}';
     }
+
+    public static final class ExpenseBuilder {
+
+        private Integer id;
+        private BigDecimal amount;
+        private OffsetDateTime creationDate;
+        private Currency currency;
+        private Integer creatorId;
+        private Integer groupId;
+        private Integer targetId;
+
+        public ExpenseBuilder withId(Integer id) {
+            this.id = id;
+            return this;
+        }
+
+        public ExpenseBuilder withAmount(BigDecimal amount) {
+            this.amount = amount;
+            return this;
+        }
+
+        public ExpenseBuilder withCreationDate(OffsetDateTime creationDate) {
+            this.creationDate = creationDate;
+            return this;
+        }
+
+        public ExpenseBuilder withCurrency(Currency currency) {
+            this.currency = currency;
+            return this;
+        }
+
+        public ExpenseBuilder withCreatorId(Integer creatorId) {
+            this.creatorId = creatorId;
+            return this;
+        }
+
+        public ExpenseBuilder withGroupId(Integer id) {
+            this.groupId = id;
+            return this;
+        }
+
+        public ExpenseBuilder withTargetId(Integer id) {
+            this.targetId = id;
+            return this;
+        }
+
+        public GroupExpense buildGroupExpense() {
+            return new GroupExpense(id, amount, creationDate, currency, creatorId, groupId);
+        }
+
+        public IndividualExpense buildIndividualExpense() {
+            return new IndividualExpense(id, amount, creationDate, currency, creatorId, targetId);
+        }
+    }
 }

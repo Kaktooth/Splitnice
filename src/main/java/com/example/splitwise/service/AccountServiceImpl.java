@@ -3,7 +3,6 @@ package com.example.splitwise.service;
 import com.example.splitwise.model.Currency;
 import com.example.splitwise.model.User;
 import com.example.splitwise.model.account.Account;
-import com.example.splitwise.model.account.AccountBuilder;
 import com.example.splitwise.repository.AccountRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +24,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account add(User user) {
 
-        Account account = new AccountBuilder()
+        Account account = new Account.AccountBuilder()
             .withUsername(user.getEmail())
             .withEmail(user.getEmail())
             .withPhone(user.getPhone())
@@ -38,7 +37,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account add(Account account) {
-        Account newAccount = new AccountBuilder()
+        Account newAccount = new Account.AccountBuilder()
             .withUsername(account.getEmail())
             .withEmail(account.getEmail())
             .withPhone(account.getPhone())
