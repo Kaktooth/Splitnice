@@ -34,7 +34,7 @@ public class AdviceExceptionHandler {
 
     @ExceptionHandler(value = {MissingServletRequestParameterException.class})
     public ResponseEntity<Object> invalidAuthentication(MissingServletRequestParameterException ex) {
-        log.error("Missing required parameter", ex.getMessage());
+        log.error("Missing required parameter", ex);
         return status(HttpStatus.BAD_REQUEST).build();
     }
 }

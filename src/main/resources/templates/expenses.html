@@ -100,7 +100,7 @@
                        th:text="${pageNumber}"></a>
                 </ul>
 
-                <li class="page-item" th:if="${pageCount} > (${currentPage}-1)">
+                <li class="page-item" th:if="${pageCount} > (${currentPage})">
                     <a class="page-link"
                        th:href="@{/dashboard/expenses/{currentPage}(currentPage=(${currentPage}+1),
                             pageSize=${param.pageSize.iterator().next()}, expenses = true)}">Next</a>
