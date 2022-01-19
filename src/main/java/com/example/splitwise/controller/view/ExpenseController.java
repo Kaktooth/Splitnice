@@ -1,11 +1,12 @@
 package com.example.splitwise.controller.view;
 
-import com.example.splitwise.controller.RestRequestService;
 import com.example.splitwise.model.Currency;
 import com.example.splitwise.model.expense.Expense;
 import com.example.splitwise.model.expense.SplittingType;
+import com.example.splitwise.service.UserService;
 import com.example.splitwise.utils.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,16 +23,15 @@ import java.util.List;
 @RequestMapping(value = "/dashboard/expenses")
 public class ExpenseController {
 
-    private final RestRequestService restResponsesService;
+    private final UserService userService;
 
     @Autowired
-    public ExpenseController(RestRequestService restResponsesService) {
-        this.restResponsesService = restResponsesService;
+    public ExpenseController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping
     public String getExpensesAccount(Model model) {
-
 
         model.addAttribute("split", SplittingType.values());
         model.addAttribute("currency", Currency.values());
@@ -40,9 +40,15 @@ public class ExpenseController {
     }
 
     @GetMapping("/{currentPage}")
-    public String getExpensesWithUserId(@PathVariable("currentPage") int currentPage,
-                                        @RequestParam("pageSize") Integer pageSize,
-                                        Model model) {
+    public String getExpenses(@PathVariable("currentPage") int currentPage,
+                              @RequestParam("pageSize") Integer pageSize,
+                              Model model) {
+
+        Integer userId = userService.getIdFromAuthenticationName(
+            SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName());
 
         List<Expense> expenseList = new ArrayList<>();
 
@@ -51,7 +57,7 @@ public class ExpenseController {
             .withAmount(new BigDecimal("13.5"))
             .withCreationDate(OffsetDateTime.now())
             .withCurrency(Currency.USD)
-            .withCreatorId(1)
+            .withCreatorId(userId)
             .buildIndividualExpense();
         expenseList.add(expense);
 
@@ -60,7 +66,7 @@ public class ExpenseController {
             .withAmount(new BigDecimal("100"))
             .withCreationDate(OffsetDateTime.now())
             .withCurrency(Currency.EUR)
-            .withCreatorId(1)
+            .withCreatorId(userId)
             .buildIndividualExpense();
         expenseList.add(expense2);
 
@@ -69,7 +75,7 @@ public class ExpenseController {
             .withAmount(new BigDecimal("76.2"))
             .withCreationDate(OffsetDateTime.now())
             .withCurrency(Currency.USD)
-            .withCreatorId(2)
+            .withCreatorId(userId)
             .buildIndividualExpense();
         expenseList.add(expense3);
 
@@ -78,7 +84,7 @@ public class ExpenseController {
             .withAmount(new BigDecimal("14.5"))
             .withCreationDate(OffsetDateTime.now())
             .withCurrency(Currency.EUR)
-            .withCreatorId(2)
+            .withCreatorId(userId)
             .buildIndividualExpense();
         expenseList.add(expense4);
 
@@ -87,7 +93,7 @@ public class ExpenseController {
             .withAmount(new BigDecimal("176.2"))
             .withCreationDate(OffsetDateTime.now())
             .withCurrency(Currency.USD)
-            .withCreatorId(2)
+            .withCreatorId(userId)
             .buildIndividualExpense();
         expenseList.add(expense5);
 
@@ -96,7 +102,7 @@ public class ExpenseController {
             .withAmount(new BigDecimal("144.5"))
             .withCreationDate(OffsetDateTime.now())
             .withCurrency(Currency.EUR)
-            .withCreatorId(3)
+            .withCreatorId(userId)
             .buildIndividualExpense();
         expenseList.add(expense6);
 

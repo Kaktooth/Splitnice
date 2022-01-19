@@ -5,7 +5,6 @@ import com.example.splitwise.model.expense.ExpenseDto;
 import com.example.splitwise.service.ExpenseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,7 +20,7 @@ public class RestExpenseCreationController {
     }
 
     @PostMapping
-    public Expense getExpenses(@RequestBody ExpenseDto expenseDto) {
+    public Expense addExpense(ExpenseDto expenseDto) {
         return expenseService.add(expenseDto);
     }
 }

@@ -9,14 +9,13 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
           crossorigin="anonymous">
 </head>
-<body>
-<form id="expForm" name="form" th:action="@{/dashboard}" method="post">
-    <!--  expenses list -->
+<body class="d-flex justify-content-center align-items-center text-center">
+<form id="expForm" name="form" th:action="@{/add-group}" method="post">
     <div class="flex">
         <p class="text-left">Create new group</p>
-        <label for="group-name"></label>
-        <input tabindex="1" placeholder="Group name..." autocomplete="off" type="text" name="group-name"
-               id="group-name">
+        <label for="title"></label>
+        <input tabindex="1" placeholder="Group name..." autocomplete="off" type="text" name="title"
+               id="title">
 
         <button class="btn btn-primary" type="submit">Create</button>
     </div>

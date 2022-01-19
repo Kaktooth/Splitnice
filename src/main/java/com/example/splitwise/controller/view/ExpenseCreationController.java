@@ -1,6 +1,5 @@
 package com.example.splitwise.controller.view;
 
-import com.example.splitwise.controller.RestRequestService;
 import com.example.splitwise.model.Currency;
 import com.example.splitwise.model.account.Account;
 import com.example.splitwise.model.expense.Expense;
@@ -9,6 +8,7 @@ import com.example.splitwise.model.expense.ExpenseType;
 import com.example.splitwise.model.expense.NamesParser;
 import com.example.splitwise.model.expense.SplittingType;
 import com.example.splitwise.service.AccountService;
+import com.example.splitwise.service.ExpenseService;
 import com.example.splitwise.service.GroupService;
 import com.example.splitwise.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,20 +29,25 @@ import java.util.Objects;
 @Controller
 @RequestMapping("/add-expense")
 public class ExpenseCreationController {
+
     private final AccountService accountService;
+
     private final UserService userService;
+
     private final GroupService groupService;
-    private final RestRequestService restResponsesService;
+
+    private final ExpenseService expenseService;
 
     @Autowired
-    public ExpenseCreationController(RestRequestService restResponsesService,
-                                     AccountService accountService,
+    public ExpenseCreationController(AccountService accountService,
                                      UserService userService,
-                                     GroupService groupService) {
-        this.restResponsesService = restResponsesService;
+                                     GroupService groupService,
+                                     ExpenseService expenseService) {
+
         this.accountService = accountService;
         this.userService = userService;
         this.groupService = groupService;
+        this.expenseService = expenseService;
     }
 
     @GetMapping
@@ -54,12 +59,12 @@ public class ExpenseCreationController {
     }
 
     @PostMapping
-    public String registerNewUser(@RequestParam(value = "names") String names,
-                                  @RequestParam(value = "expenseName") String expenseName,
-                                  @RequestParam(value = "amount") BigDecimal amount,
-                                  @RequestParam(value = "currency") String currency,
-                                  @RequestParam(value = "splitType") String splitType,
-                                  @RequestParam(value = "expenseType") String expenseType) {
+    public String registerNewExpense(@RequestParam(value = "names") String names,
+                                     @RequestParam(value = "expenseName") String expenseName,
+                                     @RequestParam(value = "amount") BigDecimal amount,
+                                     @RequestParam(value = "currency") String currency,
+                                     @RequestParam(value = "splitType") String splitType,
+                                     @RequestParam(value = "expenseType") String expenseType) {
 
         Integer id = userService.getIdFromAuthenticationName(
             SecurityContextHolder
@@ -76,7 +81,7 @@ public class ExpenseCreationController {
 
             accounts = namesParser.parseToAccounts(names);
 
-            ExpenseDto expense = restResponsesService.createExpense(
+            Expense expense = expenseService.registerNewExpense(
                 new ExpenseDto(
                     1,
                     new BigDecimal("3.3"),
@@ -93,7 +98,7 @@ public class ExpenseCreationController {
         } else {
 
             accounts = namesParser.parseToGroupAccounts(1);
-            Expense expense = restResponsesService.createExpense(
+            Expense expense = expenseService.registerNewExpense(
                 new ExpenseDto(
                     1,
                     new BigDecimal("3.3"),
@@ -109,6 +114,6 @@ public class ExpenseCreationController {
             );
         }
 
-        return "add-expense";
+        return "dashboard";
     }
 }

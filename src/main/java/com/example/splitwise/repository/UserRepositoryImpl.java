@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
@@ -73,12 +74,34 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void changePassword(String oldPassword, String newPassword) {
+    public void changePassword(Integer userId, String oldPassword, String newPassword) {
+        String query = "SELECT id, username, password, enabled, phone_number FROM users WHERE users.id = ?";
+        User user = jdbcTemplate.queryForObject(query, new UserRowMapper(), userId);
+        String salt = BCrypt.gensalt();
+        String encryptedPassword = BCrypt.hashpw(oldPassword, salt);
+        if (BCrypt.checkpw(encryptedPassword, user.getPassword())) {
+            System.out.println("You cant change password");
+            return;
+        }
+
+        String queryForUsers = "UPDATE users set password = ? WHERE users.id = ?";
+
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(queryForUsers, new String[]{"id"});
+
+            ps.setString(1, BCrypt.hashpw(newPassword, salt));
+            ps.setInt(2, userId);
+            return ps;
+        });
+    }
+
+    @Override
+    public void changeEmail(Integer userId, String email) {
 
     }
 
     @Override
-    public void changeEmail(String phoneNumber) {
+    public void forgotPassword(Integer id) {
 
     }
 
@@ -88,10 +111,5 @@ public class UserRepositoryImpl implements UserRepository {
         User user = jdbcTemplate.queryForObject(query, new UserRowMapper(), name);
 
         return user.getId();
-    }
-
-    @Override
-    public void changeSignInStatus(boolean signed) {
-
     }
 }

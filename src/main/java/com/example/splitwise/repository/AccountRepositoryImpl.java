@@ -68,7 +68,7 @@ public class AccountRepositoryImpl implements AccountRepository {
         String query = "SELECT account.id, account.username, users.username, amount, users.phone_number, user_id, currency_id\n" +
             "FROM account\n" +
             "INNER JOIN users ON users.id = user_id\n" +
-            "WHERE account.username = ?";
+            "WHERE users.username = ?";
         return jdbcTemplate.queryForObject(query, new AccountRowMapper(), username);
     }
 
