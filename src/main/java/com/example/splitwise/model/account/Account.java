@@ -1,22 +1,31 @@
-package com.example.splitwise.model;
+package com.example.splitwise.model.account;
+
+import com.example.splitwise.model.Currency;
+import com.example.splitwise.model.Identifiable;
 
 import java.math.BigDecimal;
 
-public class Account extends BusinessEntity {
+public class Account implements Identifiable {
 
+    private final Integer id;
     private final String username;
     private final String email;
     private final String phone;
     private final BigDecimal moneyAmount;
-    private final boolean signedUp;
+    private final Currency currency;
 
-    public Account(Integer id, String username, String email, String phone, BigDecimal moneyAmount, boolean signedUp) {
-        super(id);
+    public Account(Integer id, String username, String email, String phone, BigDecimal moneyAmount, Currency currency) {
+        this.id = id;
         this.username = username;
         this.email = email;
         this.phone = phone;
         this.moneyAmount = moneyAmount;
-        this.signedUp = signedUp;
+        this.currency = currency;
+    }
+
+    @Override
+    public Integer getId() {
+        return id;
     }
 
     public String getUsername() {
@@ -35,7 +44,7 @@ public class Account extends BusinessEntity {
         return moneyAmount;
     }
 
-    public boolean isSignedUp() {
-        return signedUp;
+    public Currency getCurrency() {
+        return currency;
     }
 }

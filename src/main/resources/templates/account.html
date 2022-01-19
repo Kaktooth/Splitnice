@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Account</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <title>Account</title>
+</head>
+<body class="d-flex justify-content-center align-items-center text-center">
+
+<form name="form" th:action="@{/account}" method="put">
+
+    <h1 class="h3 mb-3 font-weight-normal ">Your account</h1>
+
+    <input
+            id="id"
+            name="id"
+            th:field="${userObject.id}"
+            class="form-control"
+            autofocus="autofocus" readonly
+            placeholder="Unique identifier"/>
+    <div>
+        <label for="email">Your email address</label>
+        <div th:unless="${param.editemail}">
+            <input
+                    id="email"
+                    name="email"
+                    th:field="${userObject.email}"
+                    class="form-control"
+                    autofocus="autofocus" readonly
+                    placeholder="Email..."/>
+        </div>
+        <div th:if="${param.editemail}">
+            <input th:field="${userObject.email}"
+                   type="email" id="username"
+                   name="user" class="form-control"
+                   placeholder="Email address" required=""
+                   autofocus=""/>
+        </div>
+        <a href="?editemail" th:unless="${param.editemail}">
+            <i class="icon-pencil"></i> Edit email
+        </a>
+
+        <a href="/account" th:if="${param.editemail}">
+            <i class="icon-pencil"></i> Cancel edit email
+        </a>
+    </div>
+    <div>
+        <label for="new-password">Your password</label>
+        <div th:unless="${param.editpassword}">
+            <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    th:field="${userObject.passwordLengthChar}"
+                    class="form-control"
+                    autofocus="autofocus" readonly
+                    placeholder="Unique identifier"/>
+        </div>
+        <div th:if="${param.editpassword}">
+            <label for="old-password" class="sr-only">Old Password</label>
+            <input type="password" id="old-password" name="password" class="form-control mb-4"
+                   placeholder="Old Password">
+            <label for="new-password" class="sr-only">New Password</label>
+            <input type="password" id="new-password" name="password" class="form-control mb-4"
+                   placeholder="New password">
+        </div>
+
+        <a href="?editpassword" th:unless="${param.editpassword}">
+            <i class="icon-pencil"></i> Edit password
+        </a>
+
+        <a href="/account" th:if="${param.editpassword}">
+            <i class="icon-pencil"></i> Cancel edit password
+        </a>
+    </div>
+
+    <div>
+        <label for="phone">Your phone number</label>
+        <div th:unless="${param.editphone}">
+            <input
+                    id="phone-number"
+                    name="phone-number"
+                    type="tel"
+                    th:field="${userObject.phone}"
+                    class="form-control"
+                    autofocus="autofocus" readonly
+                    placeholder="Unique identifier"/>
+        </div>
+        <div th:if="${param.editphone}">
+            <label for="phone" class="sr-only">Phone number</label>
+            <input th:field="${userObject.phone}" type="tel" id="phone" name="phone" class="form-control mb-4"
+                   placeholder="Phone Number">
+        </div>
+
+        <a href="?editphone" th:unless="${param.editphone}">
+            <i class="icon-pencil"></i> Edit phone number
+        </a>
+
+        <a href="/account" th:if="${param.editphone}">
+            <i class="icon-pencil"></i> Cancel edit phone number
+        </a>
+    </div>
+    <button class="btn btn-primary btn-block" type="submit">Save</button>
+
+</form>
+</body>
+</html>

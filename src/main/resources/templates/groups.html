@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Groups</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+</head>
+<body>
+
+
+    <div class="d-flex container-fluid justify-content-start">
+        <nav class="col-12 navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <form id="groupsForm" name="form" th:action="@{/groups/new-group}" method="get">
+
+                        <button class="btn btn-primary btn-block" type="submit">Add group</button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+
+        <div class="col-12 justify-content-start">
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <a class="btn btn-link btn-block" data-toggle="collapse" href="#multiCollapseExample1" role="button"
+                           aria-expanded="false" aria-controls="multiCollapseExample1">Group Name</a>
+                    </h5>
+                </div>
+            </div>
+
+            <div class="collapse multi-collapse" id="multiCollapseExample1">
+                <div class="card card-body">
+
+                    <label>Expenses</label>
+
+                    <div name="expense-name">
+
+                        <button class="btn btn-primary"
+                                type="button" data-toggle="collapse"
+                                data-target="#multiCollapseExample2"
+                                aria-expanded="false"
+                                aria-controls="multiCollapseExample2">
+                            Toggle Expense
+                        </button>
+
+                        <div class="collapse multi-collapse" id="multiCollapseExample2">
+                            <div class="card card-body">
+                                <label>Expense Name</label>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+</div>
+</div>
+</body>
+</html>
