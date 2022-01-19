@@ -4,7 +4,6 @@ import com.example.splitwise.model.account.Account;
 import com.example.splitwise.model.expense.Expense;
 import com.example.splitwise.model.expense.ExpenseDto;
 import com.example.splitwise.model.transaction.Transaction;
-import com.example.splitwise.model.transaction.TransactionBuilder;
 import com.example.splitwise.repository.ExpenseRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -32,11 +32,6 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
-    public Expense update(Integer id, Expense entity) {
-        return null;
-    }
-
-    @Override
     public Expense registerNewExpense(ExpenseDto expense) {
         Expense newExpense = expenseRepository.add(expense);
 
@@ -44,7 +39,7 @@ public class ExpenseServiceImpl implements ExpenseService {
             case EQUAL:
                 for (Account account : expense.getAccounts()) {
                     if (!account.getId().equals(expense.getLander().getId())) {
-                        Transaction transaction = new TransactionBuilder()
+                        Transaction transaction = new Transaction.TransactionBuilder()
                             .withExpenseId(newExpense.getId())
                             .withAmount(getEqualShare(expense))
                             .withCurrency(expense.getCurrency())
@@ -57,11 +52,21 @@ public class ExpenseServiceImpl implements ExpenseService {
                 }
                 return newExpense;
             case SPECIFIC:
-                // to implement
+                // TODO implement
                 return newExpense;
         }
-
         return null;
+    }
+
+    @Override
+    public List<Expense> getAllGroupExpenses(Set<Integer> ids) {
+        return expenseRepository.getAllGroupExpenses(ids);
+    }
+
+    @Override
+    public List<Expense> getAllAccountExpenses(Set<Integer> ids) {
+        List<Expense> accountExpenses = List.copyOf(expenseRepository.getAllAccountExpenses(ids));
+        return accountExpenses;
     }
 
     @Override
@@ -76,6 +81,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     public void delete(Integer expenseId) {
+        transactionService.deleteTransactionsOfExpense(expenseId);
         expenseRepository.delete(expenseId);
     }
 

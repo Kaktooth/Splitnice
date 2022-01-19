@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add new Group</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+
+</head>
+<body class="d-flex justify-content-center align-items-center text-center">
+<form id="expForm" name="form" th:action="@{/add-expense}" method="post">
+    <input type="hidden" th:if="${_csrf}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+    <div class="flex border border-primary" style="width: 370px;">
+
+        <input  type="hidden"
+               name="expenseType"
+               id="expenseType"
+        th:value="${#request.getParameter('expenseType')}">
+
+        <h1 class="h3 mb-3 font-weight-normal ">Create new Expense</h1>
+
+        <label for="names" class="sr-only"></label>
+        <input tabindex="1" placeholder="Enter user or group names" autocomplete="off" type="text"
+               name="names"
+               id="names" class="involved form-control">
+
+        <label for="expenseName" class="sr-only"></label>
+        <input tabindex="1" placeholder="Expense name..." autocomplete="off" type="text" name="expenseName"
+               id="expenseName" class="form-control">
+
+        <label for="amount" class="sr-only"></label>
+        <input tabindex="1" placeholder="0.00" autocomplete="off" type="number" min="1" step="any" name="amount"
+               id="amount" class="form-control">
+
+        <!--        <label for="currency" class="sr-only"></label>-->
+        <select class="form-control" id="currency" name="currency">
+            <option th:value="'USD'" th:text="USD"></option>
+            <option th:value="'EUR'" th:text="EUR"></option>
+            <option th:value="'UAH'" th:text="UAH"></option>
+        </select>
+        <!--        th:modelAttribute="currency"-->
+        <!--        <label for="splitType" class="sr-only"></label>-->
+        <select class="form-control" id="splitType" name="splitType">
+            <option th:value="'EQUAL'" th:text="Equaly"></option>
+            <option th:value="'SPECIFIC'" th:text="Specific"></option>
+        </select>
+        <!--        th:modelAttribute="splitType"-->
+        <button class="btn btn-primary" type="submit">Create</button>
+    </div>
+</form>
+</body>
+</html>

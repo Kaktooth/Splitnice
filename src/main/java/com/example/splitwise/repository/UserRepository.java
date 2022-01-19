@@ -8,7 +8,7 @@ public interface UserRepository extends EntityRepository<User> {
 
     void changeEmail(String phoneNumber);
 
-    void forgotPassword(String phoneNumber);
+    Integer getIdFromAuthenticationName(String name);
 
     void changeSignInStatus(boolean signed);
 }

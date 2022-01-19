@@ -4,13 +4,15 @@ import com.example.splitwise.model.User;
 
 public interface UserService extends EntityService<User> {
 
-    void changePassword(String oldPassword, String newPassword);
+    User changePassword(Integer id,String oldPassword, String newPassword);
 
-    User update(Integer id, User user);
+    User changeEmail(Integer id);
 
-    void changeEmail(String phoneNumber);
+    User changePhoneNumber(Integer id);
 
-    void forgotPassword(String phoneNumber);
+    User forgotPassword(Integer id);
 
-    void changeSignInStatus(boolean signed);
+    Integer getIdFromAuthenticationName(String name);
+
+    User changeSignInStatus(boolean signed);
 }

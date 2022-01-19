@@ -13,55 +13,106 @@
 <body>
 
 
-    <div class="d-flex container-fluid justify-content-start">
-        <nav class="col-12 navbar navbar-default">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <form id="groupsForm" name="form" th:action="@{/groups/new-group}" method="get">
+<div class="d-flex container-fluid justify-content-start">
+    <nav class="col-12 navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <form id="groupsForm" name="form" th:action="@{/new-group}" method="get">
 
-                        <button class="btn btn-primary btn-block" type="submit">Add group</button>
-                    </form>
-                </div>
+                    <button class="btn btn-primary btn-block" type="submit">Add group</button>
+                </form>
+
             </div>
-        </nav>
+        </div>
+    </nav>
 
-        <div class="col-12 justify-content-start">
+    <div class="justify-content-start">
 
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">
-                        <a class="btn btn-link btn-block" data-toggle="collapse" href="#multiCollapseExample1" role="button"
-                           aria-expanded="false" aria-controls="multiCollapseExample1">Group Name</a>
-                    </h5>
-                </div>
-            </div>
+        <div class="card w-150">
+            <div class="card-header">
+                <nav class="navbar navbar-default">
+                    <!-- for each group-->
+                    <div class="container">
 
-            <div class="collapse multi-collapse" id="multiCollapseExample1">
-                <div class="card card-body">
+                        <label class="col-7">Group: Name</label>
 
-                    <label>Expenses</label>
+                        <div>
 
-                    <div name="expense-name">
+                            <input type="hidden" id="expenseType" name="expenseType" value="GROUP"/>
 
-                        <button class="btn btn-primary"
-                                type="button" data-toggle="collapse"
-                                data-target="#multiCollapseExample2"
-                                aria-expanded="false"
-                                aria-controls="multiCollapseExample2">
-                            Toggle Expense
-                        </button>
+                            <form id="expenseForm" name="form" class="row-5" style="width: 150px;"
+                                  th:action="@{/add-expense(expenseType='GROUP')}" method="get">
+                                <button class="btn btn-light">
+                                    Create expense
+                                </button>
+                            </form>
 
-                        <div class="collapse multi-collapse" id="multiCollapseExample2">
+                            <a class="btn btn-light row-5" style="width: 135px;" data-toggle="collapse" href="#multiCollapseExample1"
+                               role="button"
+                               aria-expanded="false" aria-controls="multiCollapseExample1">
+                                Show Expenses
+                            </a>
+
+                            <form id="deleteForm" name="form" class="row-5" style="width: 190px;"
+                                  th:action="@{/delete-group}" method="get">
+                                <button class="btn btn-danger">
+                                    Delete group
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- for each expense -->
+                        <div class="collapse multi-collapse" id="multiCollapseExample1" style="width:440px;">
                             <div class="card card-body">
-                                <label>Expense Name</label>
+                                <h5 class="mb-0">
+
+                                    <div class="list-group">
+                                        <div class="p-1 mb-1 small">
+
+                                            <label>Expense Name</label>
+
+                                            <div class="d-flex w-120 align-items-center justify-content-between">
+                                                <strong class="mb-1">
+                                                    <!-- <td th:text="${expense}">1</td>--></strong>
+                                                <small>300$</small>
+                                            </div>
+
+                                            <div class="p-1 col-10 mb-1 small">
+                                                Vova Beridniy 20.02.2019
+
+                                            </div>
+                                            <button class="btn btn-light"
+                                                    type="button"
+                                                    data-toggle="collapse"
+                                                    data-target="#collapseExpense"
+                                                    aria-expanded="false"
+                                                    aria-controls="collapseExpense">
+                                                Show details
+                                            </button>
+                                        </div>
+                                    </div>
+                                </h5>
+                                <div name="expense-name">
+                                    <div class="collapse multi-collapse" id="collapseExpense">
+                                        <div class="card card-body">
+                                            <h5 class="mb-0">
+                                                <div class="list-group">
+                                                    <div class="p-1 col-10 mb-1 small">
+                                                        Details
+                                                    </div>
+                                                </div>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                     </div>
-                </div>
+                </nav>
             </div>
         </div>
-
+    </div>
 </div>
 </div>
 </body>

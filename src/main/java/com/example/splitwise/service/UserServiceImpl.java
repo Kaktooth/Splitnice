@@ -4,11 +4,13 @@ import com.example.splitwise.model.User;
 import com.example.splitwise.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.Set;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -20,17 +22,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User add(User user) {
-      return userRepository.add(user);
-    }
-
-    @Override
-    public User update(Integer id, User user) {
-        return user;
+        return userRepository.add(user);
     }
 
     @Override
     public User getById(Integer userId) {
-        return new User(userId,"null","null","null",false);
+        return userRepository.getById(userId);
     }
 
     @Override
@@ -43,22 +40,33 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changePassword(String oldPassword, String newPassword) {
+    public User changePassword(Integer id, String oldPassword, String newPassword) {
 
+        return new User(1, "mock@gmail.com", "0992397893", newPassword, true);
     }
 
     @Override
-    public void changeEmail(String phoneNumber) {
-
+    public User changeEmail(Integer id) {
+        return new User(1, "changed@gmail.com", "0992397893", "qweqwe", true);
     }
 
     @Override
-    public void forgotPassword(String phoneNumber) {
-
+    public User changePhoneNumber(Integer id) {
+        return new User(1, "changed@gmail.com", "0334343422", "qweqwe", true);
     }
 
     @Override
-    public void changeSignInStatus(boolean signed) {
+    public User forgotPassword(Integer id) {
+        return null;
+    }
 
+    @Override
+    public Integer getIdFromAuthenticationName(String name) {
+        return userRepository.getIdFromAuthenticationName(name);
+    }
+
+    @Override
+    public User changeSignInStatus(boolean signed) {
+        return null;
     }
 }

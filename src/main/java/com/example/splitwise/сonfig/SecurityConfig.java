@@ -1,5 +1,6 @@
 package com.example.splitwise.сonfig;
 
+import com.example.splitwise.auth.Authority;
 import com.example.splitwise.auth.LoginAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -16,13 +17,15 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final DataSource dataSource;
     private final PasswordEncoder passwordEncoder;
 
-    public SecurityConfig(DataSource dataSource, PasswordEncoder passwordEncoder) {
+    @Autowired
+    public SecurityConfig(DataSource dataSource,
+                          PasswordEncoder passwordEncoder) {
         this.dataSource = dataSource;
         this.passwordEncoder = passwordEncoder;
     }
@@ -30,7 +33,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) {
         web.ignoring()
-            .mvcMatchers("/resources/**");
+            .mvcMatchers("/resources/**",
+                "/configuration/ui",
+                "/v2/api-docs",
+                "/swagger-resources/**",
+                "/configuration/security",
+                "/swagger-ui.html",
+                "/webjars/**");
     }
 
     @Autowired
@@ -51,24 +60,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf()
-            .ignoringAntMatchers("/h2-console/**");
-        http.headers()
+
+        http
+            .headers()
             .frameOptions()
-            .sameOrigin();
-        http.sessionManagement()
-            .sessionAuthenticationStrategy(new SessionFixationProtectionStrategy());
-        http.authorizeRequests()
-            .antMatchers("/error")
+            .sameOrigin()
+            .and()
+            .sessionManagement()
+            .sessionAuthenticationStrategy(new SessionFixationProtectionStrategy())
+            .and()
+            .authorizeRequests()
+            .mvcMatchers("/error", "/sign-in", "/sign-up", "/**", "/dashboard/**")
             .permitAll()
-            .antMatchers("/sign-in")
-            .permitAll()
-            .antMatchers("/sign-up")
-            .permitAll()
-            .antMatchers("/**", "/dashboard/**")
+            .mvcMatchers("/api")
             .authenticated()
-            .antMatchers("/admin-page")
-            .authenticated()
+            .mvcMatchers("/admin-page")
+            .hasAuthority(Authority.ADMIN.getNumVal().toString())
             .anyRequest().authenticated()
             .and()
             .httpBasic()
@@ -82,18 +89,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .failureUrl("/sign-in?error")
             .permitAll()
             .and()
-            .logout().deleteCookies("JSESSIONID")
+            .logout()
             .invalidateHttpSession(true)
+            .deleteCookies("JSESSIONID")
             .logoutUrl("/signout")
             .logoutSuccessUrl("/sign-in?signout")
             .permitAll()
             .and()
             .exceptionHandling().accessDeniedPage("/access-denied-page")
             .and()
-            .rememberMe()
-            .rememberMeCookieName("remember-me")
-            .rememberMeParameter("remember-me")
-            .key("remember-me")
-            .tokenValiditySeconds(15000);
+            .headers().frameOptions().disable();
+
     }
 }

@@ -10,10 +10,11 @@ import java.util.Map;
 
 public class ExpenseDto extends Expense {
 
+    private final ExpenseType type;
     private final SplittingType splittingType;
     private final Account lander;
     private final List<Account> accounts;
-    private final Map<Account, BigDecimal> shares;
+    private final Map<Integer, BigDecimal> shares;
 
     public ExpenseDto(Integer id,
                       BigDecimal amount,
@@ -23,8 +24,10 @@ public class ExpenseDto extends Expense {
                       SplittingType splittingType,
                       Account lander,
                       List<Account> accounts,
-                      Map<Account, BigDecimal> shares) {
-        super(id, amount, creationDate, currency, type);
+                      Map<Integer, BigDecimal> shares,
+                      Integer creatorId) {
+        super(id, amount, creationDate, currency, creatorId);
+        this.type = type;
         this.splittingType = splittingType;
         this.lander = lander;
         this.accounts = accounts;
@@ -43,7 +46,22 @@ public class ExpenseDto extends Expense {
         return accounts;
     }
 
-    public Map<Account, BigDecimal> getShares() {
+    public Map<Integer, BigDecimal> getShares() {
         return shares;
+    }
+
+    public ExpenseType getType() {
+        return type;
+    }
+
+    @Override
+    public String toString() {
+        return "ExpenseDto{" +
+            "type=" + type +
+            ", splittingType=" + splittingType +
+            ", lander=" + lander +
+            ", accounts=" + accounts +
+            ", shares=" + shares +
+            '}';
     }
 }

@@ -3,11 +3,13 @@ package com.example.splitwise.service;
 import com.example.splitwise.model.transaction.Transaction;
 import com.example.splitwise.repository.TransactionRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.Set;
 
 @Service
+@Transactional
 public class TransactionServiceImpl implements TransactionService {
 
     private final TransactionRepository transactionRepository;
@@ -19,11 +21,6 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public Transaction add(Transaction transaction) {
         return transactionRepository.add(transaction);
-    }
-
-    @Override
-    public Transaction update(Integer id, Transaction transaction) {
-        return null;
     }
 
     @Override
@@ -39,5 +36,10 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public void delete(Integer transactionId) {
         transactionRepository.delete(transactionId);
+    }
+
+    @Override
+    public void deleteTransactionsOfExpense(Integer expenseId) {
+
     }
 }

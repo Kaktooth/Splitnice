@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Expenses</title>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+</head>
+<body>
+
+<nav class="col-12 navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header container-fluid ">
+            <div class="input-group mb-1">
+
+                <div class="input-group-prepend mb-1">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">Search</span>
+                    </div>
+                    <input type="text" class="form-control" aria-label="Default"
+                           aria-describedby="inputGroup-sizing-default">
+                </div>
+
+                <div class="input-group mb-1 justify-content-between">
+                    <form id="expenseForm" name="form" th:action="@{/add-expense(expenseType='INDIVIDUAL')}"
+                          method="get">
+                        <input type="hidden" id="expenseType" name="expenseType" value="INDIVIDUAL"/>
+
+                        <button class="btn btn-primary ">
+                            Add friend
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<ul th:each="friend : ${friends}" >
+
+    <li class="list-group-item">
+
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <div class="list-group">
+                        <label>Friend Name</label>
+
+                        <button class="btn btn-light"
+                                type="button"
+                                data-toggle="collapse"
+                                data-target="#collapseExpense"
+                                aria-expanded="false"
+                                aria-controls="collapseExpense">
+                            Show details
+                        </button>
+                    </div>
+                </h5>
+            </div>
+            <div class="collapse" id="collapseExpense">
+                <div class="card-body">
+                    <label>Details</label>
+                </div>
+            </div>
+        </div>
+    </li>
+</ul>
+
+</body>
+</html>

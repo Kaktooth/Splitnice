@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class UserMapper implements RowMapper<User> {
+public class UserRowMapper implements RowMapper<User> {
 
     @Override
     public User mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -16,6 +16,6 @@ public class UserMapper implements RowMapper<User> {
         boolean enabled = rs.getBoolean("enabled");
         String phoneNumber = rs.getString("phone_number");
 
-        return new User(id, username, password, phoneNumber, enabled);
+        return new User(id, username, phoneNumber, password, enabled);
     }
 }
