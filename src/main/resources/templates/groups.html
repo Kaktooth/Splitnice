@@ -12,12 +12,11 @@
 </head>
 <body>
 
-
 <div class="d-flex container-fluid justify-content-start">
     <nav class="col-12 navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
-                <form id="groupsForm" name="form" th:action="@{/new-group}" method="get">
+                <form id="groupsForm" name="form" th:action="@{/add-group}" method="get">
 
                     <button class="btn btn-primary btn-block" type="submit">Add group</button>
                 </form>
@@ -26,88 +25,85 @@
         </div>
     </nav>
 
-    <div class="justify-content-start">
+    <!-- for each group-->
+    <div class="justify-content-start" th:each="group : ${groupList}">
 
         <div class="card w-150">
             <div class="card-header">
                 <nav class="navbar navbar-default">
-                    <!-- for each group-->
                     <div class="container">
 
-                        <label class="col-7">Group: Name</label>
+                        <label class="col-5" th:text="${group.title}"></label>
+                        <!--<label th:text="'Creator: '+${group.creatorId}"></label>-->
 
-                        <div>
-
+                        <form id="expenseForm" name="form" style="width: 150px;"
+                              th:action="@{/add-expense(expenseType='GROUP')}" method="get">
                             <input type="hidden" id="expenseType" name="expenseType" value="GROUP"/>
 
-                            <form id="expenseForm" name="form" class="row-5" style="width: 150px;"
-                                  th:action="@{/add-expense(expenseType='GROUP')}" method="get">
-                                <button class="btn btn-light">
-                                    Create expense
-                                </button>
-                            </form>
+                            <button class="btn btn-light">
+                                Create expense
+                            </button>
+                        </form>
 
-                            <a class="btn btn-light row-5" style="width: 135px;" data-toggle="collapse" href="#multiCollapseExample1"
-                               role="button"
-                               aria-expanded="false" aria-controls="multiCollapseExample1">
-                                Show Expenses
-                            </a>
+                        <a class="btn btn-light row-5" style="width: 135px;"
+                           th:attr="href='#multiCollapse'+${group.id},
+                           aria-controls='multiCollapse'+${group.id}"
+                           data-toggle="collapse"
+                           role="button"
+                           aria-expanded="false">
+                            Show Expenses
+                        </a>
 
-                            <form id="deleteForm" name="form" class="row-5" style="width: 190px;"
-                                  th:action="@{/delete-group}" method="get">
-                                <button class="btn btn-danger">
-                                    Delete group
-                                </button>
-                            </form>
-                        </div>
+                        <div class="collapse multi-collapse" th:attr="id='multiCollapse'+${group.id}"
+                             style="width:440px;">
+                            <!-- for each expense -->
+                            <div th:each="expense : ${group.expenses}">
+                                <div class="card card-body">
+                                    <h5 class="mb-0">
+                                        <div class="list-group">
+                                            <label th:text="${expense.id}"></label>
 
-                        <!-- for each expense -->
-                        <div class="collapse multi-collapse" id="multiCollapseExample1" style="width:440px;">
-                            <div class="card card-body">
-                                <h5 class="mb-0">
-
-                                    <div class="list-group">
-                                        <div class="p-1 mb-1 small">
-
-                                            <label>Expense Name</label>
-
-                                            <div class="d-flex w-120 align-items-center justify-content-between">
-                                                <strong class="mb-1">
-                                                    <!-- <td th:text="${expense}">1</td>--></strong>
-                                                <small>300$</small>
+                                            <div class="d-flex w-100 align-items-center justify-content-between">
+                                                <strong class="mb-1"> <!-- <td th:text="${expense}">1</td>--></strong>
+                                                <small th:text="${expense.getAmountInfo()}"></small>
                                             </div>
 
-                                            <div class="p-1 col-10 mb-1 small">
-                                                Vova Beridniy 20.02.2019
+                                            <div class="p-1 col-10 mb-1 small" th:text="${expense.getCreationInfo()}">
 
                                             </div>
                                             <button class="btn btn-light"
                                                     type="button"
                                                     data-toggle="collapse"
-                                                    data-target="#collapseExpense"
-                                                    aria-expanded="false"
-                                                    aria-controls="collapseExpense">
+                                                    th:attr="data-target='#collapseExpense'+${expense.id},
+                                                    aria-controls='collapseExpense'+${expense.id}"
+                                                    aria-expanded="false">
                                                 Show details
                                             </button>
                                         </div>
-                                    </div>
-                                </h5>
-                                <div name="expense-name">
-                                    <div class="collapse multi-collapse" id="collapseExpense">
-                                        <div class="card card-body">
-                                            <h5 class="mb-0">
-                                                <div class="list-group">
-                                                    <div class="p-1 col-10 mb-1 small">
-                                                        Details
+                                    </h5>
+                                    <div name="expense-name">
+                                        <div class="collapse multi-collapse"
+                                             th:attr="id='collapseExpense'+${expense.id}">
+                                            <div class="card card-body">
+                                                <h5 class="mb-0">
+                                                    <div class="list-group">
+                                                        <div class="p-1 col-10 mb-1 small">
+                                                            Details
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </h5>
+                                                </h5>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
+                        <form id="deleteForm" name="form" class="row-5" style="width: 190px;"
+                              th:action="@{/delete-group}" method="get">
+                            <button class="btn btn-danger">
+                                Delete group
+                            </button>
+                        </form>
                     </div>
                 </nav>
             </div>

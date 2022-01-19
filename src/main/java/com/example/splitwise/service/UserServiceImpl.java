@@ -32,41 +32,31 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Collection<User> getAll(Set<Integer> ids) {
-        return null;
+        return userRepository.getAll(ids);
     }
 
     @Override
     public void delete(Integer userId) {
+        userRepository.delete(userId);
     }
 
     @Override
-    public User changePassword(Integer id, String oldPassword, String newPassword) {
-
-        return new User(1, "mock@gmail.com", "0992397893", newPassword, true);
+    public void changePassword(Integer id, String oldPassword, String newPassword) {
+        userRepository.changePassword(id, oldPassword, newPassword);
     }
 
     @Override
-    public User changeEmail(Integer id) {
-        return new User(1, "changed@gmail.com", "0992397893", "qweqwe", true);
+    public void changeEmail(Integer userId, String email) {
+        userRepository.changeEmail(userId, email);
     }
 
     @Override
-    public User changePhoneNumber(Integer id) {
-        return new User(1, "changed@gmail.com", "0334343422", "qweqwe", true);
-    }
-
-    @Override
-    public User forgotPassword(Integer id) {
-        return null;
+    public void forgotPassword(Integer id) {
+        userRepository.forgotPassword(id);
     }
 
     @Override
     public Integer getIdFromAuthenticationName(String name) {
         return userRepository.getIdFromAuthenticationName(name);
-    }
-
-    @Override
-    public User changeSignInStatus(boolean signed) {
-        return null;
     }
 }

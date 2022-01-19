@@ -1,6 +1,9 @@
-package com.example.splitwise.controller;
+package com.example.splitwise.controller.rest;
 
+import com.example.splitwise.model.Currency;
+import com.example.splitwise.model.expense.Expense;
 import com.example.splitwise.model.group.Group;
+import com.example.splitwise.model.group.GroupDto;
 import com.example.splitwise.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,17 +14,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/group")
-public class GroupController {
+public class RestGroupController {
 
     private final GroupService groupService;
 
     @Autowired
-    public GroupController(GroupService groupService) {
+    public RestGroupController(GroupService groupService) {
         this.groupService = groupService;
     }
 
@@ -29,8 +34,32 @@ public class GroupController {
     public List<Group> getAll() {
 //        groupService.getAll();
         List<Group> groups = new ArrayList<>();
-        Group group1 = new Group(1, "title1", 1);
-        Group group2 = new Group(2, "title2", 2);
+        List<Expense> expenseList = new ArrayList<>();
+        Expense expense = new Expense.ExpenseBuilder()
+            .withId(1)
+            .withAmount(new BigDecimal("15.9"))
+            .withCreationDate(OffsetDateTime.now())
+            .withCurrency(Currency.EUR)
+            .withCreatorId(3)
+            .withGroupId(1)
+            .buildGroupExpense();
+        expenseList.add(expense);
+        List<Expense> expenseList2 = new ArrayList<>();
+        Expense expense2 = new Expense.ExpenseBuilder()
+            .withId(2)
+            .withAmount(new BigDecimal("15.9"))
+            .withCreationDate(OffsetDateTime.now())
+            .withCurrency(Currency.EUR)
+            .withCreatorId(3)
+            .withGroupId(1)
+            .buildGroupExpense();
+        expenseList2.add(expense2);
+        Group group1 = new GroupDto(1, "Title1", 1,
+            expenseList
+        );
+        Group group2 = new GroupDto(2, "Title2", 1,
+            expenseList2
+        );
         groups.add(group1);
         groups.add(group2);
 

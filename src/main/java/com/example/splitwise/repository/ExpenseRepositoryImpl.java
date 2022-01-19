@@ -1,6 +1,8 @@
 package com.example.splitwise.repository;
 
 import com.example.splitwise.model.expense.Expense;
+import com.example.splitwise.model.expense.ExpenseDto;
+import com.example.splitwise.model.expense.ExpenseType;
 import com.example.splitwise.model.expense.GroupExpense;
 import com.example.splitwise.model.expense.IndividualExpense;
 import com.example.splitwise.utils.DbCurrencyManager;
@@ -46,7 +48,7 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
 
         Integer entityId = (Integer) keyHolder.getKey();
 
-        if (expense instanceof GroupExpense) {
+        if (((ExpenseDto) expense).getType() == ExpenseType.INDIVIDUAL) {
             return new Expense.ExpenseBuilder()
                 .withId(entityId)
                 .withAmount(expense.getAmount())
@@ -54,7 +56,7 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
                 .withCurrency(expense.getCurrency())
                 .withCreatorId(expense.getCreatorId())
                 .buildGroupExpense();
-        } else if (expense instanceof IndividualExpense) {
+        } else if (((ExpenseDto) expense).getType() == ExpenseType.GROUP) {
             return new Expense.ExpenseBuilder()
                 .withId(entityId)
                 .withAmount(expense.getAmount())
@@ -144,9 +146,13 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
     @Override
     public List<Expense> getAllGroupExpenses(Set<Integer> ids) {
         String inSql = String.join(",", Collections.nCopies(ids.size(), "?"));
-        String query = String.format("SELECT id, expense_id, group_id FROM group_expense WHERE id IN (%s)", inSql);
+        String query = String.format("SELECT group_expense.id, amount, creation_date, currency_id, author_id, group_id\n" +
+            "FROM group_expense\n" +
+            "INNER JOIN expense ON expense.id = expense_id\n" +
+            "INNER JOIN users ON users.id = user_id\n" +
+            "WHERE group_expense.id IN (%s)", inSql);
 
-        return null; //jdbcTemplate.query(query, Expense.class, ids);
+        return jdbcTemplate.query(query, new GroupExpenseRowMapper(), ids.toArray());
     }
 
     @Override

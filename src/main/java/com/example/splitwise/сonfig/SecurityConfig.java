@@ -70,10 +70,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .sessionAuthenticationStrategy(new SessionFixationProtectionStrategy())
             .and()
             .authorizeRequests()
-            .mvcMatchers("/error", "/sign-in", "/sign-up", "/**", "/dashboard/**")
+            .mvcMatchers("/error", "/sign-in", "/sign-up")
             .permitAll()
-            .mvcMatchers("/api")
-            .authenticated()
             .mvcMatchers("/admin-page")
             .hasAuthority(Authority.ADMIN.getNumVal().toString())
             .anyRequest().authenticated()
@@ -96,9 +94,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .logoutSuccessUrl("/sign-in?signout")
             .permitAll()
             .and()
-            .exceptionHandling().accessDeniedPage("/access-denied-page")
-            .and()
-            .headers().frameOptions().disable();
+            .exceptionHandling().accessDeniedPage("/access-denied-page");
 
     }
 }

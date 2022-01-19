@@ -11,7 +11,7 @@ public class AdminController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('1')")
-    public void getAdminPage(){
+    public void getAdminPage() {
 
     }
 }

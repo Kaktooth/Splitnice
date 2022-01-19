@@ -33,7 +33,6 @@ public class GroupRepositoryImpl implements GroupRepository {
 
         Integer groupId = (Integer) keyHolder.getKey();
 
-        jdbcTemplate.update(query);
         return new Group(groupId, group.getTitle(), group.getCreatorId());
     }
 

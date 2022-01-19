@@ -3,7 +3,6 @@ package com.example.splitwise.model.expense;
 import com.example.splitwise.model.account.Account;
 import com.example.splitwise.service.AccountService;
 import com.example.splitwise.service.GroupService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,12 +21,9 @@ public class NamesParser {
         List<String> splitedNames = List.of(names.split(" "));
         List<Account> accounts = new ArrayList<>();
 
-        splitedNames
-            .forEach(
-                name -> accounts.add(
-                    accountService.getByUsername(name)
-                )
-            );
+        for (String name : splitedNames) {
+            accounts.add(accountService.getByUsername(name));
+        }
 
         return accounts;
     }

@@ -66,8 +66,8 @@
                         <button class="btn btn-light"
                                 type="button"
                                 data-toggle="collapse"
-                                th:attr="data-target='#collapseExpense'+${expense.id}
-                                ,aria-controls='collapseExpense'+${expense.id}"
+                                th:attr="data-target='#collapseExpense'+${expense.id},
+                                aria-controls='collapseExpense'+${expense.id}"
                                 aria-expanded="false">
                             Show details
                         </button>
@@ -83,7 +83,6 @@
     </li>
 </ul>
 <div class="nav-item">
-    <!--    <form method="get" th:action="@{/expenses/${param.currentPage}}">-->
     <form method="get" th:action="@{/dashboard/expense/{currentPage}(currentPage=${currentPage})}">
         <nav aria-label="Page navigation" class="navbar navbar-expand-lg navbar-light bg-light justify-content-center">
             <ul class="pagination">
@@ -109,20 +108,6 @@
             </ul>
         </nav>
     </form>
-    <nav aria-label="Page navigation">
-        <label>Page size: <label th:text=" ${param.pageSize}"></label></label>
-        <ul class="pagination">
-            <!--                <li th:if="${param.pageSize.iterator().next()} gt 1">-->
-            <!--                    <a class="page-link"-->
-            <!--                       th:href="@{/expenses/{currentPage}(pageSize=(${param.pageSize.iterator().next()}-1),expenses=true)}"><</a>-->
-            <!--                </li>-->
-            <!--                <li th:if="${param.pageSize.iterator().next()} gt (${param.pageSize.iterator().next()}-1)">-->
-            <!--                    <a class="page-link"-->
-            <!--                       th:href="@{/expenses/{currentPage}(pageSize=(${param.pageSize.iterator().next()}+1),expenses=true)}">></a>-->
-            <!--                </li>-->
-        </ul>
-    </nav>
-    <!--    </form>-->
 </div>
 </body>
 </html>

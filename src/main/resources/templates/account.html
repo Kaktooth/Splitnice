@@ -13,13 +13,12 @@
 </head>
 
 <body class="d-flex justify-content-center align-items-center text-center">
-<form name="form" th:action="@{/account/{id}(id=${userObject.id},edit=${savedEdit})}" th:method="put">
+<form name="form" th:action="@{/account/(edit=${savedEdit})}" th:method="put">
     <input type="hidden" name="${_csrf.parameterName}"
            value="${_csrf.token}"/>
     <h1 class="h3 mb-3 font-weight-normal ">Your account</h1>
-    <div sec:authorize="isAuthenticated()">
-        Welcome <b><span sec:authentication="name">Username</span></b>
-        &nbsp;
+    <div>
+        Welcome <b><span sec:authentication="name">Email</span></b>
         <i><span sec:authentication="principal.authorities">Roles</span></i>
     </div>
     <input
@@ -50,12 +49,12 @@
                    placeholder="Email address" required=""
                    autofocus=""/>
         </div>
-        <a th:href="@{/account/{id}(id=${userObject.id},edit='email')}"
+        <a th:href="@{/account/(edit='email')}"
            th:unless="${#strings.equals(#request.getParameter('edit'), 'email')}">
             <i class="icon-pencil"></i> Edit email
         </a>
 
-        <a th:href="@{/account/{id}(id=${userObject.id})}"
+        <a th:href="@{/account}"
            th:if="${#strings.equals(#request.getParameter('edit'), 'email')}">
             <i class="icon-pencil"></i> Cancel edit email
         </a>
@@ -81,12 +80,12 @@
                    placeholder="New password">
         </div>
 
-        <a th:href="@{/account/{id}(id=${userObject.id},edit='password')}"
+        <a th:href="@{/account/(edit='password')}"
            th:unless="${#strings.equals(#request.getParameter('edit'), 'password')}">
             <i class="icon-pencil"></i> Edit password
         </a>
 
-        <a th:href="@{/account/{id}(id=${userObject.id})}"
+        <a th:href="@{/account}"
            th:if="${#strings.equals(#request.getParameter('edit'), 'password')}">
             <i class="icon-pencil"></i> Cancel edit password
         </a>
@@ -111,12 +110,12 @@
                    placeholder="Phone Number">
         </div>
 
-        <a th:href="@{/account/{id}(id=${userObject.id},edit='phone')}"
+        <a th:href="@{/account/(edit='phone')}"
            th:unless="${#strings.equals(#request.getParameter('edit'), 'phone')}">
             <i class="icon-pencil"></i> Edit phone number
         </a>
 
-        <a th:href="@{/account/{id}(id=${userObject.id})}"
+        <a th:href="@{/account}"
            th:if="${#strings.equals(#request.getParameter('edit'), 'phone')}">
             <i class="icon-pencil"></i> Cancel edit phone number
         </a>
