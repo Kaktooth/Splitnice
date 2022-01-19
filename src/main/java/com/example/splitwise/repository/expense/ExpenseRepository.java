@@ -5,7 +5,6 @@ import com.example.splitwise.model.expense.GroupExpense;
 import com.example.splitwise.model.expense.IndividualExpense;
 import com.example.splitwise.repository.EntityRepository;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 

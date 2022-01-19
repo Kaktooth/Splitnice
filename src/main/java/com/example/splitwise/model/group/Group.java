@@ -2,8 +2,6 @@ package com.example.splitwise.model.group;
 
 import com.example.splitwise.model.Identifiable;
 
-import java.math.BigDecimal;
-
 public class Group implements Identifiable {
 
     private final Integer id;

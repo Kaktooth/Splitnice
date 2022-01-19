@@ -3,7 +3,6 @@ package com.example.splitwise.service;
 import com.example.splitwise.model.expense.Expense;
 import com.example.splitwise.model.expense.ExpenseDto;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 

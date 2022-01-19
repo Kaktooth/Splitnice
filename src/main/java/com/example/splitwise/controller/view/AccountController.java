@@ -25,9 +25,7 @@ public class AccountController {
     }
 
     @GetMapping
-    public String getUser(@RequestParam(value = "edit", required = false) String edit,
-                          Model model) {
-
+    public String getUser(@RequestParam(value = "edit", required = false) String edit, Model model) {
         Integer id = userService.getIdFromAuthenticationName(
             SecurityContextHolder
                 .getContext()

@@ -1,4 +1,4 @@
-package com.example.splitwise.сonfig;
+package com.example.splitwise.сonfig.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
