@@ -1,4 +1,4 @@
-package com.example.splitwise.repository;
+package com.example.splitwise.repository.transaction;
 
 import com.example.splitwise.model.transaction.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;

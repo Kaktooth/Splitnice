@@ -3,7 +3,7 @@ package com.example.splitwise.service;
 import com.example.splitwise.model.Currency;
 import com.example.splitwise.model.User;
 import com.example.splitwise.model.account.Account;
-import com.example.splitwise.repository.AccountRepository;
+import com.example.splitwise.repository.account.AccountRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

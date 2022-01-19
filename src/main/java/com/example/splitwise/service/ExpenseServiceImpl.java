@@ -4,7 +4,7 @@ import com.example.splitwise.model.account.Account;
 import com.example.splitwise.model.expense.Expense;
 import com.example.splitwise.model.expense.ExpenseDto;
 import com.example.splitwise.model.transaction.Transaction;
-import com.example.splitwise.repository.ExpenseRepository;
+import com.example.splitwise.repository.expense.ExpenseRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

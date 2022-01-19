@@ -1,7 +1,7 @@
 package com.example.splitwise.service;
 
 import com.example.splitwise.model.transaction.Transaction;
-import com.example.splitwise.repository.TransactionRepository;
+import com.example.splitwise.repository.transaction.TransactionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

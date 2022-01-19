@@ -1,4 +1,4 @@
-package com.example.splitwise.repository;
+package com.example.splitwise.repository.expense;
 
 import com.example.splitwise.model.expense.Expense;
 import com.example.splitwise.model.expense.ExpenseDto;

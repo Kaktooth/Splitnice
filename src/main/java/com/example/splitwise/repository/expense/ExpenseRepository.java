@@ -1,8 +1,9 @@
-package com.example.splitwise.repository;
+package com.example.splitwise.repository.expense;
 
 import com.example.splitwise.model.expense.Expense;
 import com.example.splitwise.model.expense.GroupExpense;
 import com.example.splitwise.model.expense.IndividualExpense;
+import com.example.splitwise.repository.EntityRepository;
 
 import java.util.Collection;
 import java.util.List;

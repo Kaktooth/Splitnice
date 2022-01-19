@@ -1,7 +1,6 @@
-package com.example.splitwise.repository;
+package com.example.splitwise.repository.group;
 
 import com.example.splitwise.model.group.Group;
-import com.example.splitwise.utils.DbCurrencyManager;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;

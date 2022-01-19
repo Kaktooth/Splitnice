@@ -1,6 +1,7 @@
-package com.example.splitwise.repository;
+package com.example.splitwise.repository.user;
 
 import com.example.splitwise.model.User;
+import com.example.splitwise.repository.EntityRepository;
 
 public interface UserRepository extends EntityRepository<User> {
 

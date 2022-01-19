@@ -1,4 +1,4 @@
-package com.example.splitwise.repository;
+package com.example.splitwise.repository.user;
 
 import com.example.splitwise.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
