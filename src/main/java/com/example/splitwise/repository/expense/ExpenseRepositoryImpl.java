@@ -22,6 +22,16 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
+    String newExpenseQuery = "INSERT INTO expense (amount, title, creation_date, currency_id, author_id) VALUES (?, ?, ?, ?, ?)";
+    String individualExpenseQuery = "INSERT INTO individual_expense (expense_id, user_id) VALUES (?, ?)";
+    String groupExpenseQuery = "INSERT INTO group_expense (expense_id, group_id) VALUES (?, ?)";
+
+    String getAccountExpensesQuery = "SELECT individual_expense.id, amount, creation_date, currency_id, user_id, title, author_id\n" +
+        "FROM individual_expense\n" +
+        "INNER JOIN expense ON expense.id = expense_id\n" +
+        "INNER JOIN users ON users.id = user_id\n" +
+        "WHERE user_id = ?  OR author_id = ?";
+
     @Autowired
     public ExpenseRepositoryImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -31,13 +41,9 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
     public Expense add(Expense expense) {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        String query = "INSERT INTO expense (amount, title, creation_date, currency_id, author_id) VALUES (?, ?, ?, ?, ?)";
-        String individualExpenseQuery = "INSERT INTO individual_expense (expense_id, user_id) VALUES (?, ?)";
-        String groupExpenseQuery = "INSERT INTO group_expense (expense_id, group_id) VALUES (?, ?)";
-
 
         jdbcTemplate.update(con -> {
-            PreparedStatement ps = con.prepareStatement(query, new String[]{"id"});
+            PreparedStatement ps = con.prepareStatement(newExpenseQuery, new String[]{"id"});
             ps.setBigDecimal(1, expense.getAmount());
             ps.setString(2, expense.getTitle());
             ps.setTimestamp(3, timestamp);
@@ -61,7 +67,7 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
         if (expense instanceof GroupExpense) {
             Integer targetId = ((GroupExpense) expense).getGroupId();
             jdbcTemplate.update(con -> {
-                PreparedStatement ps = con.prepareStatement(query, new String[]{"id"});
+                PreparedStatement ps = con.prepareStatement(newExpenseQuery, new String[]{"id"});
                 ps.setInt(1, entityId);
                 ps.setInt(2, targetId);
                 return ps;
@@ -114,10 +120,9 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
     public Expense addGroupExpense(GroupExpense expense) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         Expense savedExpense = add(expense);
-        String query = "INSERT INTO group_expense VALUES (?, ?)";
 
         jdbcTemplate.update(con -> {
-            PreparedStatement ps = con.prepareStatement(query);
+            PreparedStatement ps = con.prepareStatement(groupExpenseQuery);
             ps.setInt(1, savedExpense.getId());
             ps.setInt(2, expense.getGroupId());
 
@@ -140,9 +145,7 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
     public Expense addIndividualExpense(IndividualExpense expense) {
         Expense savedExpense = add(expense);
 
-        String query = "INSERT INTO individual_expense VALUES (?, ?)";
-
-        jdbcTemplate.update(query, savedExpense.getId(), expense.getTargetId());
+        jdbcTemplate.update(individualExpenseQuery, savedExpense.getId(), expense.getTargetId());
 
         return savedExpense;
     }
@@ -173,12 +176,6 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
 
     @Override
     public List<Expense> getAccountExpenses(Integer accountId) {
-        String query = "SELECT individual_expense.id, amount, creation_date, currency_id, user_id, title, author_id\n" +
-            "FROM individual_expense\n" +
-            "INNER JOIN expense ON expense.id = expense_id\n" +
-            "INNER JOIN users ON users.id = user_id\n" +
-            "WHERE user_id = ?  OR author_id = ?";
-
-        return jdbcTemplate.query(query, new IndividualExpenseRowMapper(), accountId, accountId);
+        return jdbcTemplate.query(getAccountExpensesQuery, new IndividualExpenseRowMapper(), accountId, accountId);
     }
 }

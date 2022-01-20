@@ -32,7 +32,6 @@ public class RestGroupController {
 
     @GetMapping
     public List<Group> getAll() {
-//        groupService.getAll();
         List<Group> groups = new ArrayList<>();
         List<Expense> expenseList = new ArrayList<>();
         Expense expense = new Expense.ExpenseBuilder()
@@ -41,7 +40,6 @@ public class RestGroupController {
             .withCreationDate(OffsetDateTime.now())
             .withCurrency(Currency.EUR)
             .withCreatorId(3)
-//            .withGroupId(1)
             .buildGroupExpense();
         expenseList.add(expense);
         List<Expense> expenseList2 = new ArrayList<>();
@@ -51,7 +49,6 @@ public class RestGroupController {
             .withCreationDate(OffsetDateTime.now())
             .withCurrency(Currency.EUR)
             .withCreatorId(3)
-//            .withGroupId(1)
             .buildGroupExpense();
         expenseList2.add(expense2);
         Group group1 = new GroupDto(1, "Title1", 1,
@@ -68,20 +65,16 @@ public class RestGroupController {
 
     @GetMapping("/{id}")
     public Group getById(@PathVariable("id") Integer id) {
-//        groupService.getById(id);
-        Group group1 = new Group(1, "title1", 1);
-        return group1;
+        return groupService.getById(id);
     }
 
     @PostMapping
     public Group add(@RequestBody Group group) {
-//        groupService.add(group);
-        Group group1 = new Group(1, "title1", 1);
-        return group1;
+        return groupService.add(group);
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable("id") Integer id) {
-//        groupService.delete(id);
+        groupService.delete(id);
     }
 }
