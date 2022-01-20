@@ -13,7 +13,7 @@
 </head>
 
 <body class="d-flex justify-content-center align-items-center text-center">
-<form name="form" th:action="@{/account/(edit=${savedEdit})}" th:method="put">
+<form name="form" th:action="@{/account/(edit=${savedEdit})}" th:type="hidden" th:method="post">
     <input type="hidden" name="${_csrf.parameterName}"
            value="${_csrf.token}"/>
     <h1 class="h3 mb-3 font-weight-normal ">Your account</h1>

@@ -1,7 +1,9 @@
 package com.example.splitwise.service;
 
 import com.example.splitwise.model.User;
-import com.example.splitwise.repository.UserRepository;
+import com.example.splitwise.model.account.Account;
+import com.example.splitwise.repository.account.AccountRepository;
+import com.example.splitwise.repository.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,16 +15,28 @@ import java.util.Set;
 @Transactional
 public class UserServiceImpl implements UserService {
 
+    private final AccountRepository accountRepository;
     private final UserRepository userRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(AccountRepository accountRepository, UserRepository userRepository) {
+        this.accountRepository = accountRepository;
         this.userRepository = userRepository;
     }
 
     @Override
     public User add(User user) {
-        return userRepository.add(user);
+        User newUser = userRepository.add(user);
+
+        Account newAccount = new Account.AccountBuilder()
+            .withUsername(user.getEmail())
+            .withEmail(user.getEmail())
+            .withPhone(user.getPhone())
+            .withUserId(newUser.getId())
+            .build();
+
+        accountRepository.add(newAccount);
+        return newUser;
     }
 
     @Override

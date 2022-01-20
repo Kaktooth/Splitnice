@@ -1,7 +1,6 @@
-package com.example.splitwise.repository;
+package com.example.splitwise.repository.group;
 
 import com.example.splitwise.model.group.Group;
-import com.example.splitwise.utils.DbCurrencyManager;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -22,18 +21,9 @@ public class GroupRepositoryImpl implements GroupRepository {
 
     @Override
     public Group add(Group group) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
         String query = "INSERT INTO \"group\" (title, creator_id) VALUES (?, ?)";
-        jdbcTemplate.update(con -> {
-            PreparedStatement ps = con.prepareStatement(query);
-            ps.setString(1, group.getTitle());
-            ps.setInt(2, group.getCreatorId());
-            return ps;
-        }, keyHolder);
-
-        Integer groupId = (Integer) keyHolder.getKey();
-
-        return new Group(groupId, group.getTitle(), group.getCreatorId());
+        jdbcTemplate.update(query, group.getTitle(), group.getCreatorId());
+        return group;
     }
 
     @Override

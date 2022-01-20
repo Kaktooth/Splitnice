@@ -5,11 +5,15 @@ import com.example.splitwise.model.expense.Expense;
 import com.example.splitwise.model.group.Group;
 import com.example.splitwise.model.group.GroupDto;
 import com.example.splitwise.service.GroupService;
+import com.example.splitwise.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -17,17 +21,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/dashboard/groups")
 public class GroupController {
 
+    private final UserService userService;
     private final GroupService groupService;
 
-    @Autowired
-    public GroupController(GroupService groupService) {
+    public GroupController(UserService userService, GroupService groupService) {
+        this.userService = userService;
         this.groupService = groupService;
     }
 
-    @GetMapping
+    @GetMapping("/dashboard/groups")
     public String getGroupsAndExpenses(Model model) {
 
         List<Group> groups = new ArrayList<>();
@@ -39,7 +43,7 @@ public class GroupController {
             .withCreationDate(OffsetDateTime.now())
             .withCurrency(Currency.EUR)
             .withCreatorId(3)
-            .withGroupId(1)
+//            .withGroupId(1)
             .buildGroupExpense();
         expenseList.add(expense);
 
@@ -50,7 +54,7 @@ public class GroupController {
             .withCreationDate(OffsetDateTime.now())
             .withCurrency(Currency.EUR)
             .withCreatorId(3)
-            .withGroupId(1)
+//            .withGroupId(1)
             .buildGroupExpense();
         expenseList2.add(expense2);
 
@@ -67,6 +71,24 @@ public class GroupController {
 
         model.addAttribute("groupList", groups);
 
+        return "dashboard";
+    }
+
+    @GetMapping("/add-group")
+    public String getPage() {
+        return "add-group";
+    }
+
+    @PostMapping("/add-group")
+    public String addNewGroup(@RequestParam(value = "title") String title) {
+
+        Integer id = userService.getIdFromAuthenticationName(
+            SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName());
+
+        groupService.add(new Group(1, title, id));
         return "dashboard";
     }
 }

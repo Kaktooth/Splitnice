@@ -1,7 +1,6 @@
 package com.example.splitwise.controller.rest;
 
 import com.example.splitwise.model.User;
-import com.example.splitwise.service.AccountService;
 import com.example.splitwise.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,18 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class RestUserRegistrationController {
 
     private final UserService userService;
-
-    private final AccountService accountService;
-
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public RestUserRegistrationController(UserService userService,
-                                          PasswordEncoder passwordEncoder,
-                                          AccountService accountService) {
+    public RestUserRegistrationController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
-        this.accountService = accountService;
     }
 
     @PostMapping
@@ -37,9 +30,6 @@ public class RestUserRegistrationController {
         String encodedPassword = passwordEncoder.encode(password);
         User user = new User(1, username, phoneNumber, encodedPassword, true);
 
-        User userReturn = userService.add(user);
-        accountService.add(user);
-
-        return userReturn;
+        return userService.add(user);
     }
 }

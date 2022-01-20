@@ -1,4 +1,4 @@
-package com.example.splitwise.repository;
+package com.example.splitwise.repository.user;
 
 import com.example.splitwise.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,7 +84,7 @@ public class UserRepositoryImpl implements UserRepository {
             return;
         }
 
-        String queryForUsers = "UPDATE users set password = ? WHERE users.id = ?";
+        String queryForUsers = "UPDATE users SET password = ? WHERE users.id = ?";
 
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(queryForUsers, new String[]{"id"});

@@ -2,7 +2,7 @@ package com.example.splitwise.service;
 
 import com.example.splitwise.model.account.Account;
 import com.example.splitwise.model.group.Group;
-import com.example.splitwise.repository.GroupRepository;
+import com.example.splitwise.repository.group.GroupRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

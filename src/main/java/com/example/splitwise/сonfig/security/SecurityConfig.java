@@ -1,4 +1,4 @@
-package com.example.splitwise.сonfig;
+package com.example.splitwise.сonfig.security;
 
 import com.example.splitwise.auth.Authority;
 import com.example.splitwise.auth.LoginAuthenticationProvider;
