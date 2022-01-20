@@ -5,6 +5,8 @@ import com.example.splitwise.model.account.Account;
 import com.example.splitwise.model.expense.Expense;
 import com.example.splitwise.model.expense.ExpenseDto;
 import com.example.splitwise.model.expense.ExpenseType;
+import com.example.splitwise.model.expense.GroupExpense;
+import com.example.splitwise.model.expense.IndividualExpense;
 import com.example.splitwise.model.expense.NamesParser;
 import com.example.splitwise.model.expense.SplittingType;
 import com.example.splitwise.service.AccountService;
@@ -30,88 +32,42 @@ import java.util.Objects;
 @RequestMapping("/add-expense")
 public class ExpenseCreationController {
 
-    private final AccountService accountService;
-
-    private final UserService userService;
-
-    private final GroupService groupService;
-
     private final ExpenseService expenseService;
 
     @Autowired
-    public ExpenseCreationController(AccountService accountService,
-                                     UserService userService,
-                                     GroupService groupService,
-                                     ExpenseService expenseService) {
-
-        this.accountService = accountService;
-        this.userService = userService;
-        this.groupService = groupService;
+    public ExpenseCreationController(ExpenseService expenseService) {
         this.expenseService = expenseService;
     }
 
     @GetMapping
-    public String addAttributes(@RequestParam(value = "expenseType") String expenseType,
-                                Model model) {
+    public String addAttributes(@RequestParam(value = "expenseType") String expenseType, Model model) {
         model.addAttribute(expenseType);
 
         return "add-expense";
     }
 
     @PostMapping
-    public String registerNewExpense(@RequestParam(value = "names") String names,
-                                     @RequestParam(value = "expenseName") String expenseName,
+    public String registerNewExpense(@RequestParam(value = "names") String name,
+                                     @RequestParam(value = "expenseName") String title,
                                      @RequestParam(value = "amount") BigDecimal amount,
                                      @RequestParam(value = "currency") String currency,
                                      @RequestParam(value = "splitType") String splitType,
                                      @RequestParam(value = "expenseType") String expenseType) {
 
-        Integer id = userService.getIdFromAuthenticationName(
-            SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getName());
+        Expense.ExpenseBuilder expenseBuilder = new Expense.ExpenseBuilder()
+            .withAmount(amount)
+            .withTitle(title)
+            .withCurrency(Currency.valueOf(currency))
+            .withSplittingType(SplittingType.valueOf(splitType));
 
-        Account account = accountService.getById(id);
-
-        NamesParser namesParser = new NamesParser(accountService, groupService);
-        List<Account> accounts;
-
-        if (Objects.equals(expenseType, "INDIVIDUAL")) {
-
-            accounts = namesParser.parseToAccounts(names);
-
-            Expense expense = expenseService.registerNewExpense(
-                new ExpenseDto(
-                    1,
-                    new BigDecimal("3.3"),
-                    OffsetDateTime.now(),
-                    Currency.valueOf(currency),
-                    ExpenseType.valueOf(expenseType),
-                    SplittingType.valueOf(splitType),
-                    account,
-                    accounts,
-                    new HashMap<>(),
-                    id
-                )
-            );
-        } else {
-
-            accounts = namesParser.parseToGroupAccounts(1);
-            Expense expense = expenseService.registerNewExpense(
-                new ExpenseDto(
-                    1,
-                    new BigDecimal("3.3"),
-                    OffsetDateTime.now(),
-                    Currency.valueOf(currency),
-                    ExpenseType.valueOf(expenseType),
-                    SplittingType.valueOf(splitType),
-                    account,
-                    accounts,
-                    new HashMap<>(),
-                    1
-                )
-            );
+        if (expenseType.equals(ExpenseType.INDIVIDUAL.toString())) {
+            IndividualExpense individualExpense = expenseBuilder
+                .buildIndividualExpense();
+            expenseService.addNewIndividualExpense(individualExpense, name);
+        } else if (expenseType.equals(ExpenseType.GROUP.toString())) {
+            GroupExpense groupExpense = expenseBuilder
+                .buildGroupExpense();
+            expenseService.addNewGroupExpense(groupExpense, name);
         }
 
         return "dashboard";

@@ -1,13 +1,11 @@
 package com.example.splitwise.service;
 
-import com.example.splitwise.model.Currency;
-import com.example.splitwise.model.User;
 import com.example.splitwise.model.account.Account;
 import com.example.splitwise.repository.account.AccountRepository;
+import com.example.splitwise.repository.user.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Set;
 
@@ -16,36 +14,17 @@ import java.util.Set;
 public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
+    private final UserRepository userRepository;
 
-    public AccountServiceImpl(AccountRepository accountRepository) {
+    public AccountServiceImpl(AccountRepository accountRepository, UserRepository userRepository) {
         this.accountRepository = accountRepository;
-    }
-
-    @Override
-    public Account add(User user) {
-
-        Account account = new Account.AccountBuilder()
-            .withUsername(user.getEmail())
-            .withEmail(user.getEmail())
-            .withPhone(user.getPhone())
-            .withMoneyAmount(new BigDecimal(0))
-            .withCurrency(Currency.USD)
-            .build();
-
-        return accountRepository.add(account, user.getId());
+        this.userRepository = userRepository;
     }
 
     @Override
     public Account add(Account account) {
-        Account newAccount = new Account.AccountBuilder()
-            .withUsername(account.getEmail())
-            .withEmail(account.getEmail())
-            .withPhone(account.getPhone())
-            .withMoneyAmount(new BigDecimal(0))
-            .withCurrency(Currency.USD)
-            .build();
 
-        return accountRepository.add(newAccount);
+        return accountRepository.add(account);
     }
 
     @Override
@@ -59,7 +38,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Account getByUsername(String username) {
+    public Account getByUserEmail(String username) {
         return accountRepository.getByUsername(username);
     }
 

@@ -19,7 +19,8 @@ public class AccountRowMapper implements RowMapper<Account> {
         String email = rs.getString("username");
         BigDecimal amount = rs.getBigDecimal("amount");
         Currency currency = DbCurrencyManager.getCurrencyTypeById(rs.getInt("currency_id"));
+        Integer userId = rs.getInt("user_id");
 
-        return new Account(id, username, email, phoneNumber, amount, currency);
+        return new Account(id, username, email, phoneNumber, amount, currency, userId);
     }
 }

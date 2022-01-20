@@ -9,13 +9,8 @@ public class GroupExpense extends Expense {
 
     private final Integer groupId;
 
-    public GroupExpense(Integer id,
-                        BigDecimal amount,
-                        OffsetDateTime creationDate,
-                        Currency currency,
-                        Integer creatorId,
-                        Integer groupId) {
-        super(id, amount, creationDate, currency, creatorId);
+    public GroupExpense(Integer id, String title, BigDecimal amount, OffsetDateTime creationDate, Currency currency, Integer creatorId, SplittingType splittingType, Integer groupId) {
+        super(id, title, amount, creationDate, currency, creatorId, splittingType);
         this.groupId = groupId;
     }
 

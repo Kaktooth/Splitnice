@@ -41,7 +41,7 @@ public class RestGroupController {
             .withCreationDate(OffsetDateTime.now())
             .withCurrency(Currency.EUR)
             .withCreatorId(3)
-            .withGroupId(1)
+//            .withGroupId(1)
             .buildGroupExpense();
         expenseList.add(expense);
         List<Expense> expenseList2 = new ArrayList<>();
@@ -51,7 +51,7 @@ public class RestGroupController {
             .withCreationDate(OffsetDateTime.now())
             .withCurrency(Currency.EUR)
             .withCreatorId(3)
-            .withGroupId(1)
+//            .withGroupId(1)
             .buildGroupExpense();
         expenseList2.add(expense2);
         Group group1 = new GroupDto(1, "Title1", 1,

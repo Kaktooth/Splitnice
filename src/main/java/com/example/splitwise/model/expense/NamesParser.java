@@ -22,7 +22,7 @@ public class NamesParser {
         List<Account> accounts = new ArrayList<>();
 
         for (String name : splitedNames) {
-            accounts.add(accountService.getByUsername(name));
+            accounts.add(accountService.getByUserEmail(name));
         }
 
         return accounts;
