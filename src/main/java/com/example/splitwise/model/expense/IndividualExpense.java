@@ -9,8 +9,8 @@ public class IndividualExpense extends Expense {
 
     private final Integer targetId;
 
-    public IndividualExpense(Integer id, BigDecimal amount, OffsetDateTime creationDate, Currency currency, Integer creatorId, Integer targetId) {
-        super(id, amount, creationDate, currency, creatorId);
+    public IndividualExpense(Integer id, String title, BigDecimal amount, OffsetDateTime creationDate, Currency currency, Integer creatorId, SplittingType splittingType, Integer targetId) {
+        super(id, title, amount, creationDate, currency, creatorId, splittingType);
         this.targetId = targetId;
     }
 

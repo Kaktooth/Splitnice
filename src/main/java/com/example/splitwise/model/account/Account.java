@@ -13,14 +13,16 @@ public class Account implements Identifiable {
     private final String phone;
     private final BigDecimal moneyAmount;
     private final Currency currency;
+    private final Integer userId;
 
-    public Account(Integer id, String username, String email, String phone, BigDecimal moneyAmount, Currency currency) {
+    public Account(Integer id, String username, String email, String phone, BigDecimal moneyAmount, Currency currency, Integer userId) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.phone = phone;
         this.moneyAmount = moneyAmount;
         this.currency = currency;
+        this.userId = userId;
     }
 
     @Override
@@ -48,6 +50,9 @@ public class Account implements Identifiable {
         return currency;
     }
 
+    public Integer getUserId() {
+        return userId;
+    }
 
     public static final class AccountBuilder {
 
@@ -55,8 +60,9 @@ public class Account implements Identifiable {
         private String username;
         private String email;
         private String phone;
-        private BigDecimal moneyAmount;
-        private Currency currency;
+        private BigDecimal moneyAmount = new BigDecimal(0);
+        private Currency currency = Currency.USD;
+        private Integer userId;
 
         public AccountBuilder withId(Integer id) {
             this.id = id;
@@ -88,8 +94,13 @@ public class Account implements Identifiable {
             return this;
         }
 
+        public AccountBuilder withUserId(Integer userId) {
+            this.userId = userId;
+            return this;
+        }
+
         public Account build() {
-            return new Account(id, username, email, phone, moneyAmount, currency);
+            return new Account(id, username, email, phone, moneyAmount, currency, userId);
         }
     }
 }

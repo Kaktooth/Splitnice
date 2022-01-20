@@ -1,4 +1,4 @@
-package com.example.splitwise.repository;
+package com.example.splitwise.repository.transaction;
 
 import com.example.splitwise.model.transaction.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +16,9 @@ import java.util.Set;
 public class TransactionRepositoryImpl implements TransactionRepository {
 
     private final JdbcTemplate jdbcTemplate;
+    private final String addNewTransactionQuery = "INSERT INTO transaction (amount, currency_id, lander_id, receiver_id, expense_id) "
+        + "VALUES (?, ?, ?, ?, ?)";
+    private final String getByIdQuery = "SELECT * FROM transaction WHERE id = ?";
 
     @Autowired
     public TransactionRepositoryImpl(JdbcTemplate jdbcTemplate) {
@@ -25,11 +28,9 @@ public class TransactionRepositoryImpl implements TransactionRepository {
     @Override
     public Transaction add(Transaction transaction) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        String query = "INSERT INTO transaction (amount, currency_id, lander_id, receiver_id, expense_id) "
-            + "VALUES (?, ?, ?, ?, ?)";
 
         jdbcTemplate.update(con -> {
-            PreparedStatement ps = con.prepareStatement(query);
+            PreparedStatement ps = con.prepareStatement(addNewTransactionQuery);
             ps.setBigDecimal(1, transaction.getAmount());
             ps.setInt(2, getCurrencyTypeId(transaction.getCurrency().toString()));
             ps.setInt(3, transaction.getLanderId());
@@ -52,8 +53,7 @@ public class TransactionRepositoryImpl implements TransactionRepository {
 
     @Override
     public Transaction getById(Integer transactionId) {
-        String query = "SELECT * FROM transaction WHERE id = ?";
-        return jdbcTemplate.queryForObject(query, Transaction.class, transactionId);
+        return jdbcTemplate.queryForObject(getByIdQuery, Transaction.class, transactionId);
     }
 
     @Override
@@ -67,11 +67,7 @@ public class TransactionRepositoryImpl implements TransactionRepository {
     @Override
     public void delete(Integer transactionId) {
         String query = "DELETE FROM transaction WHERE id = ?";
-        jdbcTemplate.update(con -> {
-            PreparedStatement ps = con.prepareStatement(query);
-            ps.setInt(1, transactionId);
-            return ps;
-        });
+        jdbcTemplate.update(query, transactionId);
     }
 
     private Integer getCurrencyTypeId(String title) {

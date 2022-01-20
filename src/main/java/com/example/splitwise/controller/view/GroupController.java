@@ -39,7 +39,7 @@ public class GroupController {
             .withCreationDate(OffsetDateTime.now())
             .withCurrency(Currency.EUR)
             .withCreatorId(3)
-            .withGroupId(1)
+//            .withGroupId(1)
             .buildGroupExpense();
         expenseList.add(expense);
 
@@ -50,7 +50,7 @@ public class GroupController {
             .withCreationDate(OffsetDateTime.now())
             .withCurrency(Currency.EUR)
             .withCreatorId(3)
-            .withGroupId(1)
+//            .withGroupId(1)
             .buildGroupExpense();
         expenseList2.add(expense2);
 

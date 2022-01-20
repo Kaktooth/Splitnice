@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,7 +19,7 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 @Controller
-@RequestMapping(value = "/account")
+@RequestMapping("/account")
 public class AccountController {
 
     private final UserService userService;
@@ -31,10 +32,9 @@ public class AccountController {
         this.accountService = accountService;
     }
 
+    // what is it?
     @GetMapping
-    public String getUser(@RequestParam(value = "edit", required = false) String edit,
-                          Model model) {
-
+    public String getUser(@RequestParam(value = "edit", required = false) String edit, Model model) {
         Integer id = userService.getIdFromAuthenticationName(
             SecurityContextHolder
                 .getContext()
@@ -53,7 +53,7 @@ public class AccountController {
         return "/account";
     }
 
-    @PutMapping
+    @PutMapping("/edit")
     public String update(@RequestParam(value = "edit") String edit,
                          @RequestParam(value = "email", required = false) String email,
                          @RequestParam(value = "old-password", required = false) String oldPassword,

@@ -3,9 +3,8 @@ package com.example.splitwise.controller.view;
 import com.example.splitwise.model.Currency;
 import com.example.splitwise.model.expense.Expense;
 import com.example.splitwise.model.expense.SplittingType;
-import com.example.splitwise.service.UserService;
+import com.example.splitwise.service.ExpenseService;
 import com.example.splitwise.utils.Pagination;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,14 +19,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = "/dashboard/expenses")
+@RequestMapping("/dashboard/expenses")
 public class ExpenseController {
 
-    private final UserService userService;
+    private final ExpenseService expenseService;
 
-    @Autowired
-    public ExpenseController(UserService userService) {
-        this.userService = userService;
+    public ExpenseController(ExpenseService expenseService) {
+        this.expenseService = expenseService;
     }
 
     @GetMapping
@@ -44,13 +42,9 @@ public class ExpenseController {
                               @RequestParam("pageSize") Integer pageSize,
                               Model model) {
 
-        Integer userId = userService.getIdFromAuthenticationName(
-            SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getName());
+        Integer userId = 2;
 
-        List<Expense> expenseList = new ArrayList<>();
+        List<Expense> expenses = new ArrayList<>();
 
         Expense expense = new Expense.ExpenseBuilder()
             .withId(1)
@@ -59,7 +53,7 @@ public class ExpenseController {
             .withCurrency(Currency.USD)
             .withCreatorId(userId)
             .buildIndividualExpense();
-        expenseList.add(expense);
+        expenses.add(expense);
 
         Expense expense2 = new Expense.ExpenseBuilder()
             .withId(2)
@@ -68,7 +62,7 @@ public class ExpenseController {
             .withCurrency(Currency.EUR)
             .withCreatorId(userId)
             .buildIndividualExpense();
-        expenseList.add(expense2);
+        expenses.add(expense2);
 
         Expense expense3 = new Expense.ExpenseBuilder()
             .withId(3)
@@ -77,7 +71,7 @@ public class ExpenseController {
             .withCurrency(Currency.USD)
             .withCreatorId(userId)
             .buildIndividualExpense();
-        expenseList.add(expense3);
+        expenses.add(expense3);
 
         Expense expense4 = new Expense.ExpenseBuilder()
             .withId(4)
@@ -86,7 +80,7 @@ public class ExpenseController {
             .withCurrency(Currency.EUR)
             .withCreatorId(userId)
             .buildIndividualExpense();
-        expenseList.add(expense4);
+        expenses.add(expense4);
 
         Expense expense5 = new Expense.ExpenseBuilder()
             .withId(5)
@@ -95,7 +89,7 @@ public class ExpenseController {
             .withCurrency(Currency.USD)
             .withCreatorId(userId)
             .buildIndividualExpense();
-        expenseList.add(expense5);
+        expenses.add(expense5);
 
         Expense expense6 = new Expense.ExpenseBuilder()
             .withId(6)
@@ -104,9 +98,9 @@ public class ExpenseController {
             .withCurrency(Currency.EUR)
             .withCreatorId(userId)
             .buildIndividualExpense();
-        expenseList.add(expense6);
+        expenses.add(expense6);
 
-        Pagination<Expense> pagination = new Pagination<>(expenseList);
+        Pagination<Expense> pagination = new Pagination<>(expenses);
         int pageCount = pagination.getPageCount(pageSize) + 1;
         List<Integer> pageNumbers = pagination.getPageNumbers(pageCount);
         List<Expense> currentPageContent = pagination.getCurrentPageContent(currentPage - 1, pageSize);

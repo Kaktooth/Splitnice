@@ -1,7 +1,6 @@
 package com.example.splitwise.controller.view;
 
 import com.example.splitwise.model.User;
-import com.example.splitwise.service.AccountService;
 import com.example.splitwise.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,21 +12,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/sign-up")
-class UserRegistrationController {
+class UserController {
 
     private final UserService userService;
-
-    private final AccountService accountService;
-
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserRegistrationController(UserService userService,
-                                      PasswordEncoder passwordEncoder,
-                                      AccountService accountService) {
+    public UserController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
-        this.accountService = accountService;
     }
 
     @GetMapping
@@ -44,7 +37,6 @@ class UserRegistrationController {
         User user = new User(1, username, phoneNumber, encodedPassword, true);
 
         userService.add(user);
-        accountService.add(user);
 
         return "/sign-in";
     }
