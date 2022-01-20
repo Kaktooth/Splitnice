@@ -3,6 +3,9 @@ package com.example.splitwise.controller.view;
 import com.example.splitwise.model.Currency;
 import com.example.splitwise.model.User;
 import com.example.splitwise.model.expense.Expense;
+import com.example.splitwise.model.expense.ExpenseType;
+import com.example.splitwise.model.expense.GroupExpense;
+import com.example.splitwise.model.expense.IndividualExpense;
 import com.example.splitwise.model.expense.SplittingType;
 import com.example.splitwise.model.transaction.Transaction;
 import com.example.splitwise.service.AccountService;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -24,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/dashboard/expenses")
+@RequestMapping("")
 public class ExpenseController {
 
     private final ExpenseService expenseService;
@@ -43,7 +47,7 @@ public class ExpenseController {
         this.accountService = accountService;
     }
 
-    @GetMapping
+    @GetMapping("/dashboard/expenses")
     public String getExpensesAccount(Model model) {
 
         model.addAttribute("split", SplittingType.values());
@@ -52,7 +56,7 @@ public class ExpenseController {
         return "redirect:/dashboard/expenses/1?expenses&pageSize=4";
     }
 
-    @GetMapping("/{currentPage}")
+    @GetMapping("/dashboard/expenses/{currentPage}")
     public String getExpenses(@PathVariable("currentPage") int currentPage,
                               @RequestParam("pageSize") Integer pageSize,
                               Model model) {
@@ -103,6 +107,40 @@ public class ExpenseController {
         model.addAttribute("expenseList", currentPageContent);
 
         return "dashboard";
+    }
+
+    @GetMapping("/add-expense")
+    public String addAttributes(@RequestParam(value = "expenseType") String expenseType, Model model) {
+        model.addAttribute(expenseType);
+
+        return "add-expense";
+    }
+
+    @PostMapping("/add-expense")
+    public String registerNewExpense(@RequestParam(value = "names") String name,
+                                     @RequestParam(value = "expenseName") String title,
+                                     @RequestParam(value = "amount") BigDecimal amount,
+                                     @RequestParam(value = "currency") String currency,
+                                     @RequestParam(value = "splitType") String splitType,
+                                     @RequestParam(value = "expenseType") String expenseType) {
+
+        Expense.ExpenseBuilder expenseBuilder = new Expense.ExpenseBuilder()
+            .withAmount(amount)
+            .withTitle(title)
+            .withCurrency(Currency.valueOf(currency))
+            .withSplittingType(SplittingType.valueOf(splitType));
+
+        if (expenseType.equals(ExpenseType.INDIVIDUAL.toString())) {
+            IndividualExpense individualExpense = expenseBuilder
+                .buildIndividualExpense();
+            expenseService.addNewIndividualExpense(individualExpense, name);
+        } else if (expenseType.equals(ExpenseType.GROUP.toString())) {
+            GroupExpense groupExpense = expenseBuilder
+                .buildGroupExpense();
+            expenseService.addNewGroupExpense(groupExpense, name);
+        }
+
+        return "redirect:/dashboard/expenses?expenses";
     }
 }
 
