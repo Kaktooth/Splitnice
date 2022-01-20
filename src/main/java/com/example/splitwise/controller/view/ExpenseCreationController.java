@@ -1,20 +1,13 @@
 package com.example.splitwise.controller.view;
 
 import com.example.splitwise.model.Currency;
-import com.example.splitwise.model.account.Account;
 import com.example.splitwise.model.expense.Expense;
-import com.example.splitwise.model.expense.ExpenseDto;
 import com.example.splitwise.model.expense.ExpenseType;
 import com.example.splitwise.model.expense.GroupExpense;
 import com.example.splitwise.model.expense.IndividualExpense;
-import com.example.splitwise.model.expense.NamesParser;
 import com.example.splitwise.model.expense.SplittingType;
-import com.example.splitwise.service.AccountService;
 import com.example.splitwise.service.ExpenseService;
-import com.example.splitwise.service.GroupService;
-import com.example.splitwise.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,10 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
 
 @Controller
 @RequestMapping("/add-expense")
@@ -70,6 +59,6 @@ public class ExpenseCreationController {
             expenseService.addNewGroupExpense(groupExpense, name);
         }
 
-        return "dashboard";
+        return "redirect:/dashboard/expenses?expenses";
     }
 }

@@ -33,6 +33,9 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String query = "INSERT INTO expense (amount, title, creation_date, currency_id, author_id) VALUES (?, ?, ?, ?, ?)";
+        String individualExpenseQuery = "INSERT INTO individual_expense (expense_id, user_id) VALUES (?, ?)";
+        String groupExpenseQuery = "INSERT INTO group_expense (expense_id, group_id) VALUES (?, ?)";
+
 
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(query, new String[]{"id"});
@@ -57,10 +60,26 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
             .withSplittingType(expense.getSplittingType());
 
         if (expense instanceof GroupExpense) {
+            Integer targetId = ((GroupExpense) expense).getGroupId();
+            jdbcTemplate.update(con -> {
+                PreparedStatement ps = con.prepareStatement(query, new String[]{"id"});
+                ps.setInt(1, entityId);
+                ps.setInt(2, targetId);
+                return ps;
+            }, keyHolder);
+
             return expenseBuilder
                 .withTargetId(((GroupExpense) expense).getGroupId())
                 .buildGroupExpense();
+
         } else if (expense instanceof IndividualExpense) {
+            Integer targetId = ((IndividualExpense) expense).getTargetId();
+            jdbcTemplate.update(con -> {
+                PreparedStatement ps = con.prepareStatement(individualExpenseQuery, new String[]{"id"});
+                ps.setInt(1, entityId);
+                ps.setInt(2, targetId);
+                return ps;
+            }, keyHolder);
             return expenseBuilder
                 .withTargetId(((IndividualExpense) expense).getTargetId())
                 .buildIndividualExpense();
@@ -131,19 +150,36 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
 
     @Override
     public List<Expense> getAllGroupExpenses(Set<Integer> ids) {
-        return null;
+        String inSql = String.join(",", Collections.nCopies(ids.size(), "?"));
+        String query = String.format("SELECT group_expense.id, amount, creation_date, currency_id, author_id, group_id\n" +
+            "FROM group_expense\n" +
+            "INNER JOIN expense ON expense.id = expense_id\n" +
+            "INNER JOIN users ON users.id = user_id\n" +
+            "WHERE group_expense.id IN (%s)", inSql);
+
+        return jdbcTemplate.query(query, new GroupExpenseRowMapper(), ids.toArray());
     }
 
     @Override
     public List<Expense> getAllAccountExpenses(Set<Integer> ids) {
-        return null;
+        String inSql = String.join(",", Collections.nCopies(ids.size(), "?"));
+        String query = String.format("SELECT individual_expense.id, amount, creation_date, currency_id, user_id, title, author_id\n" +
+            "FROM individual_expense\n" +
+            "INNER JOIN expense ON expense.id = expense_id\n" +
+            "INNER JOIN users ON users.id = user_id\n" +
+            "WHERE user_id IN (%s)", inSql);
+
+        return jdbcTemplate.query(query, new IndividualExpenseRowMapper(), ids.toArray());
     }
 
     @Override
     public List<Expense> getAccountExpenses(Integer accountId) {
-//        String query = "SELECT account.id, account.username, users.username, amount, users.phone_number, user_id, currency_id FROM account " +
-//            "INNER JOIN users ON users.id = user_id WHERE users.username = ?";
-//        return jdbcTemplate.queryForList(query, Ex);
-        return null;
+        String query = "SELECT individual_expense.id, amount, creation_date, currency_id, user_id, title, author_id\n" +
+            "FROM individual_expense\n" +
+            "INNER JOIN expense ON expense.id = expense_id\n" +
+            "INNER JOIN users ON users.id = user_id\n" +
+            "WHERE user_id = ?";
+
+        return jdbcTemplate.query(query, new IndividualExpenseRowMapper(), accountId);
     }
 }

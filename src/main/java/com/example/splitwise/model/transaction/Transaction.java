@@ -48,6 +48,17 @@ public class Transaction implements Identifiable {
         return expenseId;
     }
 
+    @Override
+    public String toString() {
+        return "Transaction{" +
+            "id=" + id +
+            ", amount=" + amount +
+            ", currency=" + currency +
+            ", landerId=" + landerId +
+            ", receiverId=" + receiverId +
+            ", expenseId=" + expenseId +
+            '}';
+    }
 
     public static final class TransactionBuilder {
 

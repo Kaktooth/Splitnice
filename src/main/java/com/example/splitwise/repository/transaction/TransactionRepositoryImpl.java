@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 @Repository
@@ -73,5 +74,13 @@ public class TransactionRepositoryImpl implements TransactionRepository {
     private Integer getCurrencyTypeId(String title) {
         String query = "SELECT currency.id FROM currency WHERE title = ?";
         return jdbcTemplate.queryForObject(query, Integer.class, title);
+    }
+
+    @Override
+    public List<Transaction> getTransactionsFromExpense(Set<Integer> ids) {
+        String inSql = String.join(",", Collections.nCopies(ids.size(), "?"));
+        String query = String.format("SELECT * FROM transaction WHERE expense_id IN (%s)", inSql);
+
+        return jdbcTemplate.queryForList(query, Transaction.class, ids.toArray());
     }
 }

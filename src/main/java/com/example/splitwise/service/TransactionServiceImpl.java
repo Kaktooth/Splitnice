@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -41,5 +42,10 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public void deleteTransactionsOfExpense(Integer expenseId) {
 
+    }
+
+    @Override
+    public List<Transaction> getTransactionsFromExpense(Set<Integer> ids) {
+        return transactionRepository.getTransactionsFromExpense(ids);
     }
 }
