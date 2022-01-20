@@ -16,7 +16,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -38,7 +37,6 @@ public class ExpenseController {
 
     public ExpenseController(ExpenseService expenseService, UserService userService,
                              TransactionService transactionService, AccountService accountService) {
-
         this.expenseService = expenseService;
         this.userService = userService;
         this.transactionService = transactionService;
@@ -50,23 +48,6 @@ public class ExpenseController {
 
         model.addAttribute("split", SplittingType.values());
         model.addAttribute("currency", Currency.values());
-
-        return "redirect:/dashboard/expenses/1?expenses&pageSize=4";
-    }
-
-    @PostMapping("/pay/{id}")
-    public String payMoney(@PathVariable("id") Integer id,
-                           @RequestParam("currentAmount") BigDecimal currentAmount,
-                           @RequestParam("targetId") Integer targetId,
-                           @RequestParam("transactionAmount") BigDecimal transactionAmount,
-                           Model model) {
-
-        BigDecimal totalAmount = currentAmount.min(transactionAmount);
-
-        accountService.setMoneyAmount(
-            targetId,
-            totalAmount
-        );
 
         return "redirect:/dashboard/expenses/1?expenses&pageSize=4";
     }
