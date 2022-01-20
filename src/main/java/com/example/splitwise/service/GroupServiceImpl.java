@@ -21,7 +21,12 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Collection<Account> getAccounts(Integer groupId) {
+    public List<Group> getAccountGroups(Integer accountId) {
+        return groupRepository.getAccountGroups(accountId);
+    }
+
+    @Override
+    public List<Account> getAccounts(Integer groupId) {
         return null;
     }
 

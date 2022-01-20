@@ -4,8 +4,11 @@ import com.example.splitwise.model.account.Account;
 import com.example.splitwise.model.group.Group;
 
 import java.util.Collection;
+import java.util.List;
 
 public interface GroupService extends EntityService<Group> {
 
-    Collection<Account> getAccounts(Integer groupId);
+    List<Group> getAccountGroups(Integer accountId);
+
+    List<Account> getAccounts(Integer groupId);
 }
