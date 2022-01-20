@@ -1,7 +1,6 @@
 package com.example.splitwise.auth;
 
 public enum Authority {
-
     USER(0), ADMIN(1);
 
     private final Integer numVal;

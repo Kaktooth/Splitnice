@@ -30,7 +30,7 @@ public class Pagination<T> {
     }
 
     public int getPageCount(int pageSize) {
-        int pageCount = (expenses.size() / pageSize);
+        int pageCount = ((expenses.size() - 1) / pageSize);
         return pageCount;
     }
 }

@@ -1,6 +1,5 @@
 package com.example.splitwise.controller.rest;
 
-import com.example.splitwise.model.account.Account;
 import com.example.splitwise.model.expense.Expense;
 import com.example.splitwise.service.ExpenseService;
 import com.example.splitwise.utils.ExcelExpenseExporter;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -30,9 +28,10 @@ public class RestExportController {
 
     @GetMapping
     public ResponseEntity<ByteArrayResource> export() throws IOException {
-        List<Expense> expenseList = new ArrayList<>();
 
-//        expenseService.getUserExpenses();
+        List<Expense> expenseList = expenseService.getUserExpenses(SecurityContextHolder.getContext()
+            .getAuthentication()
+            .getName());
 
         Exporter<Expense> exporter = new ExcelExpenseExporter<>();
         ByteArrayResource bytes = exporter.export(expenseList);

@@ -21,18 +21,12 @@
         Welcome <b><span sec:authentication="name">Email</span></b>
         <i><span sec:authentication="principal.authorities">Roles</span></i>
     </div>
-    <input
-            id="id"
-            name="id"
-            th:field="${userObject.id}"
-            class="form-control"
-            autofocus="autofocus" readonly
-            placeholder="Unique identifier"/>
+    
+    <label th:text="'Your current money amount: '+${amount}">Balance</label>
 
     <div>
 
         <div th:unless="${#strings.equals(#request.getParameter('edit'), 'email')}">
-            <label for="user-email">Your email address</label>
             <input
                     id="user-email"
                     name="user-email"
@@ -42,7 +36,6 @@
                     placeholder="Email..."/>
         </div>
         <div th:if="${#strings.equals(#request.getParameter('edit'), 'email')}">
-            <label for="email">Your email address</label>
             <input th:field="${userObject.email}"
                    type="email" id="email"
                    name="email" class="form-control"
@@ -62,7 +55,6 @@
     <div>
 
         <div th:unless="${#strings.equals(#request.getParameter('edit'), 'password')}">
-            <label for="password">Your password</label>
             <input
                     id="password"
                     name="password"
@@ -94,7 +86,6 @@
     <div>
 
         <div th:unless="${#strings.equals(#request.getParameter('edit'), 'phone')}">
-            <label for="phone-number">Your phone number</label>
             <input
                     id="phone-number"
                     name="phone-number"
@@ -105,7 +96,6 @@
                     placeholder="Unique identifier"/>
         </div>
         <div th:if="${#strings.equals(#request.getParameter('edit'), 'phone')}">
-            <label for="phone" class="sr-only">Phone number</label>
             <input th:field="${userObject.phone}" type="tel" id="phone" name="phone" class="form-control mb-4"
                    placeholder="Phone Number">
         </div>

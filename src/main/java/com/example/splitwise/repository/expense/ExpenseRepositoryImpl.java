@@ -1,8 +1,6 @@
 package com.example.splitwise.repository.expense;
 
 import com.example.splitwise.model.expense.Expense;
-import com.example.splitwise.model.expense.ExpenseDto;
-import com.example.splitwise.model.expense.ExpenseType;
 import com.example.splitwise.model.expense.GroupExpense;
 import com.example.splitwise.model.expense.IndividualExpense;
 import com.example.splitwise.utils.DbCurrencyManager;
@@ -15,7 +13,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -24,6 +21,16 @@ import java.util.Set;
 public class ExpenseRepositoryImpl implements ExpenseRepository {
 
     private final JdbcTemplate jdbcTemplate;
+
+    String newExpenseQuery = "INSERT INTO expense (amount, title, creation_date, currency_id, author_id) VALUES (?, ?, ?, ?, ?)";
+    String individualExpenseQuery = "INSERT INTO individual_expense (expense_id, user_id) VALUES (?, ?)";
+    String groupExpenseQuery = "INSERT INTO group_expense (expense_id, group_id) VALUES (?, ?)";
+
+    String getAccountExpensesQuery = "SELECT individual_expense.id, amount, creation_date, currency_id, user_id, title, author_id\n" +
+        "FROM individual_expense\n" +
+        "INNER JOIN expense ON expense.id = expense_id\n" +
+        "INNER JOIN users ON users.id = user_id\n" +
+        "WHERE user_id = ?  OR author_id = ?";
 
     @Autowired
     public ExpenseRepositoryImpl(JdbcTemplate jdbcTemplate) {
@@ -34,10 +41,9 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
     public Expense add(Expense expense) {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        String query = "INSERT INTO expense (amount, title, creation_date, currency_id, author_id) VALUES (?, ?, ?, ?, ?)";
 
         jdbcTemplate.update(con -> {
-            PreparedStatement ps = con.prepareStatement(query);
+            PreparedStatement ps = con.prepareStatement(newExpenseQuery, new String[]{"id"});
             ps.setBigDecimal(1, expense.getAmount());
             ps.setString(2, expense.getTitle());
             ps.setTimestamp(3, timestamp);
@@ -59,10 +65,26 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
             .withSplittingType(expense.getSplittingType());
 
         if (expense instanceof GroupExpense) {
+            Integer targetId = ((GroupExpense) expense).getGroupId();
+            jdbcTemplate.update(con -> {
+                PreparedStatement ps = con.prepareStatement(newExpenseQuery, new String[]{"id"});
+                ps.setInt(1, entityId);
+                ps.setInt(2, targetId);
+                return ps;
+            }, keyHolder);
+
             return expenseBuilder
                 .withTargetId(((GroupExpense) expense).getGroupId())
                 .buildGroupExpense();
+
         } else if (expense instanceof IndividualExpense) {
+            Integer targetId = ((IndividualExpense) expense).getTargetId();
+            jdbcTemplate.update(con -> {
+                PreparedStatement ps = con.prepareStatement(individualExpenseQuery, new String[]{"id"});
+                ps.setInt(1, entityId);
+                ps.setInt(2, targetId);
+                return ps;
+            }, keyHolder);
             return expenseBuilder
                 .withTargetId(((IndividualExpense) expense).getTargetId())
                 .buildIndividualExpense();
@@ -77,7 +99,7 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
     }
 
     @Override
-    public Collection<Expense> getAll(Set<Integer> ids) {
+    public List<Expense> getAll(Set<Integer> ids) {
         String inSql = String.join(",", Collections.nCopies(ids.size(), "?"));
         String query = String.format("SELECT * FROM expense WHERE id IN %s", inSql);
 
@@ -98,10 +120,9 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
     public Expense addGroupExpense(GroupExpense expense) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         Expense savedExpense = add(expense);
-        String query = "INSERT INTO group_expense VALUES (?, ?)";
 
         jdbcTemplate.update(con -> {
-            PreparedStatement ps = con.prepareStatement(query);
+            PreparedStatement ps = con.prepareStatement(groupExpenseQuery);
             ps.setInt(1, savedExpense.getId());
             ps.setInt(2, expense.getGroupId());
 
@@ -124,28 +145,37 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
     public Expense addIndividualExpense(IndividualExpense expense) {
         Expense savedExpense = add(expense);
 
-        String query = "INSERT INTO individual_expense VALUES (?, ?)";
-
-        jdbcTemplate.update(query, savedExpense.getId(), expense.getTargetId());
+        jdbcTemplate.update(individualExpenseQuery, savedExpense.getId(), expense.getTargetId());
 
         return savedExpense;
     }
 
     @Override
     public List<Expense> getAllGroupExpenses(Set<Integer> ids) {
-        return null;
+        String inSql = String.join(",", Collections.nCopies(ids.size(), "?"));
+        String query = String.format("SELECT group_expense.id, amount, creation_date, currency_id, author_id, group_id\n" +
+            "FROM group_expense\n" +
+            "INNER JOIN expense ON expense.id = expense_id\n" +
+            "INNER JOIN users ON users.id = user_id\n" +
+            "WHERE group_expense.id IN (%s)", inSql);
+
+        return jdbcTemplate.query(query, new GroupExpenseRowMapper(), ids.toArray());
     }
 
     @Override
     public List<Expense> getAllAccountExpenses(Set<Integer> ids) {
-        return null;
+        String inSql = String.join(",", Collections.nCopies(ids.size(), "?"));
+        String query = String.format("SELECT individual_expense.id, amount, creation_date, currency_id, user_id, title, author_id\n" +
+            "FROM individual_expense\n" +
+            "INNER JOIN expense ON expense.id = expense_id\n" +
+            "INNER JOIN users ON users.id = user_id\n" +
+            "WHERE user_id IN (%s) OR author_id IN (%s)", inSql);
+
+        return jdbcTemplate.query(query, new IndividualExpenseRowMapper(), ids.toArray());
     }
 
     @Override
     public List<Expense> getAccountExpenses(Integer accountId) {
-//        String query = "SELECT account.id, account.username, users.username, amount, users.phone_number, user_id, currency_id FROM account " +
-//            "INNER JOIN users ON users.id = user_id WHERE users.username = ?";
-//        return jdbcTemplate.queryForList(query, Ex);
-        return null;
+        return jdbcTemplate.query(getAccountExpensesQuery, new IndividualExpenseRowMapper(), accountId, accountId);
     }
 }

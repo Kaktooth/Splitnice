@@ -6,7 +6,8 @@ import com.example.splitwise.repository.user.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -23,7 +24,6 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account add(Account account) {
-
         return accountRepository.add(account);
     }
 
@@ -33,13 +33,18 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Collection<Account> getAll(Set<Integer> ids) {
+    public List<Account> getAll(Set<Integer> ids) {
         return accountRepository.getAll(ids);
     }
 
     @Override
     public Account getByUserEmail(String username) {
         return accountRepository.getByUsername(username);
+    }
+
+    @Override
+    public void setMoneyAmount(Integer accountId, BigDecimal amount) {
+        accountRepository.setMoneyAmount(accountId, amount);
     }
 
     @Override

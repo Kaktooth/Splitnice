@@ -58,12 +58,12 @@ public abstract class Expense implements Identifiable {
     }
 
     public String getAmountInfo() {
-        return amount + " " + currency;
+        return amount + " " + currency.toString();
     }
 
     public String getCreationInfo() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM, dd, yyyy HH:mm:ss", Locale.US);
-        return "Creation date: " + creationDate.format(formatter);
+        return " at " + creationDate.format(formatter);
     }
 
     public static final class ExpenseBuilder {

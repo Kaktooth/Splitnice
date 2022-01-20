@@ -57,11 +57,13 @@
 
                         <div class="d-flex w-100 align-items-center justify-content-between">
                             <strong class="mb-1"> <!-- <td th:text="${expense}">1</td>--></strong>
-                            <small th:text="${expense.amount}"></small>
+                            <small th:text="${expense.getAmountInfo()}"></small>
                         </div>
 
-                        <div class="p-1 col-10 mb-1 small" th:text="${expense.getCreationInfo()}">
+                        <div class="p-1 col-10 mb-1 small">
 
+                            <label th:text="${'Added by: '+users.get(expense.id-1).getEmail()}"></label>
+                            <label class="small" th:text="${expense.getCreationInfo()}"></label>
                         </div>
                         <button class="btn btn-light"
                                 type="button"
@@ -71,12 +73,28 @@
                                 aria-expanded="false">
                             Show details
                         </button>
+
+                        <form th:if="${currentId == expense.targetId}"
+                              th:attr=" id='expense' +${expense.id}"
+                              th:action="@{/dashboard/expenses/pay/{id}(
+                              id = ${expense.id},
+                              targetId=${expense.targetId},
+                              currentAmount=${currentAmount},
+                              transactionAmount=${transactions.get(expense.id-1).get(1).amount.negate()})}"
+                              method="post">
+                            <button th:disabled="${currentAmount < transactions.get(expense.id-1).get(1).amount.negate()}"
+                                    class="btn btn-info">
+                                Pay
+                            </button>
+                        </form>
                     </div>
                 </h5>
             </div>
             <div class="collapse" th:attr="id='collapseExpense'+${expense.id}">
                 <div class="card-body">
-                    <label>Details</label>
+                    <div th:each="trMessage : ${transactionMessages.get(expense.id-1)}">
+                        <label th:text="${trMessage}"> </label>
+                    </div>
                 </div>
             </div>
         </div>
@@ -100,7 +118,7 @@
                        th:text="${pageNumber}"></a>
                 </ul>
 
-                <li class="page-item" th:if="${pageCount} > (${currentPage}-1)">
+                <li class="page-item" th:if="${pageCount} > (${currentPage})">
                     <a class="page-link"
                        th:href="@{/dashboard/expenses/{currentPage}(currentPage=(${currentPage}+1),
                             pageSize=${param.pageSize.iterator().next()}, expenses = true)}">Next</a>

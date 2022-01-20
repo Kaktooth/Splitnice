@@ -13,6 +13,11 @@ public class GroupDto extends Group {
         this.expenses = expenses;
     }
 
+    public GroupDto(Group group, List<Expense> expenses) {
+        super(group.getId(), group.getTitle(), group.getCreatorId());
+        this.expenses = expenses;
+    }
+
     public List<Expense> getExpenses() {
         return expenses;
     }

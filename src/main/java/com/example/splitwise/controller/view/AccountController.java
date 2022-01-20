@@ -1,17 +1,20 @@
 package com.example.splitwise.controller.view;
 
+import com.example.splitwise.model.Currency;
 import com.example.splitwise.model.User;
+import com.example.splitwise.model.account.Account;
+import com.example.splitwise.service.AccountService;
 import com.example.splitwise.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 @Controller
@@ -20,9 +23,12 @@ public class AccountController {
 
     private final UserService userService;
 
+    private final AccountService accountService;
+
     @Autowired
-    public AccountController(UserService userService) {
+    public AccountController(UserService userService, AccountService accountService) {
         this.userService = userService;
+        this.accountService = accountService;
     }
 
     @GetMapping
@@ -34,7 +40,10 @@ public class AccountController {
                 .getName());
 
         User user = userService.getById(id);
-
+        Account account = accountService.getById(id);
+        BigDecimal moneyAmount = account.getMoneyAmount();
+        Currency currency = account.getCurrency();
+        model.addAttribute("amount", moneyAmount.toString() + currency.toString());
         model.addAttribute("edit", edit);
         model.addAttribute("savedEdit", edit);
         model.addAttribute("userObject", user);

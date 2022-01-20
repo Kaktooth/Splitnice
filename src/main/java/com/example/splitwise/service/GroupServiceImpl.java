@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -20,7 +21,12 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Collection<Account> getAccounts(Integer groupId) {
+    public List<Group> getAccountGroups(Integer accountId) {
+        return groupRepository.getAccountGroups(accountId);
+    }
+
+    @Override
+    public List<Account> getAccounts(Integer groupId) {
         return null;
     }
 
@@ -35,7 +41,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Collection<Group> getAll(Set<Integer> ids) {
+    public List<Group> getAll(Set<Integer> ids) {
         return null;
     }
 

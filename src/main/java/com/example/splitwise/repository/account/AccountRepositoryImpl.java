@@ -8,15 +8,28 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.sql.PreparedStatement;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 @Repository
 public class AccountRepositoryImpl implements AccountRepository {
 
     private final JdbcTemplate jdbcTemplate;
+
+    String getByUsernameQuery = "SELECT account.id, account.username, users.username, amount, users.phone_number, user_id, currency_id " +
+        "FROM account " +
+        "INNER JOIN users ON users.id = user_id " +
+        "WHERE users.username = ?";
+
+    String getByIdQuery = "SELECT account.id, account.username, users.username, amount, users.phone_number, user_id, currency_id " +
+        "FROM account " +
+        "INNER JOIN users ON users.id = user_id " +
+        "WHERE account.id = ?";
+
+    String addAccountQuery = "INSERT INTO account (username, amount, currency_id, user_id) VALUES (?, ?, ?, ?)";
 
     @Autowired
     public AccountRepositoryImpl(JdbcTemplate jdbcTemplate) {
@@ -25,32 +38,34 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     @Override
     public Account add(Account account) {
-        String query = "INSERT INTO account (username, amount, currency_id, user_id) VALUES (?, ?, ?, ?)";
-        jdbcTemplate.update(query, account.getUsername(), account.getMoneyAmount(), DbCurrencyManager.getIdOfCurrencyType(account.getCurrency()), account.getUserId());
-
+        jdbcTemplate.update(addAccountQuery, account.getUsername(), account.getMoneyAmount(), DbCurrencyManager.getIdOfCurrencyType(account.getCurrency()), account.getUserId());
         return account;
     }
 
     @Override
     public Account getById(Integer accountId) {
-        String query = "SELECT account.id, account.username, users.username, amount, users.phone_number, user_id, currency_id " +
-            "FROM account " +
-            "INNER JOIN users ON users.id = user_id " +
-            "WHERE account.id = ?";
-        return jdbcTemplate.queryForObject(query, new AccountRowMapper(), accountId);
+        return jdbcTemplate.queryForObject(getByIdQuery, new AccountRowMapper(), accountId);
     }
 
     @Override
     public Account getByUsername(String username) {
-        String query = "SELECT account.id, account.username, users.username, amount, users.phone_number, user_id, currency_id " +
-            "FROM account " +
-            "INNER JOIN users ON users.id = user_id " +
-            "WHERE users.username = ?";
-        return jdbcTemplate.queryForObject(query, new AccountRowMapper(), username);
+        return jdbcTemplate.queryForObject(getByUsernameQuery, new AccountRowMapper(), username);
     }
 
     @Override
-    public Collection<Account> getAll(Set<Integer> ids) {
+    public void setMoneyAmount(Integer accountId, BigDecimal amount) {
+        String queryForUsers = "UPDATE account SET amount = ? WHERE id = ?";
+
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(queryForUsers);
+            ps.setBigDecimal(1, amount);
+            ps.setInt(2, accountId);
+            return ps;
+        });
+    }
+
+    @Override
+    public List<Account> getAll(Set<Integer> ids) {
         String inSql = String.join(",", Collections.nCopies(ids.size(), "?"));
         String query = String.format("SELECT * FROM expense WHERE id IN %s", inSql);
 
