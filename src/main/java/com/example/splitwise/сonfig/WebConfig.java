@@ -15,7 +15,10 @@ public class WebConfig implements WebMvcConfigurer {
 
         registry.addViewController("/admin-page").setViewName("admin-page");
         registry.addViewController("/dashboard").setViewName("dashboard");
-        registry.addRedirectViewController("/", "/dashboard");
+
+        registry.addRedirectViewController("/", "/dashboard/expenses?expenses");
+        registry.addRedirectViewController("/dashboard", "/dashboard/expenses?expenses");
+
         registry.addViewController("/dashboard/**").setViewName("dashboard");
 
         registry.addViewController("/add-expense/**").setViewName("add-expense");
@@ -29,7 +32,6 @@ public class WebConfig implements WebMvcConfigurer {
 
         registry.addViewController("/api/dashboard/expenses").setViewName("expenses");
         registry.addViewController("/api/group").setViewName("expenses");
-
 
         registry.addViewController("/error").setViewName("error");
         registry.addViewController("/access-denied-page").setViewName("access-denied-page");

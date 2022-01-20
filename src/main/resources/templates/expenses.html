@@ -71,6 +71,12 @@
                                 aria-expanded="false">
                             Show details
                         </button>
+
+                        <form th:attr="id='expense'+${expense.id}" th:action="@{/pay-expense}" method="get">
+                            <button class="btn btn-info">
+                                Pay
+                            </button>
+                        </form>
                     </div>
                 </h5>
             </div>
