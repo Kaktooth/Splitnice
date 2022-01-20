@@ -1,72 +1,75 @@
 package com.example.splitwise.controller.view;
 
-import com.example.splitwise.model.Currency;
-import com.example.splitwise.model.expense.Expense;
 import com.example.splitwise.model.group.Group;
 import com.example.splitwise.model.group.GroupDto;
+import com.example.splitwise.service.ExpenseService;
 import com.example.splitwise.service.GroupService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.splitwise.service.UserService;
+import com.example.splitwise.utils.CurrentUserGetter;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.math.BigDecimal;
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/dashboard/groups")
 public class GroupController {
 
     private final GroupService groupService;
+    private final UserService userService;
+    private final ExpenseService expenseService;
 
-    @Autowired
-    public GroupController(GroupService groupService) {
+    public GroupController(GroupService groupService,
+                           UserService userService,
+                           ExpenseService expenseService) {
         this.groupService = groupService;
+        this.userService = userService;
+        this.expenseService = expenseService;
     }
 
-    @GetMapping
-    public String getGroupsAndExpenses(Model model) {
+    @GetMapping("/dashboard/groups")
+    public String getGroupAccounts(Model model) {
 
-        List<Group> groups = new ArrayList<>();
+        String currentUserEmail = CurrentUserGetter.getActiveUserEmail();
 
-        List<Expense> expenseList = new ArrayList<>();
-        Expense expense = new Expense.ExpenseBuilder()
-            .withId(1)
-            .withAmount(new BigDecimal("15.9"))
-            .withCreationDate(OffsetDateTime.now())
-            .withCurrency(Currency.EUR)
-            .withCreatorId(3)
-//            .withGroupId(1)
-            .buildGroupExpense();
-        expenseList.add(expense);
+        Integer activeUserId = userService.getIdFromAuthenticationName(currentUserEmail);
 
-        List<Expense> expenseList2 = new ArrayList<>();
-        Expense expense2 = new Expense.ExpenseBuilder()
-            .withId(2)
-            .withAmount(new BigDecimal("15.9"))
-            .withCreationDate(OffsetDateTime.now())
-            .withCurrency(Currency.EUR)
-            .withCreatorId(3)
-//            .withGroupId(1)
-            .buildGroupExpense();
-        expenseList2.add(expense2);
+        List<Group> accountGroups = groupService.getAccountGroups(activeUserId);
 
-        Group group1 = new GroupDto(1, "Title1", 1,
-            expenseList
-        );
+        List<GroupDto> groupDtos = new ArrayList<>();
+        for (Group group : accountGroups) {
+            groupDtos.add(
+                new GroupDto(group, expenseService.getUserExpenses(
+                    userService.getById(
+                        group.getCreatorId()
+                    ).getEmail()
+                ))
+            );
+        }
+        model.addAttribute("groupList", groupDtos);
 
-        Group group2 = new GroupDto(2, "Title2", 1,
-            expenseList2
-        );
+        return "dashboard";
+    }
 
-        groups.add(group1);
-        groups.add(group2);
+    @GetMapping("add-group")
+    public String getPage() {
+        return "add-group";
+    }
 
-        model.addAttribute("groupList", groups);
+    @PostMapping("add-group")
+    public String addNewGroup(@RequestParam(value = "title") String title) {
 
+        Integer id = userService.getIdFromAuthenticationName(
+            SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName());
+
+        groupService.add(new Group(1, title, id));
         return "dashboard";
     }
 }

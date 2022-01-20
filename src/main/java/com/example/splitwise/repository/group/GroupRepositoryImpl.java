@@ -15,8 +15,10 @@ public class GroupRepositoryImpl implements GroupRepository {
         "    INNER JOIN account_group ag on account.id = ag.account_id\n" +
         "    INNER JOIN \"group\" g on g.id = ag.group_id\n" +
         "    WHERE account_id = ?";
+
     private final String queryToAddGroup = "INSERT INTO \"group\" (title, creator_id) VALUES (?, ?)";
     private final String queryToGetById = "SELECT * FROM \"group\" WHERE \"group\".id = ?";
+    private final String queryAddAccountGroup = "INSERT INTO account_group (role_id, added_by_id, group_id, account_id) VALUES (?, ?, ?, ?)";
 
     public GroupRepositoryImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -25,6 +27,8 @@ public class GroupRepositoryImpl implements GroupRepository {
     @Override
     public Group add(Group group) {
         jdbcTemplate.update(queryToAddGroup, group.getTitle(), group.getCreatorId());
+
+        jdbcTemplate.update(queryAddAccountGroup, 1, group.getCreatorId(), group.getId(), group.getCreatorId());
         return group;
     }
 
