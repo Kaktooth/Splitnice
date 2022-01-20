@@ -1,8 +1,6 @@
 package com.example.splitwise.repository.expense;
 
 import com.example.splitwise.model.expense.Expense;
-import com.example.splitwise.model.expense.ExpenseDto;
-import com.example.splitwise.model.expense.ExpenseType;
 import com.example.splitwise.model.expense.GroupExpense;
 import com.example.splitwise.model.expense.IndividualExpense;
 import com.example.splitwise.utils.DbCurrencyManager;
@@ -37,7 +35,7 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
         String query = "INSERT INTO expense (amount, title, creation_date, currency_id, author_id) VALUES (?, ?, ?, ?, ?)";
 
         jdbcTemplate.update(con -> {
-            PreparedStatement ps = con.prepareStatement(query);
+            PreparedStatement ps = con.prepareStatement(query, new String[]{"id"});
             ps.setBigDecimal(1, expense.getAmount());
             ps.setString(2, expense.getTitle());
             ps.setTimestamp(3, timestamp);

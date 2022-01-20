@@ -32,7 +32,6 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    // what is it?
     @GetMapping
     public String getUser(@RequestParam(value = "edit", required = false) String edit, Model model) {
         Integer id = userService.getIdFromAuthenticationName(

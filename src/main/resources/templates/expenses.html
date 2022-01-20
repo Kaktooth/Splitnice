@@ -57,7 +57,7 @@
 
                         <div class="d-flex w-100 align-items-center justify-content-between">
                             <strong class="mb-1"> <!-- <td th:text="${expense}">1</td>--></strong>
-                            <small th:text="${expense.amount}"></small>
+                            <small th:text="${expense.getAmountInfo()}"></small>
                         </div>
 
                         <div class="p-1 col-10 mb-1 small" th:text="${expense.getCreationInfo()}">

@@ -58,7 +58,7 @@ public abstract class Expense implements Identifiable {
     }
 
     public String getAmountInfo() {
-        return amount + " " + currency;
+        return amount + " " + currency.toString();
     }
 
     public String getCreationInfo() {
