@@ -8,9 +8,13 @@ import java.util.Set;
 
 public interface ExpenseService extends EntityService<Expense> {
 
-    Expense registerNewExpense(ExpenseDto expense);
+    Expense addNewIndividualExpense(Expense expense, String targetTitle);
+
+    Expense addNewGroupExpense(Expense expense, String targetTitle);
 
     List<Expense> getAllGroupExpenses(Set<Integer> ids);
 
     List<Expense> getAllAccountExpenses(Set<Integer> ids);
+
+    List<Expense> getUserExpenses(String userEmail);
 }

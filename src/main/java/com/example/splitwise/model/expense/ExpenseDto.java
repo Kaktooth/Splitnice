@@ -17,18 +17,20 @@ public class ExpenseDto extends Expense {
     private final Map<Integer, BigDecimal> shares;
 
     public ExpenseDto(Integer id,
+                      String title,
                       BigDecimal amount,
                       OffsetDateTime creationDate,
                       Currency currency,
-                      ExpenseType type,
+                      Integer creatorId,
                       SplittingType splittingType,
+                      ExpenseType type,
+                      SplittingType splittingType1,
                       Account lander,
                       List<Account> accounts,
-                      Map<Integer, BigDecimal> shares,
-                      Integer creatorId) {
-        super(id, amount, creationDate, currency, creatorId);
+                      Map<Integer, BigDecimal> shares) {
+        super(id, title, amount, creationDate, currency, creatorId, splittingType);
         this.type = type;
-        this.splittingType = splittingType;
+        this.splittingType = splittingType1;
         this.lander = lander;
         this.accounts = accounts;
         this.shares = shares;
