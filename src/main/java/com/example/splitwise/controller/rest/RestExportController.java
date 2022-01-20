@@ -20,7 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/export")
-public class ExportController {
+public class RestExportController {
 
     @GetMapping
     public ResponseEntity<ByteArrayResource> export() throws IOException {
