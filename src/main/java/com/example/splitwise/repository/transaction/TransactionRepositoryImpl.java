@@ -19,6 +19,8 @@ public class TransactionRepositoryImpl implements TransactionRepository {
     private final String addNewTransactionQuery = "INSERT INTO transaction (amount, currency_id, lander_id, receiver_id, expense_id) "
         + "VALUES (?, ?, ?, ?, ?)";
     private final String getByIdQuery = "SELECT * FROM transaction WHERE id = ?";
+    private final String getCurrencyIdQuery = "SELECT currency.id FROM currency WHERE title = ?";
+    private final String deleteTransactionByIdQuery = "DELETE FROM transaction WHERE id = ?";
 
     @Autowired
     public TransactionRepositoryImpl(JdbcTemplate jdbcTemplate) {
@@ -66,13 +68,11 @@ public class TransactionRepositoryImpl implements TransactionRepository {
 
     @Override
     public void delete(Integer transactionId) {
-        String query = "DELETE FROM transaction WHERE id = ?";
-        jdbcTemplate.update(query, transactionId);
+        jdbcTemplate.update(deleteTransactionByIdQuery, transactionId);
     }
 
     private Integer getCurrencyTypeId(String title) {
-        String query = "SELECT currency.id FROM currency WHERE title = ?";
-        return jdbcTemplate.queryForObject(query, Integer.class, title);
+        return jdbcTemplate.queryForObject(getCurrencyIdQuery, Integer.class, title);
     }
 
     @Override

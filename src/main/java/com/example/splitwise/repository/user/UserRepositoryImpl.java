@@ -1,7 +1,6 @@
 package com.example.splitwise.repository.user;
 
 import com.example.splitwise.model.User;
-import com.example.splitwise.repository.transaction.TransactionRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -19,6 +18,11 @@ public class UserRepositoryImpl implements UserRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
+    private final String newUserQuery = "INSERT INTO users(username, password, enabled, phone_number) VALUES (?, ?, ?, ?)";
+    private final String queryForAuthorities = "INSERT INTO authorities(id, username, authority) VALUES (?, ?, ?)";
+    private final String deleteUserQuery = "DELETE FROM users WHERE id = ?";
+    private  String query = "SELECT id, username, password, enabled, phone_number FROM users WHERE users.username = ?";
+
     @Autowired
     public UserRepositoryImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -27,10 +31,9 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User add(User user) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        String queryForUsers = "INSERT INTO users(username, password, enabled, phone_number) VALUES (?, ?, ?, ?)";
 
         jdbcTemplate.update(con -> {
-            PreparedStatement ps = con.prepareStatement(queryForUsers, new String[]{"id"});
+            PreparedStatement ps = con.prepareStatement(newUserQuery, new String[]{"id"});
             ps.setString(1, user.getEmail());
             ps.setString(2, user.getPassword());
             ps.setBoolean(3, user.isEnabled());
@@ -39,8 +42,6 @@ public class UserRepositoryImpl implements UserRepository {
         }, keyHolder);
 
         Integer entityId = (Integer) keyHolder.getKey();
-
-        String queryForAuthorities = "INSERT INTO authorities(id, username, authority) VALUES (?, ?, ?)";
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(queryForAuthorities);
             ps.setInt(1, entityId);
@@ -75,8 +76,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void delete(Integer entityId) {
-        String query = "DELETE FROM users WHERE id = ?";
-        jdbcTemplate.update(query, entityId);
+        jdbcTemplate.update(deleteUserQuery, entityId);
     }
 
     @Override
@@ -113,7 +113,6 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Integer getIdFromAuthenticationName(String name) {
-        String query = "SELECT id, username, password, enabled, phone_number FROM users WHERE users.username = ?";
         User user = jdbcTemplate.queryForObject(query, new UserRowMapper(), name);
 
         return user.getId();

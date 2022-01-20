@@ -18,6 +18,18 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
+    String getByUsernameQuery = "SELECT account.id, account.username, users.username, amount, users.phone_number, user_id, currency_id " +
+        "FROM account " +
+        "INNER JOIN users ON users.id = user_id " +
+        "WHERE users.username = ?";
+
+    String getByIdQuery = "SELECT account.id, account.username, users.username, amount, users.phone_number, user_id, currency_id " +
+        "FROM account " +
+        "INNER JOIN users ON users.id = user_id " +
+        "WHERE account.id = ?";
+
+    String addAccountQuery = "INSERT INTO account (username, amount, currency_id, user_id) VALUES (?, ?, ?, ?)";
+
     @Autowired
     public AccountRepositoryImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -25,28 +37,18 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     @Override
     public Account add(Account account) {
-        String query = "INSERT INTO account (username, amount, currency_id, user_id) VALUES (?, ?, ?, ?)";
-        jdbcTemplate.update(query, account.getUsername(), account.getMoneyAmount(), DbCurrencyManager.getIdOfCurrencyType(account.getCurrency()), account.getUserId());
-
+        jdbcTemplate.update(addAccountQuery, account.getUsername(), account.getMoneyAmount(), DbCurrencyManager.getIdOfCurrencyType(account.getCurrency()), account.getUserId());
         return account;
     }
 
     @Override
     public Account getById(Integer accountId) {
-        String query = "SELECT account.id, account.username, users.username, amount, users.phone_number, user_id, currency_id " +
-            "FROM account " +
-            "INNER JOIN users ON users.id = user_id " +
-            "WHERE account.id = ?";
-        return jdbcTemplate.queryForObject(query, new AccountRowMapper(), accountId);
+        return jdbcTemplate.queryForObject(getByIdQuery, new AccountRowMapper(), accountId);
     }
 
     @Override
     public Account getByUsername(String username) {
-        String query = "SELECT account.id, account.username, users.username, amount, users.phone_number, user_id, currency_id " +
-            "FROM account " +
-            "INNER JOIN users ON users.id = user_id " +
-            "WHERE users.username = ?";
-        return jdbcTemplate.queryForObject(query, new AccountRowMapper(), username);
+        return jdbcTemplate.queryForObject(getByUsernameQuery, new AccountRowMapper(), username);
     }
 
     @Override
