@@ -59,19 +59,16 @@ public class ExpenseController {
         int pageCount = pagination.getPageCount(pageSize) + 1;
         List<Integer> pageNumbers = pagination.getPageNumbers(pageCount);
         List<Expense> currentPageContent = pagination.getCurrentPageContent(currentPage - 1, pageSize);
-//
-//        Integer userId = userService.getIdFromAuthenticationName(SecurityContextHolder.getContext()
-//            .getAuthentication()
-//            .getName());
+        if (expenses.size() > 0) {
+            Set<Integer> expenseIds = new HashSet<>();
+            for (Expense expense : expenses) {
+                expenseIds.add(expense.getId());
+            }
 
-        Set<Integer> expenseIds = new HashSet<>();
-        for (Expense expense : expenses) {
-            expenseIds.add(expense.getId());
+            List<Transaction> transactions = transactionService.getTransactionsFromExpense(expenseIds);
+
+            model.addAttribute("transactions", transactions);
         }
-
-        List<Transaction> transactions = transactionService.getTransactionsFromExpense(expenseIds);
-
-        model.addAttribute("transactions", transactions);
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("pageCount", pageCount);
         model.addAttribute("pageSize", pageSize);

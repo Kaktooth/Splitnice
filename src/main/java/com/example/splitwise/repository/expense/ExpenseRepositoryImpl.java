@@ -167,7 +167,7 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
             "FROM individual_expense\n" +
             "INNER JOIN expense ON expense.id = expense_id\n" +
             "INNER JOIN users ON users.id = user_id\n" +
-            "WHERE user_id IN (%s)", inSql);
+            "WHERE user_id IN (%s) OR author_id IN (%s)", inSql);
 
         return jdbcTemplate.query(query, new IndividualExpenseRowMapper(), ids.toArray());
     }
@@ -178,8 +178,8 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
             "FROM individual_expense\n" +
             "INNER JOIN expense ON expense.id = expense_id\n" +
             "INNER JOIN users ON users.id = user_id\n" +
-            "WHERE user_id = ?";
+            "WHERE user_id = ?  OR author_id = ?";
 
-        return jdbcTemplate.query(query, new IndividualExpenseRowMapper(), accountId);
+        return jdbcTemplate.query(query, new IndividualExpenseRowMapper(), accountId, accountId);
     }
 }

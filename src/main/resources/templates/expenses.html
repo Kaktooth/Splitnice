@@ -83,7 +83,7 @@
             <div class="collapse" th:attr="id='collapseExpense'+${expense.id}">
                 <div class="card-body">
                     <div th:each="tr : ${transactions}">
-                        <label th:text="tr"> </label>
+                        <label th:text="${tr}"> </label>
                     </div>
                 </div>
             </div>

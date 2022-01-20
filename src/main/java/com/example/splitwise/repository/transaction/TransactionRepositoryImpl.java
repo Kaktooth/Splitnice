@@ -79,8 +79,9 @@ public class TransactionRepositoryImpl implements TransactionRepository {
     @Override
     public List<Transaction> getTransactionsFromExpense(Set<Integer> ids) {
         String inSql = String.join(",", Collections.nCopies(ids.size(), "?"));
-        String query = String.format("SELECT * FROM transaction WHERE expense_id IN (%s)", inSql);
+        String query = String.format("SELECT id, amount, currency_id, lander_id, receiver_id," +
+            " expense_id FROM transaction WHERE expense_id IN (%s)", inSql);
 
-        return jdbcTemplate.queryForList(query, Transaction.class, ids.toArray());
+        return jdbcTemplate.query(query, new TransactionRowMapper(), ids.toArray());
     }
 }
