@@ -8,7 +8,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -58,7 +57,7 @@ public class TransactionRepositoryImpl implements TransactionRepository {
     }
 
     @Override
-    public Collection<Transaction> getAll(Set<Integer> ids) {
+    public List<Transaction> getAll(Set<Integer> ids) {
         String inSql = String.join(",", Collections.nCopies(ids.size(), "?"));
         String query = String.format("SELECT * FROM transaction WHERE id IN %s", inSql);
 

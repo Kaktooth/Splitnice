@@ -9,8 +9,8 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 @Repository
@@ -50,7 +50,7 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public Collection<Account> getAll(Set<Integer> ids) {
+    public List<Account> getAll(Set<Integer> ids) {
         String inSql = String.join(",", Collections.nCopies(ids.size(), "?"));
         String query = String.format("SELECT * FROM expense WHERE id IN %s", inSql);
 

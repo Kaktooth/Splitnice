@@ -5,7 +5,6 @@ import com.example.splitwise.repository.transaction.TransactionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -30,7 +29,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Collection<Transaction> getAll(Set<Integer> ids) {
+    public List<Transaction> getAll(Set<Integer> ids) {
         return transactionRepository.getAll(ids);
     }
 

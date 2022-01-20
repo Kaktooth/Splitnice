@@ -60,8 +60,10 @@
                             <small th:text="${expense.getAmountInfo()}"></small>
                         </div>
 
-                        <div class="p-1 col-10 mb-1 small" th:text="${expense.getCreationInfo()}">
+                        <div class="p-1 col-10 mb-1 small">
 
+                            <label th:text="${'Added by: '+users.get(expense.id-1).getEmail()}"></label>
+                            <label class="small" th:text="${expense.getCreationInfo()}"></label>
                         </div>
                         <button class="btn btn-light"
                                 type="button"
@@ -71,9 +73,14 @@
                                 aria-expanded="false">
                             Show details
                         </button>
+                        <label th:text="${currentAmount}"></label>
+                        <label th:text="${transactions.get(expense.id-1).get(1).amount.negate()}"></label>
+                        <form th:if="${currentId == expense.targetId}"
 
-                        <form th:attr="id='expense'+${expense.id}" th:action="@{/pay-expense}" method="get">
-                            <button class="btn btn-info">
+                              th:attr=" id='expense' +${expense.id}"
+                              th:action="@{/pay-expense}" method="get">
+                            <button th:disabled="${currentAmount < transactions.get(expense.id-1).get(1).amount.negate()}"
+                                    class="btn btn-info">
                                 Pay
                             </button>
                         </form>
@@ -82,8 +89,8 @@
             </div>
             <div class="collapse" th:attr="id='collapseExpense'+${expense.id}">
                 <div class="card-body">
-                    <div th:each="tr : ${transactions}">
-                        <label th:text="${tr}"> </label>
+                    <div th:each="trMessage : ${transactionMessages.get(expense.id-1)}">
+                        <label th:text="${trMessage}"> </label>
                     </div>
                 </div>
             </div>

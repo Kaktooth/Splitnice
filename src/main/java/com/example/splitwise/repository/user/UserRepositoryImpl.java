@@ -1,6 +1,7 @@
 package com.example.splitwise.repository.user;
 
 import com.example.splitwise.model.User;
+import com.example.splitwise.repository.transaction.TransactionRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -9,7 +10,8 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
-import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 @Repository
@@ -63,8 +65,12 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Collection<User> getAll(Set<Integer> ids) {
-        return null;
+    public List<User> getAll(Set<Integer> ids) {
+        String inSql = String.join(",", Collections.nCopies(ids.size(), "?"));
+        String query = String.format("SELECT * FROM users WHERE id IN (%s)", inSql);
+
+        List<User> users = jdbcTemplate.query(query, new UserRowMapper(), ids.toArray());
+        return users;
     }
 
     @Override

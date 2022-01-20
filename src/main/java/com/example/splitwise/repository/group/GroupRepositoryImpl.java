@@ -1,13 +1,11 @@
 package com.example.splitwise.repository.group;
 
+import com.example.splitwise.model.expense.Expense;
 import com.example.splitwise.model.group.Group;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @Repository
@@ -32,7 +30,7 @@ public class GroupRepositoryImpl implements GroupRepository {
     }
 
     @Override
-    public Collection<Group> getAll(Set<Integer> ids) {
+    public List<Group> getAll(Set<Integer> ids) {
         return null;
     }
 

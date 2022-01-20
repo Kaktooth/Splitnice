@@ -2,7 +2,6 @@ package com.example.splitwise.service;
 
 import com.example.splitwise.model.account.Account;
 import com.example.splitwise.model.expense.Expense;
-import com.example.splitwise.model.expense.ExpenseDto;
 import com.example.splitwise.model.expense.IndividualExpense;
 import com.example.splitwise.model.expense.SplittingType;
 import com.example.splitwise.model.transaction.Transaction;
@@ -14,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.time.OffsetDateTime;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -109,7 +107,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
-    public Collection<Expense> getAll(Set<Integer> ids) {
+    public List<Expense> getAll(Set<Integer> ids) {
         return expenseRepository.getAll(ids);
     }
 
