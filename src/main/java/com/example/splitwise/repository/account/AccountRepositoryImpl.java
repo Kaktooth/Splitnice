@@ -8,6 +8,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.util.Collections;
 import java.util.List;
@@ -47,6 +48,18 @@ public class AccountRepositoryImpl implements AccountRepository {
             "INNER JOIN users ON users.id = user_id " +
             "WHERE users.username = ?";
         return jdbcTemplate.queryForObject(query, new AccountRowMapper(), username);
+    }
+
+    @Override
+    public void setMoneyAmount(Integer accountId, BigDecimal amount) {
+        String queryForUsers = "UPDATE account SET amount = ? WHERE id = ?";
+
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(queryForUsers);
+            ps.setBigDecimal(1, amount);
+            ps.setInt(2, accountId);
+            return ps;
+        });
     }
 
     @Override

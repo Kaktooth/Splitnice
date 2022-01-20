@@ -3,9 +3,6 @@ package com.example.splitwise.controller.view;
 import com.example.splitwise.model.Currency;
 import com.example.splitwise.model.User;
 import com.example.splitwise.model.expense.Expense;
-import com.example.splitwise.model.expense.ExpenseType;
-import com.example.splitwise.model.expense.GroupExpense;
-import com.example.splitwise.model.expense.IndividualExpense;
 import com.example.splitwise.model.expense.SplittingType;
 import com.example.splitwise.model.transaction.Transaction;
 import com.example.splitwise.service.AccountService;
@@ -28,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping
+@RequestMapping("/dashboard/expenses")
 public class ExpenseController {
 
     private final ExpenseService expenseService;
@@ -41,13 +38,14 @@ public class ExpenseController {
 
     public ExpenseController(ExpenseService expenseService, UserService userService,
                              TransactionService transactionService, AccountService accountService) {
+
         this.expenseService = expenseService;
         this.userService = userService;
         this.transactionService = transactionService;
         this.accountService = accountService;
     }
 
-    @GetMapping("/dashboard/expenses")
+    @GetMapping
     public String getExpensesAccount(Model model) {
 
         model.addAttribute("split", SplittingType.values());
@@ -56,7 +54,24 @@ public class ExpenseController {
         return "redirect:/dashboard/expenses/1?expenses&pageSize=4";
     }
 
-    @GetMapping("/dashboard/expenses/{currentPage}")
+    @PostMapping("/pay/{id}")
+    public String payMoney(@PathVariable("id") Integer id,
+                           @RequestParam("currentAmount") BigDecimal currentAmount,
+                           @RequestParam("targetId") Integer targetId,
+                           @RequestParam("transactionAmount") BigDecimal transactionAmount,
+                           Model model) {
+
+        BigDecimal totalAmount = currentAmount.min(transactionAmount);
+
+        accountService.setMoneyAmount(
+            targetId,
+            totalAmount
+        );
+
+        return "redirect:/dashboard/expenses/1?expenses&pageSize=4";
+    }
+
+    @GetMapping("/{currentPage}")
     public String getExpenses(@PathVariable("currentPage") int currentPage,
                               @RequestParam("pageSize") Integer pageSize,
                               Model model) {
@@ -105,40 +120,6 @@ public class ExpenseController {
         model.addAttribute("pageSize", pageSize);
         model.addAttribute("pageNumbers", pageNumbers);
         model.addAttribute("expenseList", currentPageContent);
-
-        return "dashboard";
-    }
-
-    @GetMapping("/add-expense")
-    public String addAttributes(@RequestParam(value = "expenseType") String expenseType, Model model) {
-        model.addAttribute(expenseType);
-
-        return "add-expense";
-    }
-
-    @PostMapping("/add-expense")
-    public String registerNewExpense(@RequestParam(value = "names") String name,
-                                     @RequestParam(value = "expenseName") String title,
-                                     @RequestParam(value = "amount") BigDecimal amount,
-                                     @RequestParam(value = "currency") String currency,
-                                     @RequestParam(value = "splitType") String splitType,
-                                     @RequestParam(value = "expenseType") String expenseType) {
-
-        Expense.ExpenseBuilder expenseBuilder = new Expense.ExpenseBuilder()
-            .withAmount(amount)
-            .withTitle(title)
-            .withCurrency(Currency.valueOf(currency))
-            .withSplittingType(SplittingType.valueOf(splitType));
-
-        if (expenseType.equals(ExpenseType.INDIVIDUAL.toString())) {
-            IndividualExpense individualExpense = expenseBuilder
-                .buildIndividualExpense();
-            expenseService.addNewIndividualExpense(individualExpense, name);
-        } else if (expenseType.equals(ExpenseType.GROUP.toString())) {
-            GroupExpense groupExpense = expenseBuilder
-                .buildGroupExpense();
-            expenseService.addNewGroupExpense(groupExpense, name);
-        }
 
         return "dashboard";
     }

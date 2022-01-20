@@ -73,12 +73,15 @@
                                 aria-expanded="false">
                             Show details
                         </button>
-                        <label th:text="${currentAmount}"></label>
-                        <label th:text="${transactions.get(expense.id-1).get(1).amount.negate()}"></label>
-                        <form th:if="${currentId == expense.targetId}"
 
+                        <form th:if="${currentId == expense.targetId}"
                               th:attr=" id='expense' +${expense.id}"
-                              th:action="@{/pay-expense}" method="get">
+                              th:action="@{/dashboard/expenses/pay/{id}(
+                              id = ${expense.id},
+                              targetId=${expense.targetId},
+                              currentAmount=${currentAmount},
+                              transactionAmount=${transactions.get(expense.id-1).get(1).amount.negate()})}"
+                              method="post">
                             <button th:disabled="${currentAmount < transactions.get(expense.id-1).get(1).amount.negate()}"
                                     class="btn btn-info">
                                 Pay
