@@ -23,9 +23,11 @@ public class IndividualExpenseRowMapper implements RowMapper<Expense> {
         OffsetDateTime creationDate = TimeConverter.convertTime(rs.getTimestamp("creation_date"));
         Currency currency = DbCurrencyManager.getCurrencyTypeById(rs.getInt("currency_id"));
         Integer creatorId = rs.getInt("author_id");
+        Boolean paid = rs.getBoolean("paid");
         Integer targetId = rs.getInt("user_id");
 
-        return new IndividualExpense(id, title, amount, creationDate, currency, creatorId, SplittingType.EQUAL, targetId);
+        return new IndividualExpense(id, title, amount, creationDate, currency, creatorId, SplittingType.EQUAL, paid,
+            targetId);
     }
 
 }

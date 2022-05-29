@@ -10,15 +10,18 @@
           crossorigin="anonymous">
 </head>
 <body class="d-flex justify-content-center align-items-center text-center">
-<form id="expForm" name="form" th:action="@{/add-group}" method="post">
-    <div class="flex">
-        <p class="text-left">Create new group</p>
-        <label for="title"></label>
-        <input tabindex="1" placeholder="Group name..." autocomplete="off" type="text" name="title"
-               id="title">
+<div class="container-sm">
+    <div th:height="130" class="mb-4"></div>
+    <form id="expForm" name="form" th:action="@{/add-group}" method="post">
+        <div class="flex">
+            <p class="text-left">Create new group</p>
+            <label for="title"></label>
+            <input tabindex="1" placeholder="Group name..." autocomplete="off" type="text" name="title"
+                   id="title">
 
-        <button class="btn btn-primary" type="submit">Create</button>
-    </div>
-</form>
+            <button class="btn btn-primary" type="submit">Create</button>
+        </div>
+    </form>
+</div>
 </body>
 </html>

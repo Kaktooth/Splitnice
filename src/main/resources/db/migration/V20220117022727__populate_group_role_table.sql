@@ -1,1 +1,1 @@
-INSERT INTO group_role (title) VALUES ('OWNER'), ('USER');
+INSERT INTO group_role (title) VALUES ('OWNER'), ('MEMBER');

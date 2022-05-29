@@ -4,6 +4,7 @@ CREATE TABLE expense
     title         VARCHAR,
     amount        DECIMAL,
     creation_date TIMESTAMP,
+    paid          BOOLEAN NOT NULL,
     author_id     INTEGER
         CONSTRAINT fk_author_id REFERENCES account (id),
     currency_id   INTEGER

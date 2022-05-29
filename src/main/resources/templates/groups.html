@@ -17,51 +17,47 @@
         <div class="container-fluid">
             <div class="navbar-header">
                 <form id="groupsForm" name="form" th:action="@{/add-group}" method="get">
-
                     <button class="btn btn-primary btn-block" type="submit">Add group</button>
                 </form>
-
             </div>
         </div>
     </nav>
 
-    <!-- for each group-->
     <div class="justify-content-start" th:each="group : ${groupList}">
-
         <div class="card w-150">
             <div class="card-header">
                 <nav class="navbar navbar-default">
                     <div class="container">
-
-                        <label class="col-5" th:text="${group.title}"></label>
-                        <!--<label th:text="'Creator: '+${group.creatorId}"></label>-->
-
-                        <form id="expenseForm" name="form" style="width: 150px;"
-                              th:action="@{/add-expense(expenseType='GROUP')}" method="get">
-                            <input type="hidden" id="expenseType" name="expenseType" value="GROUP"/>
-
-                            <button class="btn btn-light">
-                                Create expense
-                            </button>
-                        </form>
-
-                        <a class="btn btn-light row-5" style="width: 135px;"
-                           th:attr="href='#multiCollapse'+${group.id},
-                           aria-controls='multiCollapse'+${group.id}"
-                           data-toggle="collapse"
-                           role="button"
-                           aria-expanded="false">
-                            Show Expenses
-                        </a>
-
-                        <div class="collapse multi-collapse" th:attr="id='multiCollapse'+${group.id}"
+                        <div class="collapse multi-collapse" th:attr="id='accountsCollapse'+${group.id}"
                              style="width:440px;">
-                            <!-- for each expense -->
-                            <div th:each="expense : ${group.expenses}">
+                            <h5 class="text-center">Members</h5>
+                            <div th:each="accountInfo, i : ${group.accounts}">
                                 <div class="card card-body">
                                     <h5 class="mb-0">
                                         <div class="list-group">
-                                            <label th:text="${expense.id}"></label>
+                                            <label th:text="${i.index + 1}"></label>
+
+                                            <div class="d-flex w-100 align-items-center justify-content-between">
+                                                <strong class="mb-1"> <!-- <td th:text="${expense}">1</td>--></strong>
+                                                <small th:text="${accountInfo.account.username}"></small>
+                                            </div>
+
+                                            <div class="p-1 col-10 mb-1 small"
+                                                 th:text="${accountInfo.getInfo()}">
+                                            </div>
+                                        </div>
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="collapse multi-collapse col" th:attr="id='multiCollapse'+${group.id}"
+                             style="width:440px;">
+                            <h5 class="text-center">Expenses</h5>
+                            <div th:each="expense, i : ${group.expenses}">
+                                <div class="card card-body">
+                                    <h5 class="mb-0">
+                                        <div class="list-group">
+                                            <label th:text="${expense.title}"></label>
 
                                             <div class="d-flex w-100 align-items-center justify-content-between">
                                                 <strong class="mb-1"> <!-- <td th:text="${expense}">1</td>--></strong>
@@ -71,45 +67,59 @@
                                             <div class="p-1 col-10 mb-1 small" th:text="${expense.getCreationInfo()}">
 
                                             </div>
-                                            <button class="btn btn-light"
-                                                    type="button"
-                                                    data-toggle="collapse"
-                                                    th:attr="data-target='#collapseExpense'+${expense.id},
-                                                    aria-controls='collapseExpense'+${expense.id}"
-                                                    aria-expanded="false">
-                                                Show details
-                                            </button>
                                         </div>
                                     </h5>
-                                    <div name="expense-name">
-                                        <div class="collapse multi-collapse"
-                                             th:attr="id='collapseExpense'+${expense.id}">
-                                            <div class="card card-body">
-                                                <h5 class="mb-0">
-                                                    <div class="list-group">
-                                                        <div class="p-1 col-10 mb-1 small">
-                                                            Details
-                                                        </div>
-                                                    </div>
-                                                </h5>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <form id="deleteForm" name="form" class="row-5" style="width: 190px;"
-                              th:action="@{/delete-group}" method="get">
-                            <button class="btn btn-danger">
-                                Delete group
-                            </button>
-                        </form>
                     </div>
+                    <label class="col-5" th:text="${group.title}"></label>
+
+                    <form id="expenseForm" name="form" style="width: 150px;"
+                          th:action="@{/add-expense(expenseType='GROUP')}" method="get">
+                        <input type="hidden" id="expenseType" name="expenseType" value="GROUP"/>
+
+                        <button class="btn btn-light">
+                            Create expense
+                        </button>
+                    </form>
+
+                    <a class="btn btn-light row-5" style="width: 135px;"
+                       th:attr="href='#multiCollapse'+${group.id},
+                           aria-controls='multiCollapse'+${group.id}"
+                       data-toggle="collapse"
+                       role="button"
+                       aria-expanded="false">
+                        Show expenses
+                    </a>
+                    <a class="btn btn-light row-5" style="width: 135px;"
+                       th:attr="href='#accountsCollapse'+${group.id},
+                           aria-controls='accountsCollapse'+${group.id}"
+                       data-toggle="collapse"
+                       role="button"
+                       aria-expanded="false">
+                        Show accounts
+                    </a>
+                    <form id="deleteGroupForm" name="form" class="col mb-2" style="width: 190px;"
+                          th:action="@{/delete-group/{id}(id = ${group.getId()})}" th:method="delete">
+                        <button class="btn btn-danger">
+                            Delete group
+                        </button>
+                    </form>
+
+                    <form id="groupUserForm" name="form" class="col-5 form-inline" style="width: 190px;"
+                          th:action="@{/group/{id}/add-account(id = ${group.getId()})}" th:method="post">
+                        <div class="form-group mx-sm-1">
+                            <input class="form-control" type="email" id="account" name="account"/>
+                            <button class="btn btn-info">
+                                Add Account
+                            </button>
+                        </div>
+                    </form>
                 </nav>
             </div>
         </div>
     </div>
-</div>
 </div>
 </body>
 </html>

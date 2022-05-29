@@ -28,7 +28,7 @@ public class CommonSecurityConfig {
     public RoleHierarchy roleHierarchy(){
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
 
-        roleHierarchy.setHierarchy("ADMIN > USER");
+        roleHierarchy.setHierarchy("ADMIN > MEMBER");
 
         return roleHierarchy;
     }

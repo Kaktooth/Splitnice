@@ -14,15 +14,6 @@
     <div class="container-fluid">
         <div class="navbar-header container-fluid ">
             <div class="input-group mb-1">
-
-                <div class="input-group-prepend mb-1">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroup-sizing-default">Search</span>
-                    </div>
-                    <input type="text" class="form-control" aria-label="Default"
-                           aria-describedby="inputGroup-sizing-default">
-                </div>
-
                 <div class="input-group mb-1 justify-content-between">
                     <form id="expenseForm" name="form" th:action="@{/add-expense(expenseType='INDIVIDUAL')}"
                           method="get">
@@ -65,7 +56,7 @@
                             <label th:text="${'Added by: '+users.get(expense.id-1).getEmail()}"></label>
                             <label class="small" th:text="${expense.getCreationInfo()}"></label>
                         </div>
-                        <button class="btn btn-light"
+                        <button class="btn btn-light mb-1"
                                 type="button"
                                 data-toggle="collapse"
                                 th:attr="data-target='#collapseExpense'+${expense.id},
@@ -78,14 +69,28 @@
                               th:attr=" id='expense' +${expense.id}"
                               th:action="@{/dashboard/expenses/pay/{id}(
                               id = ${expense.id},
+                              creatorId=${expense.getCreatorId()},
                               targetId=${expense.targetId},
                               currentAmount=${currentAmount},
                               transactionAmount=${transactions.get(expense.id-1).get(1).amount.negate()})}"
                               method="post">
-                            <button th:disabled="${currentAmount < transactions.get(expense.id-1).get(1).amount.negate()}"
+                            <button th:if="${expense.paid == false}" th:disabled="${currentAmount < transactions.get(expense.id - 1).get(0).amount}
+                            or ${accounts.get(expense.getCreatorId()).getMoneyAmount() < transactions.get(expense.id - 1).get(1).amount.negate()}"
                                     class="btn btn-info">
                                 Pay
+
                             </button>
+                            <button th:if="${expense.paid == true}" th:disabled="${true}"
+                                    class="btn btn-info">
+                                Paid
+                            </button>
+                            <div class="float-right">
+                                <label th:if="${currentAmount < transactions.get(expense.id - 1).get(1).amount.negate()}"
+                                       class="small text-danger" th:text="'Not enough money in your wallet! '"></label>
+                                <label th:if="${accounts.get(expense.getCreatorId()).getMoneyAmount() < transactions.get(expense.id - 1).get(0).amount}"
+                                       class="small text-danger" th:text="'Not enough money in creator wallet! '"></label>
+
+                            </div>
                         </form>
                     </div>
                 </h5>

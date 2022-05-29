@@ -6,11 +6,11 @@ import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class GroupRowMapper implements RowMapper<Group> {
+public class SingleGroupRowMapper implements RowMapper<Group> {
 
     @Override
     public Group mapRow(ResultSet rs, int rowNum) throws SQLException {
-        Integer id = rs.getInt("group_id");
+        Integer id = rs.getInt("id");
         String username = rs.getString("title");
         Integer creatorId = rs.getInt("creator_id");
 

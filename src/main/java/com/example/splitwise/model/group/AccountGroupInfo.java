@@ -1,25 +1,26 @@
 package com.example.splitwise.model.group;
 
 import com.example.splitwise.model.Identifiable;
+import com.example.splitwise.model.account.Account;
 
 public class AccountGroupInfo implements Identifiable {
 
     private final Integer id;
-    private final GroupRole roleId;
+    private final GroupRole role;
     private final Integer addedById;
     private final Integer groupId;
-    private final Integer accountId;
+    private final Account account;
 
-    public AccountGroupInfo(Integer id, GroupRole roleId, Integer addedById, Integer groupId, Integer accountId) {
+    public AccountGroupInfo(Integer id, GroupRole role, Integer addedById, Integer groupId, Account account) {
         this.id = id;
-        this.roleId = roleId;
+        this.role = role;
         this.addedById = addedById;
         this.groupId = groupId;
-        this.accountId = accountId;
+        this.account = account;
     }
 
-    public GroupRole getRoleId() {
-        return roleId;
+    public GroupRole getRole() {
+        return role;
     }
 
     public Integer getAddedById() {
@@ -30,8 +31,12 @@ public class AccountGroupInfo implements Identifiable {
         return groupId;
     }
 
-    public Integer getAccountId() {
-        return accountId;
+    public Account getAccount() {
+        return account;
+    }
+
+    public String getInfo() {
+        return " role: " + getRole().toString() + " balance: " + account.getMoneyAmount() + " " + account.getCurrency().toString();
     }
 
     @Override
@@ -43,18 +48,18 @@ public class AccountGroupInfo implements Identifiable {
     public static final class AccountGroupInfoBuilder {
 
         private Integer id;
-        private GroupRole roleId;
+        private GroupRole role;
         private Integer addedById;
         private Integer groupId;
-        private Integer accountId;
+        private Account account;
 
         public AccountGroupInfoBuilder withId(Integer id) {
             this.id = id;
             return this;
         }
 
-        public AccountGroupInfoBuilder withRoleId(GroupRole roleId) {
-            this.roleId = roleId;
+        public AccountGroupInfoBuilder withRole(GroupRole role) {
+            this.role = role;
             return this;
         }
 
@@ -68,13 +73,13 @@ public class AccountGroupInfo implements Identifiable {
             return this;
         }
 
-        public AccountGroupInfoBuilder withAccountId(Integer accountId) {
-            this.accountId = accountId;
+        public AccountGroupInfoBuilder withAccountId(Account account) {
+            this.account = account;
             return this;
         }
 
         public AccountGroupInfo build() {
-            return new AccountGroupInfo(id, roleId, addedById, groupId, accountId);
+            return new AccountGroupInfo(id, role, addedById, groupId, account);
         }
     }
 }

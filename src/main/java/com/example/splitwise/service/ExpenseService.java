@@ -16,4 +16,8 @@ public interface ExpenseService extends EntityService<Expense> {
     List<Expense> getAllAccountExpenses(Set<Integer> ids);
 
     List<Expense> getUserExpenses(String userEmail);
+
+    List<Expense> getGroupExpenses(Integer groupId);
+
+    void pay(Integer expenseId, Integer creatorId, Integer targetId);
 }

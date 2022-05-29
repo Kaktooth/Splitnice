@@ -23,14 +23,12 @@ public class Pagination<T> {
     }
 
     public List<Integer> getPageNumbers(int pageCount) {
-        List<Integer> pageNumbers = IntStream.rangeClosed(1, pageCount)
+        return IntStream.rangeClosed(1, pageCount)
             .boxed()
             .collect(Collectors.toList());
-        return pageNumbers;
     }
 
     public int getPageCount(int pageSize) {
-        int pageCount = ((expenses.size() - 1) / pageSize);
-        return pageCount;
+        return ((expenses.size() - 1) / pageSize);
     }
 }

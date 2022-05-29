@@ -19,4 +19,8 @@ public interface ExpenseRepository extends EntityRepository<Expense> {
     List<Expense> getAllAccountExpenses(Set<Integer> ids);
 
     List<Expense> getAccountExpenses(Integer accountId);
+
+    List<Expense> getGroupExpenses(Integer groupId);
+
+    void pay(Integer id);
 }

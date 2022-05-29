@@ -1,13 +1,15 @@
 package com.example.splitwise.service;
 
 import com.example.splitwise.model.account.Account;
+import com.example.splitwise.model.group.AccountGroupInfo;
 import com.example.splitwise.model.group.Group;
+import com.example.splitwise.model.group.GroupRole;
 import com.example.splitwise.repository.group.GroupRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Service
@@ -26,8 +28,18 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public List<Account> getAccounts(Integer groupId) {
-        return null;
+    public Group getByTitle(String title) {
+        return groupRepository.getByTitle(title);
+    }
+
+    @Override
+    public List<AccountGroupInfo> getAccounts(Integer groupId) {
+        return groupRepository.getAccounts(groupId);
+    }
+
+    @Override
+    public void addAccount(Account account, Group group) {
+        groupRepository.addAccount(account, group);
     }
 
     @Override
@@ -47,6 +59,8 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public void delete(Integer groupId) {
-
+        groupRepository.delete(groupId);
     }
+
+
 }

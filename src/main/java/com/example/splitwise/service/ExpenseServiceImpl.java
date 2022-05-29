@@ -2,8 +2,10 @@ package com.example.splitwise.service;
 
 import com.example.splitwise.model.account.Account;
 import com.example.splitwise.model.expense.Expense;
+import com.example.splitwise.model.expense.GroupExpense;
 import com.example.splitwise.model.expense.IndividualExpense;
 import com.example.splitwise.model.expense.SplittingType;
+import com.example.splitwise.model.group.Group;
 import com.example.splitwise.model.transaction.Transaction;
 import com.example.splitwise.repository.expense.ExpenseRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,15 +22,18 @@ import java.util.Set;
 @Transactional
 public class ExpenseServiceImpl implements ExpenseService {
 
+    private final UserService userService;
     private final AccountService accountService;
     private final GroupService groupService;
     private final TransactionService transactionService;
     private final ExpenseRepository expenseRepository;
 
-    public ExpenseServiceImpl(AccountService accountService,
+    public ExpenseServiceImpl(UserService userService,
+                              AccountService accountService,
                               GroupService groupService,
                               TransactionService transactionService,
                               ExpenseRepository expenseRepository) {
+        this.userService = userService;
         this.accountService = accountService;
         this.groupService = groupService;
         this.transactionService = transactionService;
@@ -81,7 +86,42 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     public Expense addNewGroupExpense(Expense expense, String targetTitle) {
-        return null;
+        Group group = groupService.getByTitle(targetTitle);
+
+        GroupExpense groupExpense = new Expense.ExpenseBuilder()
+            .withTitle(expense.getTitle())
+            .withAmount(expense.getAmount())
+            .withCreationDate(OffsetDateTime.now())
+            .withCurrency(expense.getCurrency())
+            .withSplittingType(SplittingType.EQUAL)
+            .withCreatorId(getAuthorId())
+            .withGroupId(group.getId())
+            .buildGroupExpense();
+
+        Expense newExpense = expenseRepository.add(groupExpense);
+        BigDecimal equalShare = getEqualShare(newExpense, 2);
+
+        Transaction landMoneyTransaction = new Transaction.TransactionBuilder()
+            .withAmount(equalShare)
+            .withCurrency(newExpense.getCurrency())
+            .withLanderId(newExpense.getCreatorId())
+            .withReceiverId(group.getCreatorId())
+            .withExpenseId(newExpense.getId())
+            .build();
+        transactionService.add(landMoneyTransaction);
+
+        for (var accountInfo : groupService.getAccounts(group.getId())) {
+            Transaction receiveMoneyTransaction = new Transaction.TransactionBuilder()
+                .withAmount(equalShare.negate())
+                .withCurrency(newExpense.getCurrency())
+                .withLanderId(newExpense.getCreatorId())
+                .withReceiverId(accountInfo.getId())
+                .withExpenseId(newExpense.getId())
+                .build();
+            transactionService.add(receiveMoneyTransaction);
+        }
+
+        return newExpense;
     }
 
     @Override
@@ -102,6 +142,11 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
+    public List<Expense> getGroupExpenses(Integer groupId) {
+        return expenseRepository.getGroupExpenses(groupId);
+    }
+
+    @Override
     public Expense getById(Integer expenseId) {
         return expenseRepository.getById(expenseId);
     }
@@ -115,6 +160,22 @@ public class ExpenseServiceImpl implements ExpenseService {
     public void delete(Integer expenseId) {
         transactionService.deleteTransactionsOfExpense(expenseId);
         expenseRepository.delete(expenseId);
+    }
+
+    @Override
+    public void pay(Integer expenseId, Integer creatorId, Integer targetId) {
+        Account creatorAccount = accountService.getById(creatorId);
+        Account targetAccount = accountService.getById(targetId);
+
+        List<Transaction> transactions = transactionService.getTransactionsFromExpense(
+            Set.of(expenseId)
+        );
+
+        BigDecimal currentUserAmount = creatorAccount.getMoneyAmount().subtract(transactions.get(0).getAmount());
+        BigDecimal targetUserAmount = targetAccount.getMoneyAmount().add(transactions.get(1).getAmount());
+        accountService.setMoneyAmount(creatorAccount.getUserId(), currentUserAmount);
+        accountService.setMoneyAmount(targetId, targetUserAmount);
+        expenseRepository.pay(expenseId);
     }
 
     private BigDecimal getEqualShare(Expense expense, int count) {

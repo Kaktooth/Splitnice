@@ -25,10 +25,11 @@ public class ExpenseDto extends Expense {
                       SplittingType splittingType,
                       ExpenseType type,
                       SplittingType splittingType1,
+                      Boolean paid,
                       Account lander,
                       List<Account> accounts,
                       Map<Integer, BigDecimal> shares) {
-        super(id, title, amount, creationDate, currency, creatorId, splittingType);
+        super(id, title, amount, creationDate, currency, creatorId, splittingType, paid);
         this.type = type;
         this.splittingType = splittingType1;
         this.lander = lander;

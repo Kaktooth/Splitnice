@@ -2,7 +2,11 @@ package com.example.splitwise.controller.view;
 
 import com.example.splitwise.model.Currency;
 import com.example.splitwise.model.User;
+import com.example.splitwise.model.account.Account;
 import com.example.splitwise.model.expense.Expense;
+import com.example.splitwise.model.expense.ExpenseType;
+import com.example.splitwise.model.expense.GroupExpense;
+import com.example.splitwise.model.expense.IndividualExpense;
 import com.example.splitwise.model.expense.SplittingType;
 import com.example.splitwise.model.transaction.Transaction;
 import com.example.splitwise.service.AccountService;
@@ -16,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -67,10 +72,17 @@ public class ExpenseController {
         List<Expense> currentPageContent = pagination.getCurrentPageContent(currentPage - 1, pageSize);
 
         List<User> users = new ArrayList<>();
+        List<Account> accounts = new ArrayList<>();
         if (expenses.size() > 0) {
 
             expenses.forEach(expense -> users.add(
                 userService.getById(
+                    expense.getCreatorId()
+                )
+            ));
+
+            expenses.forEach(expense -> accounts.add(
+                accountService.getById(
                     expense.getCreatorId()
                 )
             ));
@@ -84,6 +96,7 @@ public class ExpenseController {
             model.addAttribute("transactions", transactions);
             model.addAttribute("transactionMessages", messages);
             model.addAttribute("users", users);
+            model.addAttribute("accounts", accounts);
         }
 
         String userEmail = SecurityContextHolder.getContext()
@@ -101,6 +114,50 @@ public class ExpenseController {
         model.addAttribute("pageSize", pageSize);
         model.addAttribute("pageNumbers", pageNumbers);
         model.addAttribute("expenseList", currentPageContent);
+
+        return "dashboard";
+    }
+
+    @PostMapping("/pay/{expenseId}")
+    public String payExpenses(@PathVariable("expenseId") int expenseId,
+                              @RequestParam("creatorId") int creatorId,
+                              @RequestParam("targetId") int targetId,
+                              @RequestParam("currentAmount") BigDecimal currentAmount,
+                              @RequestParam("transactionAmount") BigDecimal transactionAmount,
+                              Model model) {
+        expenseService.pay(expenseId, creatorId, targetId);
+        return "redirect:/dashboard/expenses";
+    }
+
+    @GetMapping("/add-expense")
+    public String getPage() {
+        return "add-expense";
+    }
+
+    @PostMapping("/add-expense")
+    public String addNewExpense(@RequestParam(value = "expenseType") String expenseType,
+                                @RequestParam(value = "name") String name,
+                                @RequestParam(value = "expenseName") String expenseName,
+                                @RequestParam(value = "amount") BigDecimal amount,
+                                @RequestParam(value = "currency") String currency,
+                                @RequestParam(value = "splitType") String splitType) {
+
+        Expense.ExpenseBuilder expenseBuilder = new Expense.ExpenseBuilder()
+            .withAmount(amount)
+            .withTitle(expenseName)
+            .withCurrency(Currency.valueOf(currency))
+            .withSplittingType(SplittingType.valueOf(splitType));
+
+        if (expenseType.equals(ExpenseType.INDIVIDUAL.toString())) {
+            IndividualExpense individualExpense = expenseBuilder
+                .buildIndividualExpense();
+
+            expenseService.addNewIndividualExpense(individualExpense, name);
+        } else if (expenseType.equals(ExpenseType.GROUP.toString())) {
+            GroupExpense groupExpense = expenseBuilder
+                .buildGroupExpense();
+            expenseService.addNewGroupExpense(groupExpense, name);
+        }
 
         return "dashboard";
     }

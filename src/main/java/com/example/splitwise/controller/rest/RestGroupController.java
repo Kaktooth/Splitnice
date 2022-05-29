@@ -51,14 +51,14 @@ public class RestGroupController {
             .withCreatorId(3)
             .buildGroupExpense();
         expenseList2.add(expense2);
-        Group group1 = new GroupDto(1, "Title1", 1,
-            expenseList
-        );
-        Group group2 = new GroupDto(2, "Title2", 1,
-            expenseList2
-        );
-        groups.add(group1);
-        groups.add(group2);
+//        Group group1 = new GroupDto(1, "Title1", 1,
+//            expenseList
+//        );
+//        Group group2 = new GroupDto(2, "Title2", 1,
+//            expenseList2
+//        );
+//        groups.add(group1);
+//        groups.add(group2);
 
         return groups;
     }

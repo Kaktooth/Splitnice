@@ -16,9 +16,11 @@ public abstract class Expense implements Identifiable {
     private final OffsetDateTime creationDate;
     private final Currency currency;
     private final Integer creatorId;
+    private final Boolean paid;
     private final SplittingType splittingType;
 
-    public Expense(Integer id, String title, BigDecimal amount, OffsetDateTime creationDate, Currency currency, Integer creatorId, SplittingType splittingType) {
+    public Expense(Integer id, String title, BigDecimal amount, OffsetDateTime creationDate, Currency currency,
+                   Integer creatorId, SplittingType splittingType, Boolean paid) {
         this.id = id;
         this.title = title;
         this.amount = amount;
@@ -26,6 +28,7 @@ public abstract class Expense implements Identifiable {
         this.currency = currency;
         this.creatorId = creatorId;
         this.splittingType = splittingType;
+        this.paid = paid;
     }
 
     @Override
@@ -53,6 +56,10 @@ public abstract class Expense implements Identifiable {
         return title;
     }
 
+    public Boolean getPaid() {
+        return paid;
+    }
+
     public SplittingType getSplittingType() {
         return splittingType;
     }
@@ -70,15 +77,27 @@ public abstract class Expense implements Identifiable {
 
         private Integer id;
         private String title;
+        private Boolean paid;
         private BigDecimal amount;
         private OffsetDateTime creationDate;
         private Currency currency;
         private Integer creatorId;
         private Integer targetId;
+        private Integer groupId;
         private SplittingType splittingType;
 
         public ExpenseBuilder withId(Integer id) {
             this.id = id;
+            return this;
+        }
+
+        public ExpenseBuilder withGroupId(Integer groupId) {
+            this.groupId = groupId;
+            return this;
+        }
+
+        public ExpenseBuilder withPaid(Boolean paid) {
+            this.paid = paid;
             return this;
         }
 
@@ -118,11 +137,11 @@ public abstract class Expense implements Identifiable {
         }
 
         public GroupExpense buildGroupExpense() {
-            return new GroupExpense(id, title, amount, creationDate, currency, creatorId, splittingType, targetId);
+            return new GroupExpense(id, title, amount, creationDate, currency, creatorId, splittingType, paid, groupId);
         }
 
         public IndividualExpense buildIndividualExpense() {
-            return new IndividualExpense(id, title, amount, creationDate, currency, creatorId, splittingType, targetId);
+            return new IndividualExpense(id, title, amount, creationDate, currency, creatorId, splittingType, paid, targetId);
         }
     }
 }

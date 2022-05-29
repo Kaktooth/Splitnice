@@ -28,7 +28,7 @@ public class NamesParser {
         return accounts;
     }
 
-    public List<Account> parseToGroupAccounts(Integer groupId) {
-        return new ArrayList<>(groupService.getAccounts(groupId));
-    }
+//    public List<Account> parseToGroupAccounts(Integer groupId) {
+//        return new ArrayList<>(groupService.getAccounts(groupId));
+//    }
 }

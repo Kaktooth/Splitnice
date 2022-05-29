@@ -19,6 +19,8 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
+    String setAmount = "UPDATE account SET amount = ? WHERE id = ?";
+
     String getByUsernameQuery = "SELECT account.id, account.username, users.username, amount, users.phone_number, user_id, currency_id " +
         "FROM account " +
         "INNER JOIN users ON users.id = user_id " +
@@ -54,10 +56,9 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     @Override
     public void setMoneyAmount(Integer accountId, BigDecimal amount) {
-        String queryForUsers = "UPDATE account SET amount = ? WHERE id = ?";
 
         jdbcTemplate.update(con -> {
-            PreparedStatement ps = con.prepareStatement(queryForUsers);
+            PreparedStatement ps = con.prepareStatement(setAmount);
             ps.setBigDecimal(1, amount);
             ps.setInt(2, accountId);
             return ps;

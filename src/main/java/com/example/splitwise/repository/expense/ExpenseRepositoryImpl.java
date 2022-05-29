@@ -22,15 +22,23 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    String newExpenseQuery = "INSERT INTO expense (amount, title, creation_date, currency_id, author_id) VALUES (?, ?, ?, ?, ?)";
+    String newExpenseQuery = "INSERT INTO expense (amount, title, creation_date, currency_id, author_id, paid) VALUES (?, ?, ?, ?, ?, ?)";
     String individualExpenseQuery = "INSERT INTO individual_expense (expense_id, user_id) VALUES (?, ?)";
     String groupExpenseQuery = "INSERT INTO group_expense (expense_id, group_id) VALUES (?, ?)";
 
-    String getAccountExpensesQuery = "SELECT individual_expense.id, amount, creation_date, currency_id, user_id, title, author_id\n" +
+    String getAccountExpensesQuery = "SELECT individual_expense.id, amount, creation_date, currency_id, user_id, title, " +
+        "paid, author_id\n" +
         "FROM individual_expense\n" +
         "INNER JOIN expense ON expense.id = expense_id\n" +
         "INNER JOIN users ON users.id = user_id\n" +
         "WHERE user_id = ?  OR author_id = ?";
+
+    String getGroupExpensesQuery = "SELECT * " +
+        "FROM group_expense\n" +
+        "INNER JOIN expense ON expense.id = expense_id\n" +
+        "WHERE group_id = ? ";
+
+    String setPaidValue = "UPDATE expense SET paid = true WHERE id = ?";
 
     @Autowired
     public ExpenseRepositoryImpl(JdbcTemplate jdbcTemplate) {
@@ -49,6 +57,7 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
             ps.setTimestamp(3, timestamp);
             ps.setInt(4, DbCurrencyManager.getIdOfCurrencyType(expense.getCurrency()));
             ps.setInt(5, expense.getCreatorId());
+            ps.setBoolean(6, false);
 
             return ps;
         }, keyHolder);
@@ -57,6 +66,7 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
 
         Expense.ExpenseBuilder expenseBuilder = new Expense.ExpenseBuilder()
             .withId(entityId)
+            .withPaid(expense.getPaid())
             .withTitle(expense.getTitle())
             .withAmount(expense.getAmount())
             .withCreationDate(TimeConverter.convertTime(timestamp))
@@ -65,16 +75,16 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
             .withSplittingType(expense.getSplittingType());
 
         if (expense instanceof GroupExpense) {
-            Integer targetId = ((GroupExpense) expense).getGroupId();
+            Integer groupId = ((GroupExpense) expense).getGroupId();
             jdbcTemplate.update(con -> {
-                PreparedStatement ps = con.prepareStatement(newExpenseQuery, new String[]{"id"});
+                PreparedStatement ps = con.prepareStatement(groupExpenseQuery, new String[]{"id"});
                 ps.setInt(1, entityId);
-                ps.setInt(2, targetId);
+                ps.setInt(2, groupId);
                 return ps;
             }, keyHolder);
 
             return expenseBuilder
-                .withTargetId(((GroupExpense) expense).getGroupId())
+                .withGroupId(((GroupExpense) expense).getGroupId())
                 .buildGroupExpense();
 
         } else if (expense instanceof IndividualExpense) {
@@ -133,6 +143,7 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
 
         return new Expense.ExpenseBuilder()
             .withId(savedExpense.getId())
+            .withPaid(savedExpense.getPaid())
             .withAmount(expense.getAmount())
             .withCreationDate(savedExpense.getCreationDate())
             .withCurrency(expense.getCurrency())
@@ -177,5 +188,15 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
     @Override
     public List<Expense> getAccountExpenses(Integer accountId) {
         return jdbcTemplate.query(getAccountExpensesQuery, new IndividualExpenseRowMapper(), accountId, accountId);
+    }
+
+    @Override
+    public List<Expense> getGroupExpenses(Integer groupId) {
+        return jdbcTemplate.query(getGroupExpensesQuery, new GroupExpenseRowMapper(), groupId);
+    }
+
+    @Override
+    public void pay(Integer id) {
+        jdbcTemplate.update(setPaidValue, id);
     }
 }
