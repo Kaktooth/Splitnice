@@ -11,7 +11,13 @@
           crossorigin="anonymous">
 </head>
 <body>
-
+<div class="alert alert-success" role="alert" th:if="${param.paymentCompleted}">
+    Your payment completed!
+</div>
+<div class="alert alert-danger" role="alert" th:if="${param.paymentCanceled}">
+    Your payment canceled!
+    Some people don't have money in their wallet.
+</div>
 <div class="d-flex container-fluid justify-content-start">
     <nav class="col-12 navbar navbar-default">
         <div class="container-fluid">
@@ -73,11 +79,11 @@
                                                   th:action="@{/dashboard/groups/pay/{id}(
                                                      id = ${expense.id},
                                                      creatorId=${expense.getCreatorId()},
-                                                     targetId=${group.getId()},
+                                                     groupId=${group.getId()},
                                                      currentAmount=${currentAmount},
                                                      transactionAmount=${transactions.get(i.index).get(0).amount})}"
                                                   method="post">
-                                                <button th:if="${expense.paid == false && group.getCreatorId() == currentAccount.getId()}" th:disabled="${currentAmount < transactions.get(i.index).get(0).amount}"
+                                                <button th:if="${expense.paid == false && group.getCreatorId() == currentAccount.getId()}"
                                                         class="btn btn-info">
                                                     Pay
 

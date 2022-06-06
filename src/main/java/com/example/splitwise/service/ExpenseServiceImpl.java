@@ -100,7 +100,7 @@ public class ExpenseServiceImpl implements ExpenseService {
             .buildGroupExpense();
 
         Expense newExpense = expenseRepository.add(groupExpense);
-        BigDecimal equalShare = getEqualShare(newExpense, 2);
+        BigDecimal equalShare = getEqualShare(newExpense, groupService.getAccounts(group.getId()).size());
 
         Transaction landMoneyTransaction = new Transaction.TransactionBuilder()
             .withAmount(equalShare)
@@ -164,7 +164,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
-    public void pay(Integer expenseId, Integer creatorId, Integer targetId) {
+    public boolean pay(Integer expenseId, Integer creatorId, Integer targetId) {
         Expense expense = getById(expenseId);
         if (expense instanceof IndividualExpense) {
             Account creatorAccount = accountService.getById(creatorId);
@@ -176,9 +176,13 @@ public class ExpenseServiceImpl implements ExpenseService {
 
             BigDecimal currentUserAmount = creatorAccount.getMoneyAmount().add(transactions.get(0).getAmount());
             BigDecimal targetUserAmount = targetAccount.getMoneyAmount().add(transactions.get(1).getAmount());
+            if(currentUserAmount.doubleValue() < 0 || targetUserAmount.doubleValue() < 0){
+                return false;
+            }
             accountService.setMoneyAmount(creatorAccount.getUserId(), currentUserAmount);
             accountService.setMoneyAmount(targetId, targetUserAmount);
             expenseRepository.pay(expenseId);
+            return true;
         } else {
 
             List<AccountGroupInfo> accounts = groupService.getAccounts(targetId);
@@ -186,12 +190,22 @@ public class ExpenseServiceImpl implements ExpenseService {
                 Set.of(expenseId)
             );
 
+
+                for (int i = 0; i < accounts.size(); i++) {
+                    Account account = accounts.get(i).getAccount();
+                    BigDecimal testCalculation = account.getMoneyAmount().subtract(transactions.get(i).getAmount());
+                    if(testCalculation.doubleValue() < 0){
+                        return false;
+                    }
+                }
+
             for (int i = 0; i < accounts.size(); i++) {
                 Account account = accounts.get(i).getAccount();
                 accountService.setMoneyAmount(account.getUserId(),
                     account.getMoneyAmount().subtract(transactions.get(i).getAmount()));
             }
             expenseRepository.pay(expenseId);
+            return true;
         }
     }
 

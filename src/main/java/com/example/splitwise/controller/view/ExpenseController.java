@@ -73,7 +73,7 @@ public class ExpenseController {
 
         List<User> users = new ArrayList<>();
         List<Account> accounts = new ArrayList<>();
-        if (expenses.size() > 0) {
+        if (!expenses.isEmpty()) {
 
             expenses.forEach(expense -> users.add(
                 userService.getById(
@@ -128,8 +128,14 @@ public class ExpenseController {
                               @RequestParam("currentAmount") BigDecimal currentAmount,
                               @RequestParam("transactionAmount") BigDecimal transactionAmount,
                               Model model) {
-        expenseService.pay(expenseId, creatorId, targetId);
-        return "redirect:/dashboard/expenses";
+        boolean paymentCompleted = expenseService.pay(expenseId, creatorId, targetId);
+
+        if (paymentCompleted) {
+            return "redirect:/dashboard/expenses?expenses&paymentCompleted";
+        } else {
+            return "redirect:/dashboard/expenses?expenses&paymentCanceled";
+        }
+
     }
 
     @GetMapping("/add-expense")

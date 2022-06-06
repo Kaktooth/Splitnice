@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,11 +65,12 @@ public class GroupController {
                     groupService.getAccounts(group.getId()))
             );
         }
-        System.out.println(expenses);
+
         List<List<Transaction>> transactions = transactionMessageCreator.getTransactions(expenses);
         String userEmail = SecurityContextHolder.getContext()
             .getAuthentication()
             .getName();
+
         model.addAttribute("currentAccount", accountService.getByUserEmail(userEmail));
         model.addAttribute("transactions", transactions);
         model.addAttribute("groupList", groupDtos);
@@ -84,11 +84,15 @@ public class GroupController {
     public String payExpense(@PathVariable("expenseId") int expenseId,
                              @RequestParam("creatorId") int creatorId,
                              @RequestParam("groupId") int groupId,
-                             @RequestParam("currentAmount") BigDecimal currentAmount,
-                             @RequestParam("transactionAmount") BigDecimal transactionAmount,
                              Model model) {
-        expenseService.pay(expenseId, creatorId, groupId);
-        return "redirect:/dashboard/groups";
+
+        boolean paymentCompleted = expenseService.pay(expenseId, creatorId, groupId);
+
+        if (paymentCompleted) {
+            return "redirect:/dashboard/groups?groups&paymentCompleted";
+        } else {
+            return "redirect:/dashboard/groups?groups&paymentCanceled";
+        }
     }
 
     @GetMapping("/add-group")
@@ -118,8 +122,7 @@ public class GroupController {
     @PostMapping("/group/{id}/add-account")
     public String addUser(@PathVariable Integer id,
                           @RequestParam("account") String account) {
-        System.out.println(account);
-        System.out.println(id);
+
         Integer accountId = accountService.getByUserEmail(account).getId();
         groupService.addAccount(accountService.getById(accountId), groupService.getById(id));
 

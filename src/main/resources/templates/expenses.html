@@ -9,7 +9,13 @@
           crossorigin="anonymous">
 </head>
 <body>
-
+<div class="alert alert-success" role="alert" th:if="${param.paymentCompleted}">
+    Your payment completed!
+</div>
+<div class="alert alert-danger" role="alert" th:if="${param.paymentCanceled}">
+    Your payment canceled!
+    Person don't have money in their wallet.
+</div>
 <nav class="col-12 navbar navbar-default">
     <div class="container-fluid">
         <div class="navbar-header container-fluid ">

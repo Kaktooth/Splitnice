@@ -6,6 +6,7 @@ import com.example.splitwise.model.expense.IndividualExpense;
 import com.example.splitwise.utils.DbCurrencyManager;
 import com.example.splitwise.utils.TimeConverter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -105,11 +106,10 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
         String query = "SELECT * FROM expense, individual_expense WHERE expense.id = ? AND expense_id = ?";
         String query2 = "SELECT * FROM expense, group_expense WHERE expense.id = ? AND expense_id = ?";
         Expense expense;
+        try {
+            expense = jdbcTemplate.queryForObject(query, new IndividualExpenseRowMapper(), expenseId, expenseId);
+        } catch (EmptyResultDataAccessException exception) {
 
-        expense = jdbcTemplate.queryForObject(query, new IndividualExpenseRowMapper(), expenseId, expenseId);
-        System.out.println(expense.toString());
-        if (expense == null) {
-            System.out.println("null");
             expense = jdbcTemplate.queryForObject(query2, new GroupExpenseRowMapper(), expenseId, expenseId);
         }
         return expense;

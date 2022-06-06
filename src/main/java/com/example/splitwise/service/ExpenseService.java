@@ -19,5 +19,5 @@ public interface ExpenseService extends EntityService<Expense> {
 
     List<Expense> getGroupExpenses(Integer groupId);
 
-    void pay(Integer expenseId, Integer creatorId, Integer targetId);
+    boolean pay(Integer expenseId, Integer creatorId, Integer targetId);
 }
