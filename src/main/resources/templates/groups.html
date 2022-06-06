@@ -67,6 +67,33 @@
                                             <div class="p-1 col-10 mb-1 small" th:text="${expense.getCreationInfo()}">
 
                                             </div>
+
+                                            <form
+                                                  th:attr=" id='expense' +${expense.id}"
+                                                  th:action="@{/dashboard/groups/pay/{id}(
+                                                     id = ${expense.id},
+                                                     creatorId=${expense.getCreatorId()},
+                                                     targetId=${group.getId()},
+                                                     currentAmount=${currentAmount},
+                                                     transactionAmount=${transactions.get(i.index).get(0).amount})}"
+                                                  method="post">
+                                                <button th:if="${expense.paid == false && group.getCreatorId() == currentAccount.getId()}" th:disabled="${currentAmount < transactions.get(i.index).get(0).amount}"
+                                                        class="btn btn-info">
+                                                    Pay
+
+                                                </button>
+                                                <button th:if="${expense.paid == true && group.getCreatorId() == currentAccount.getId()}" th:disabled="${true}"
+                                                        class="btn btn-info">
+                                                    Paid
+                                                </button>
+                                                <div class="float-right" th:each="account : ${group.accounts}">
+                                                    <label th:if="${expense.paid == false && group.getCreatorId() == currentAccount.getId()
+                                                    && account.getAccount().getMoneyAmount() < transactions.get(i.index).get(0).amount}"
+                                                           class="small text-danger"
+                                                           th:text="${account.getAccount().username}+' have not enough money in wallet! '"></label>
+
+                                                </div>
+                                            </form>
                                         </div>
                                     </h5>
                                 </div>
@@ -101,6 +128,7 @@
                         Show accounts
                     </a>
                     <form id="deleteGroupForm" name="form" class="col mb-2" style="width: 190px;"
+                          th:if="${group.getCreatorId() == currentAccount.getId()}"
                           th:action="@{/delete-group/{id}(id = ${group.getId()})}" th:method="delete">
                         <button class="btn btn-danger">
                             Delete group
@@ -108,6 +136,7 @@
                     </form>
 
                     <form id="groupUserForm" name="form" class="col-5 form-inline" style="width: 190px;"
+                          th:if="${group.getCreatorId() == currentAccount.getId()}"
                           th:action="@{/group/{id}/add-account(id = ${group.getId()})}" th:method="post">
                         <div class="form-group mx-sm-1">
                             <input class="form-control" type="email" id="account" name="account"/>

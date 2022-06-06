@@ -21,7 +21,7 @@ public class UserRepositoryImpl implements UserRepository {
     private final String newUserQuery = "INSERT INTO users(username, password, enabled, phone_number) VALUES (?, ?, ?, ?)";
     private final String queryForAuthorities = "INSERT INTO authorities(id, username, authority) VALUES (?, ?, ?)";
     private final String deleteUserQuery = "DELETE FROM users WHERE id = ?";
-    private  String query = "SELECT id, username, password, enabled, phone_number FROM users WHERE users.username = ?";
+    private String query = "SELECT id, username, password, enabled, phone_number FROM users WHERE users.username = ?";
 
     @Autowired
     public UserRepositoryImpl(JdbcTemplate jdbcTemplate) {

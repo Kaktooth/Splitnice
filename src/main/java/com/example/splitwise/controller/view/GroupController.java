@@ -1,14 +1,15 @@
 package com.example.splitwise.controller.view;
 
-import com.example.splitwise.model.User;
-import com.example.splitwise.model.account.Account;
+import com.example.splitwise.model.expense.Expense;
 import com.example.splitwise.model.group.Group;
 import com.example.splitwise.model.group.GroupDto;
+import com.example.splitwise.model.group.GroupRole;
 import com.example.splitwise.model.transaction.Transaction;
 import com.example.splitwise.service.AccountService;
 import com.example.splitwise.service.ExpenseService;
 import com.example.splitwise.service.GroupService;
 import com.example.splitwise.service.TransactionMessageCreator;
+import com.example.splitwise.service.TransactionService;
 import com.example.splitwise.service.UserService;
 import com.example.splitwise.utils.CurrentUserGetter;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,15 +32,18 @@ public class GroupController {
     private final UserService userService;
     private final AccountService accountService;
     private final ExpenseService expenseService;
+    private final TransactionService transactionService;
 
     public GroupController(GroupService groupService,
                            UserService userService,
                            AccountService accountService,
-                           ExpenseService expenseService) {
+                           ExpenseService expenseService,
+                           TransactionService transactionService) {
         this.groupService = groupService;
         this.userService = userService;
         this.accountService = accountService;
         this.expenseService = expenseService;
+        this.transactionService = transactionService;
     }
 
     @GetMapping("/dashboard/groups")
@@ -47,19 +52,44 @@ public class GroupController {
         String currentUserEmail = CurrentUserGetter.getActiveUserEmail();
         Integer activeUserId = userService.getIdFromAuthenticationName(currentUserEmail);
         List<Group> accountGroups = groupService.getAccountGroups(activeUserId);
+        TransactionMessageCreator transactionMessageCreator = new TransactionMessageCreator(
+            userService, transactionService
+        );
+        List<Expense> expenses = new ArrayList<>();
 
         List<GroupDto> groupDtos = new ArrayList<>();
         for (Group group : accountGroups) {
-            System.out.println(group.getId());
+            expenses.addAll(expenseService.getGroupExpenses(group.getId()));
+
             groupDtos.add(
                 new GroupDto(group, expenseService.getGroupExpenses(group.getId()),
                     groupService.getAccounts(group.getId()))
             );
         }
-
+        System.out.println(expenses);
+        List<List<Transaction>> transactions = transactionMessageCreator.getTransactions(expenses);
+        String userEmail = SecurityContextHolder.getContext()
+            .getAuthentication()
+            .getName();
+        model.addAttribute("currentAccount", accountService.getByUserEmail(userEmail));
+        model.addAttribute("transactions", transactions);
+        System.out.println(transactions);
         model.addAttribute("groupList", groupDtos);
+        model.addAttribute("ownerRole", GroupRole.OWNER);
+        model.addAttribute("memberRole", GroupRole.MEMBER);
 
         return "dashboard";
+    }
+
+    @PostMapping("/dashboard/groups/pay/{expenseId}")
+    public String payExpense(@PathVariable("expenseId") int expenseId,
+                             @RequestParam("creatorId") int creatorId,
+                             @RequestParam("groupId") int groupId,
+                             @RequestParam("currentAmount") BigDecimal currentAmount,
+                             @RequestParam("transactionAmount") BigDecimal transactionAmount,
+                             Model model) {
+        expenseService.pay(expenseId, creatorId, groupId);
+        return "redirect:/dashboard/groups";
     }
 
     @GetMapping("/add-group")

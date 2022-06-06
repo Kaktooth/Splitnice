@@ -44,4 +44,5 @@ public class RestExpenseController {
     @PostMapping("/expense")
     public Expense addExpense(ExpenseDto expenseDto) {
         return expenseService.add(expenseDto);
-    }}
+    }
+}

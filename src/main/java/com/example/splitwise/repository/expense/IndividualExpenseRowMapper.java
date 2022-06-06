@@ -17,7 +17,7 @@ public class IndividualExpenseRowMapper implements RowMapper<Expense> {
 
     @Override
     public Expense mapRow(ResultSet rs, int rowNum) throws SQLException {
-        Integer id = rs.getInt("id");
+        Integer id = rs.getInt("expense_id");
         String title = rs.getString("title");
         BigDecimal amount = new BigDecimal(rs.getString("amount"));
         OffsetDateTime creationDate = TimeConverter.convertTime(rs.getTimestamp("creation_date"));

@@ -25,7 +25,7 @@ public class CommonSecurityConfig {
     }
 
     @Bean
-    public RoleHierarchy roleHierarchy(){
+    public RoleHierarchy roleHierarchy() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
 
         roleHierarchy.setHierarchy("ADMIN > MEMBER");

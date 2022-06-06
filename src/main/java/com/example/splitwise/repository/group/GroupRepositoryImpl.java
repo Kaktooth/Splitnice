@@ -34,6 +34,7 @@ public class GroupRepositoryImpl implements GroupRepository {
     private final String queryAddAccountGroup = "INSERT INTO account_group (role_id, added_by_id, group_id, account_id) VALUES (?, ?, ?, ?)";
 
     private final String deleteAccounts = "DELETE FROM account_group WHERE group_id = ?";
+    private final String deleteExpenses = "DELETE FROM group_expense WHERE group_id = ?";
     private final String deleteGroup = "DELETE FROM \"group\" WHERE id = ?";
 
     public GroupRepositoryImpl(JdbcTemplate jdbcTemplate) {
@@ -71,6 +72,7 @@ public class GroupRepositoryImpl implements GroupRepository {
     @Override
     public void delete(Integer entityId) {
         jdbcTemplate.update(deleteAccounts, entityId);
+        jdbcTemplate.update(deleteExpenses, entityId);
         jdbcTemplate.update(deleteGroup, entityId);
     }
 

@@ -26,9 +26,7 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
     String individualExpenseQuery = "INSERT INTO individual_expense (expense_id, user_id) VALUES (?, ?)";
     String groupExpenseQuery = "INSERT INTO group_expense (expense_id, group_id) VALUES (?, ?)";
 
-    String getAccountExpensesQuery = "SELECT individual_expense.id, amount, creation_date, currency_id, user_id, title, " +
-        "paid, author_id\n" +
-        "FROM individual_expense\n" +
+    String getAccountExpensesQuery = "SELECT * FROM individual_expense\n" +
         "INNER JOIN expense ON expense.id = expense_id\n" +
         "INNER JOIN users ON users.id = user_id\n" +
         "WHERE user_id = ?  OR author_id = ?";
@@ -104,8 +102,17 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
 
     @Override
     public Expense getById(Integer expenseId) {
-        String query = "SELECT * FROM expense WHERE id = ?";
-        return jdbcTemplate.queryForObject(query, Expense.class, expenseId);
+        String query = "SELECT * FROM expense, individual_expense WHERE expense.id = ? AND expense_id = ?";
+        String query2 = "SELECT * FROM expense, group_expense WHERE expense.id = ? AND expense_id = ?";
+        Expense expense;
+
+        expense = jdbcTemplate.queryForObject(query, new IndividualExpenseRowMapper(), expenseId, expenseId);
+        System.out.println(expense.toString());
+        if (expense == null) {
+            System.out.println("null");
+            expense = jdbcTemplate.queryForObject(query2, new GroupExpenseRowMapper(), expenseId, expenseId);
+        }
+        return expense;
     }
 
     @Override

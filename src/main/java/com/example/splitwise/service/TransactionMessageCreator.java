@@ -54,6 +54,7 @@ public class TransactionMessageCreator {
         List<List<Transaction>> transactions = new ArrayList<>();
 
         for (Expense expense : expenses) {
+            System.out.println(expense.getId());
             List<Transaction> expenseTransactions = transactionService.getTransactionsFromExpense(
                 Set.of(expense.getId())
             );

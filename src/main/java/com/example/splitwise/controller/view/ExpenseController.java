@@ -141,10 +141,15 @@ public class ExpenseController {
                                 @RequestParam(value = "amount") BigDecimal amount,
                                 @RequestParam(value = "currency") String currency,
                                 @RequestParam(value = "splitType") String splitType) {
+        String userEmail = SecurityContextHolder.getContext()
+            .getAuthentication()
+            .getName();
+        Account currentAccount = accountService.getByUserEmail(userEmail);
 
         Expense.ExpenseBuilder expenseBuilder = new Expense.ExpenseBuilder()
             .withAmount(amount)
             .withTitle(expenseName)
+            .withCreatorId(currentAccount.getId())
             .withCurrency(Currency.valueOf(currency))
             .withSplittingType(SplittingType.valueOf(splitType));
 
@@ -152,6 +157,8 @@ public class ExpenseController {
             IndividualExpense individualExpense = expenseBuilder
                 .buildIndividualExpense();
 
+            accountService.setMoneyAmount(currentAccount.getUserId(),
+                accountService.getByUserEmail(userEmail).getMoneyAmount().subtract(individualExpense.getAmount()));
             expenseService.addNewIndividualExpense(individualExpense, name);
         } else if (expenseType.equals(ExpenseType.GROUP.toString())) {
             GroupExpense groupExpense = expenseBuilder

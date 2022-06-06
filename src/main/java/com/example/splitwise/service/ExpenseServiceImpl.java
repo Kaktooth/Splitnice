@@ -5,6 +5,7 @@ import com.example.splitwise.model.expense.Expense;
 import com.example.splitwise.model.expense.GroupExpense;
 import com.example.splitwise.model.expense.IndividualExpense;
 import com.example.splitwise.model.expense.SplittingType;
+import com.example.splitwise.model.group.AccountGroupInfo;
 import com.example.splitwise.model.group.Group;
 import com.example.splitwise.model.transaction.Transaction;
 import com.example.splitwise.repository.expense.ExpenseRepository;
@@ -112,10 +113,10 @@ public class ExpenseServiceImpl implements ExpenseService {
 
         for (var accountInfo : groupService.getAccounts(group.getId())) {
             Transaction receiveMoneyTransaction = new Transaction.TransactionBuilder()
-                .withAmount(equalShare.negate())
+                .withAmount(equalShare)
                 .withCurrency(newExpense.getCurrency())
                 .withLanderId(newExpense.getCreatorId())
-                .withReceiverId(accountInfo.getId())
+                .withReceiverId(accountInfo.getAccount().getId())
                 .withExpenseId(newExpense.getId())
                 .build();
             transactionService.add(receiveMoneyTransaction);
@@ -164,18 +165,36 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     public void pay(Integer expenseId, Integer creatorId, Integer targetId) {
-        Account creatorAccount = accountService.getById(creatorId);
-        Account targetAccount = accountService.getById(targetId);
+        Expense expense = getById(expenseId);
+        if (expense instanceof IndividualExpense) {
+            Account creatorAccount = accountService.getById(creatorId);
+            Account targetAccount = accountService.getById(targetId);
 
-        List<Transaction> transactions = transactionService.getTransactionsFromExpense(
-            Set.of(expenseId)
-        );
+            List<Transaction> transactions = transactionService.getTransactionsFromExpense(
+                Set.of(expenseId)
+            );
 
-        BigDecimal currentUserAmount = creatorAccount.getMoneyAmount().subtract(transactions.get(0).getAmount());
-        BigDecimal targetUserAmount = targetAccount.getMoneyAmount().add(transactions.get(1).getAmount());
-        accountService.setMoneyAmount(creatorAccount.getUserId(), currentUserAmount);
-        accountService.setMoneyAmount(targetId, targetUserAmount);
-        expenseRepository.pay(expenseId);
+            BigDecimal currentUserAmount = creatorAccount.getMoneyAmount().add(transactions.get(0).getAmount());
+            BigDecimal targetUserAmount = targetAccount.getMoneyAmount().add(transactions.get(1).getAmount());
+            accountService.setMoneyAmount(creatorAccount.getUserId(), currentUserAmount);
+            accountService.setMoneyAmount(targetId, targetUserAmount);
+            expenseRepository.pay(expenseId);
+            System.out.println("indiv");
+        } else {
+
+            List<AccountGroupInfo> accounts = groupService.getAccounts(targetId);
+            List<Transaction> transactions = transactionService.getTransactionsFromExpense(
+                Set.of(expenseId)
+            );
+
+            for (int i = 0; i < accounts.size(); i++) {
+                Account account = accounts.get(i).getAccount();
+                accountService.setMoneyAmount(account.getUserId(),
+                    account.getMoneyAmount().subtract(transactions.get(i).getAmount()));
+            }
+            expenseRepository.pay(expenseId);
+            System.out.println("group");
+        }
     }
 
     private BigDecimal getEqualShare(Expense expense, int count) {
