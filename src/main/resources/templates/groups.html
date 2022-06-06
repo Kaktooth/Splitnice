@@ -90,7 +90,7 @@
                                                     <label th:if="${expense.paid == false && group.getCreatorId() == currentAccount.getId()
                                                     && account.getAccount().getMoneyAmount() < transactions.get(i.index).get(0).amount}"
                                                            class="small text-danger"
-                                                           th:text="${account.getAccount().username}+' have not enough money in wallet! '"></label>
+                                                           th:text="${account.getAccount().username} + ' have not enough money in wallet! '"></label>
 
                                                 </div>
                                             </form>

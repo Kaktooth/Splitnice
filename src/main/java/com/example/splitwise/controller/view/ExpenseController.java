@@ -67,9 +67,9 @@ public class ExpenseController {
             .getName());
 
         Pagination<Expense> pagination = new Pagination<>(expenses);
-        int pageCount = pagination.getPageCount(pageSize) + 1;
+        int pageCount = pagination.getPageCount(pageSize);
         List<Integer> pageNumbers = pagination.getPageNumbers(pageCount);
-        List<Expense> currentPageContent = pagination.getCurrentPageContent(currentPage - 1, pageSize);
+        List<Expense> currentPageContent = pagination.getCurrentPageContent(currentPage, pageSize);
 
         List<User> users = new ArrayList<>();
         List<Account> accounts = new ArrayList<>();
@@ -90,11 +90,14 @@ public class ExpenseController {
             TransactionMessageCreator transactionMessageCreator = new TransactionMessageCreator(
                 userService, transactionService
             );
-            List<List<Transaction>> transactions = transactionMessageCreator.getTransactions(expenses);
+            List<List<Transaction>> transactionList = transactionMessageCreator.getTransactions(expenses);
             List<List<String>> messages = transactionMessageCreator.getTransactionMessages(expenses);
-
+            Pagination<List<Transaction>> transactionsPagination = new Pagination<>(transactionList);
+            List<List<Transaction>> transactions = transactionsPagination.getCurrentPageContent(currentPage, pageSize);
+            Pagination<List<String>> transactionMessagePagination = new Pagination<>(messages);
+            List<List<String>> transactionMessages = transactionMessagePagination.getCurrentPageContent(currentPage, pageSize);
             model.addAttribute("transactions", transactions);
-            model.addAttribute("transactionMessages", messages);
+            model.addAttribute("transactionMessages", transactionMessages);
             model.addAttribute("users", users);
             model.addAttribute("accounts", accounts);
         }

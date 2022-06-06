@@ -179,7 +179,6 @@ public class ExpenseServiceImpl implements ExpenseService {
             accountService.setMoneyAmount(creatorAccount.getUserId(), currentUserAmount);
             accountService.setMoneyAmount(targetId, targetUserAmount);
             expenseRepository.pay(expenseId);
-            System.out.println("indiv");
         } else {
 
             List<AccountGroupInfo> accounts = groupService.getAccounts(targetId);
@@ -193,7 +192,6 @@ public class ExpenseServiceImpl implements ExpenseService {
                     account.getMoneyAmount().subtract(transactions.get(i).getAmount()));
             }
             expenseRepository.pay(expenseId);
-            System.out.println("group");
         }
     }
 

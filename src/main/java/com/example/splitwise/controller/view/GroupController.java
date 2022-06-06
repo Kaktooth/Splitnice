@@ -73,7 +73,6 @@ public class GroupController {
             .getName();
         model.addAttribute("currentAccount", accountService.getByUserEmail(userEmail));
         model.addAttribute("transactions", transactions);
-        System.out.println(transactions);
         model.addAttribute("groupList", groupDtos);
         model.addAttribute("ownerRole", GroupRole.OWNER);
         model.addAttribute("memberRole", GroupRole.MEMBER);

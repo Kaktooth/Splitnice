@@ -15,7 +15,7 @@ public class Pagination<T> {
     public List<T> getCurrentPageContent(int page, int size) {
         List<T> expenseList = expenses;
         expenseList = expenseList.stream()
-            .skip((long) page * size)
+            .skip((long) (page - 1) * size)
             .limit(size)
             .collect(Collectors.toList());
 
@@ -23,7 +23,7 @@ public class Pagination<T> {
     }
 
     public List<Integer> getPageNumbers(int pageCount) {
-        return IntStream.rangeClosed(1, pageCount)
+        return IntStream.rangeClosed(1, pageCount + 1)
             .boxed()
             .collect(Collectors.toList());
     }
